@@ -62,11 +62,11 @@
   }
   .scroll-curve path {
     fill: none;
-    stroke: var(--blue);
+    stroke: url(#curveGradient);
     stroke-width: 26;
     stroke-linecap: round;
     opacity: 0.95;
-    filter: drop-shadow(0 8px 24px rgba(27,35,224,0.18));
+    filter: drop-shadow(0 8px 24px rgba(27,35,224,0.15));
   }
   @media (max-width: 760px) {
     .scroll-curve path { stroke-width: 14; }
@@ -1707,6 +1707,14 @@
 <!-- Animated scroll curve in background -->
 <div class="scroll-curve" aria-hidden="true">
   <svg viewBox="0 0 1600 5000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="curveGradient" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+        <stop offset="0%"   stop-color="#1B23E0"/>
+        <stop offset="48%"  stop-color="#1B23E0"/>
+        <stop offset="72%"  stop-color="#2E7BBF"/>
+        <stop offset="100%" stop-color="#58B947"/>
+      </linearGradient>
+    </defs>
     <path id="scrollCurvePath" d="M -200 200 C 200 100, 500 700, 1100 500 S 1500 1400, 900 1700 S 100 2400, 600 2700 S 1700 3300, 1200 3700 S 200 4400, 1000 4900" />
   </svg>
 </div>
