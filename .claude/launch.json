@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "guru-site",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "8743", "/Users/mike/Guru"],
+      "port": 8743
+    }
+  ]
+}

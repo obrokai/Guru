@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Us — Guru Digital Creative Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F2EEDF;
+    --ink: #0e0e10;
+    --ink-2: #2c2c30;
+    --ink-3: #6d6d72;
+    --line: rgba(14,14,16,0.12);
+    --lime: #C8F84A;
+    --lime-2: #B0E833;
+    --cream: #F2EEDF;
+    --blue: #1B23E0;
+    --purple: #5A1AB8;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+  }
+
+  /* ══════════════════════════════════════════ NAV (identical to all pages) */
+  .gn-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    padding: 22px 32px;
+    pointer-events: none;
+  }
+  .gn-nav-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .gn-nav-inner > * { pointer-events: auto; }
+  .gn-logo {
+    display: flex;
+    align-items: center;
+    height: 56px;
+  }
+  .gn-logo img { height: 28px; width: auto; display: block; }
+  .gn-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(247,244,232,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 999px;
+    padding: 8px;
+    box-shadow: 0 2px 18px rgba(14,14,16,0.05);
+  }
+  .gn-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 6px;
+  }
+  .gn-link {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    border-radius: 999px;
+    transition: color .2s, background .2s;
+  }
+  .gn-link:hover { color: var(--blue); }
+  .gn-link.active { color: var(--blue); background: rgba(27,35,224,0.07); }
+  .gn-link-cta {
+    display: inline-flex;
+    align-items: center;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 13px 24px;
+    border-radius: 999px;
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .gn-link-cta:hover { background: var(--blue); transform: translateY(-1px); }
+  .gn-link-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 13px 24px;
+    border-radius: 999px;
+    background: #25D366;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    transition: background 0.18s, transform 0.12s;
+  }
+  .gn-link-whatsapp:hover { background: #1ebe5d; transform: scale(1.02); }
+  .gn-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px; height: 40px;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 10px;
+    transition: background 0.15s;
+  }
+  .gn-hamburger:hover { background: rgba(14,14,16,0.07); }
+  .gn-hamburger span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--ink);
+    border-radius: 999px;
+    transition: transform 0.22s, opacity 0.18s;
+    transform-origin: center;
+  }
+  .gn-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .gn-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .gn-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .gn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 68px;
+    left: 12px; right: 12px;
+    background: rgba(242,238,223,0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1.5px solid var(--line);
+    border-radius: 22px;
+    padding: 8px 20px 24px;
+    z-index: 48;
+    flex-direction: column;
+    box-shadow: 0 16px 40px rgba(14,14,16,0.12);
+    animation: menu-in 0.22s cubic-bezier(0.2,0.8,0.2,1) both;
+  }
+  .gn-mobile-menu.open { display: flex; }
+  @keyframes menu-in {
+    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .gn-mobile-link {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.15s, padding-left 0.15s;
+  }
+  .gn-mobile-link:last-of-type { border-bottom: none; }
+  .gn-mobile-link:hover { color: var(--blue); padding-left: 6px; }
+  .gn-mobile-link::after { content: '↗'; font-size: 20px; color: var(--ink-3); }
+  .gn-mobile-ctas { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .gn-mobile-ctas .gn-link-cta { flex: 1; justify-content: center; text-align: center; }
+  .gn-mobile-ctas .gn-link-whatsapp { flex: 1; justify-content: center; text-align: center; }
+
+  /* ══════════════════════════════════════════ PAGE LOAD ANIMATION */
+  .pg-intro {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 9000;
+    pointer-events: none;
+    animation: pgFade 0.5s cubic-bezier(0.16,1,0.3,1) 0.04s both;
+  }
+  @keyframes pgFade { from { opacity: 1; } to { opacity: 0; } }
+
+  .gn-nav   { animation: navDown 0.7s var(--ease-out-expo) both 0.1s; }
+  @keyframes navDown { from { opacity:0; transform:translateY(-22px); } to { opacity:1; transform:translateY(0); } }
+
+  .abt-hero { animation: fadeUp 0.9s var(--ease-out-expo) both 0.18s; }
+  .abt-story-wrap { animation: fadeUp 0.8s var(--ease-out-expo) both 0.3s; }
+  .abt-stats-section { animation: fadeUp 0.8s var(--ease-out-expo) both 0.38s; }
+  .abt-values { animation: fadeUp 0.75s var(--ease-out-expo) both 0.44s; }
+  .abt-offices-section { animation: fadeUp 0.75s var(--ease-out-expo) both 0.5s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pg-intro, .gn-nav, .abt-hero, .abt-story-wrap, .abt-stats-section, .abt-values, .abt-offices-section { animation: none !important; }
+  }
+
+  /* ══════════════════════════════════════════ HERO */
+  .abt-hero {
+    padding: 170px 40px 90px;
+    max-width: 1580px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--line);
+  }
+  .abt-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 36px;
+  }
+  .abt-hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+  .abt-hero-title {
+    font-size: clamp(72px, 12vw, 200px);
+    font-weight: 800;
+    line-height: 0.84;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 48px;
+  }
+  .abt-hero-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .abt-hero-tagline {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(22px, 2.8vw, 42px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    max-width: 660px;
+  }
+  .abt-hero-tagline em {
+    font-style: normal;
+    color: var(--blue);
+  }
+  .abt-hero-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+  .abt-hero-meta span {
+    font-size: 13px;
+    color: var(--ink-3);
+    letter-spacing: 0.02em;
+  }
+  .abt-hero-meta strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════════ STORY */
+  .abt-story-wrap {
+    max-width: 1580px;
+    margin: 0 auto;
+    padding: 100px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 100px;
+    align-items: start;
+    border-bottom: 1px solid var(--line);
+  }
+  .abt-story-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 32px;
+  }
+  .abt-story-heading {
+    font-size: clamp(36px, 3.8vw, 68px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+  }
+  .abt-story-right {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding-top: 8px;
+  }
+  .abt-story-p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+  .abt-story-quote {
+    margin-top: 16px;
+    padding: 28px 32px;
+    background: var(--ink);
+    border-radius: 20px;
+  }
+  .abt-story-quote p {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(22px, 2.2vw, 32px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--lime);
+  }
+  .abt-story-quote cite {
+    display: block;
+    margin-top: 14px;
+    font-size: 13px;
+    font-style: normal;
+    color: rgba(246,244,230,0.5);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ══════════════════════════════════════════ STATS */
+  .abt-stats-section {
+    background: var(--ink);
+    padding: 100px 40px;
+  }
+  .abt-stats-inner {
+    max-width: 1580px;
+    margin: 0 auto;
+  }
+  .abt-stats-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(246,244,230,0.35);
+    margin-bottom: 60px;
+  }
+  .abt-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .abt-stat-item {
+    padding: 0 48px 0 0;
+    border-right: 1px solid rgba(246,244,230,0.10);
+  }
+  .abt-stat-item + .abt-stat-item { padding-left: 48px; }
+  .abt-stat-item:last-child { border-right: none; }
+  .abt-stat-num {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(56px, 6vw, 96px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--cream);
+    margin-bottom: 12px;
+  }
+  .abt-stat-label {
+    font-size: 15px;
+    color: rgba(246,244,230,0.5);
+    font-weight: 500;
+  }
+
+  /* ══════════════════════════════════════════ VALUES */
+  .abt-values {
+    max-width: 1580px;
+    margin: 0 auto;
+    padding: 100px 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .abt-values-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 72px;
+  }
+  .abt-values-heading {
+    font-size: clamp(36px, 3.8vw, 64px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+  }
+  .abt-values-intro {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+  .abt-values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .abt-value-card {
+    background: #EDEADE;
+    padding: 44px 36px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: background 0.25s;
+  }
+  .abt-value-card:hover { background: var(--ink); }
+  .abt-value-card:hover .abt-value-title,
+  .abt-value-card:hover .abt-value-body { color: var(--cream); }
+  .abt-value-card:hover .abt-value-num { color: var(--lime); }
+  .abt-value-num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: color 0.25s;
+  }
+  .abt-value-title {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(22px, 2vw, 30px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    transition: color 0.25s;
+  }
+  .abt-value-body {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    transition: color 0.25s;
+  }
+
+  /* ══════════════════════════════════════════ OFFICES */
+  .abt-offices-section {
+    background: var(--ink);
+    padding: 100px 40px;
+  }
+  .abt-offices-inner {
+    max-width: 1580px;
+    margin: 0 auto;
+  }
+  .abt-offices-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  /* World map video */
+  .abt-world-map {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 56px;
+    background: #0a0a12;
+  }
+  .abt-world-map video {
+    width: 100%;
+    display: block;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+    opacity: 0.88;
+  }
+  .abt-world-map::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(10,10,16,0.45) 0%, transparent 25%, transparent 75%, rgba(10,10,16,0.45) 100%),
+      linear-gradient(to bottom, rgba(10,10,16,0.3) 0%, transparent 30%, transparent 70%, rgba(10,10,16,0.5) 100%);
+    pointer-events: none;
+    border-radius: 20px;
+  }
+  @media (max-width: 980px) {
+    .abt-world-map video { aspect-ratio: 16 / 9; }
+    .abt-world-map { border-radius: 14px; margin-bottom: 40px; }
+  }
+  @media (max-width: 520px) {
+    .abt-world-map video { aspect-ratio: 4 / 3; }
+  }
+  .abt-offices-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(246,244,230,0.35);
+    margin-bottom: 16px;
+  }
+  .abt-offices-heading {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(36px, 3.8vw, 64px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    color: var(--cream);
+  }
+  .abt-offices-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(246,244,230,0.10);
+  }
+  .abt-office-card {
+    padding: 44px 32px 44px 0;
+    border-right: 1px solid rgba(246,244,230,0.10);
+  }
+  .abt-office-card + .abt-office-card { padding-left: 32px; }
+  .abt-office-card:last-child { border-right: none; }
+  .abt-office-city {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(24px, 2vw, 32px);
+    font-weight: 800;
+    color: var(--cream);
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .abt-office-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lime);
+    border: 1px solid rgba(200,248,74,0.35);
+    border-radius: 999px;
+    padding: 3px 10px;
+    margin-bottom: 16px;
+  }
+  .abt-office-tel {
+    font-size: 14px;
+    color: rgba(246,244,230,0.42);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════════ FOOTER CTA */
+  .ftr { position: relative; }
+  .ftr-top {
+    padding: 120px 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .ftr-inner { max-width: 1500px; margin: 0 auto; }
+  .ftr-cta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .ftr-cta-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .ftr-cta-heading {
+    font-size: clamp(56px, 8vw, 160px);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    color: var(--blue);
+    max-width: 1300px;
+    text-transform: uppercase;
+  }
+  .btn-primary-lg {
+    margin-top: 22px;
+    padding: 22px 44px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all .2s;
+  }
+  .btn-primary-lg:hover { background: var(--blue); transform: translateY(-2px); }
+  .ftr-bottom { padding: 60px 40px 30px; }
+  .ftr-bottom .ftr-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1.2fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .ftr-logo-col { display: flex; flex-direction: column; gap: 18px; }
+  .ftr-logo { display: block; height: 28px; width: fit-content; }
+  .ftr-logo::before {
+    content: "GURU";
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  .ftr-tagline { font-size: 14px; color: var(--ink-3); line-height: 1.5; }
+  .ftr-nav-heading {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .ftr-link {
+    display: block;
+    font-size: 15px;
+    color: var(--ink-2);
+    padding: 6px 0;
+    transition: color .2s;
+  }
+  .ftr-link:hover { color: var(--blue); }
+  .ftr-base {
+    max-width: 1500px;
+    margin: 60px auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .ftr-copy { font-size: 13px; color: var(--ink-3); }
+
+  /* ══════════════════════════════════════════ RESPONSIVE */
+  @media (max-width: 980px) {
+    .gn-nav { padding: 12px 16px; }
+    .gn-nav-links, .gn-link-cta, .gn-link-whatsapp { display: none; }
+    .gn-hamburger { display: flex; }
+    .abt-hero { padding: 130px 22px 64px; }
+    .abt-hero-title { font-size: clamp(56px, 18vw, 120px); }
+    .abt-story-wrap { grid-template-columns: 1fr; gap: 48px; padding: 72px 22px; }
+    .abt-stats-section { padding: 72px 22px; }
+    .abt-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0; }
+    .abt-stat-item { padding: 32px 0 !important; border-right: none; border-bottom: 1px solid rgba(246,244,230,0.10); }
+    .abt-stat-item:nth-child(odd) { border-right: 1px solid rgba(246,244,230,0.10); padding-right: 24px !important; }
+    .abt-stat-item:nth-child(even) { padding-left: 24px !important; }
+    .abt-stat-item:nth-last-child(-n+2) { border-bottom: none; }
+    .abt-values { padding: 72px 22px; }
+    .abt-values-header { grid-template-columns: 1fr; gap: 24px; }
+    .abt-values-grid { grid-template-columns: 1fr; gap: 2px; }
+    .abt-offices-section { padding: 72px 22px; }
+    .abt-offices-grid { grid-template-columns: repeat(2, 1fr); }
+    .abt-office-card { padding: 32px 0 !important; border-right: none; border-bottom: 1px solid rgba(246,244,230,0.10); }
+    .abt-office-card:nth-child(odd) { border-right: 1px solid rgba(246,244,230,0.10); padding-right: 20px !important; }
+    .abt-office-card:nth-child(even) { padding-left: 20px !important; }
+    .abt-office-card:nth-last-child(-n+2) { border-bottom: none; }
+    .ftr-top { padding: 80px 22px; }
+    .ftr-cta-heading { font-size: clamp(44px, 14vw, 90px); }
+    .ftr-bottom { padding: 50px 22px 24px; }
+    .ftr-bottom .ftr-inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
+    .abt-hero-bottom { flex-direction: column; align-items: flex-start; }
+    .abt-hero-meta { align-items: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .abt-values-grid { grid-template-columns: 1fr; }
+    .ftr-bottom .ftr-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="pg-intro" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav class="gn-nav">
+  <div class="gn-nav-inner">
+    <a href="index.html" class="gn-logo">
+      <img src="guru-logo.png" alt="Guru" onerror="this.style.display='none';this.parentElement.innerHTML='GURU';" />
+    </a>
+    <div class="gn-pill">
+      <div class="gn-nav-links">
+        <a href="about.html"  class="gn-link active">About</a>
+        <a href="work.html"   class="gn-link">Work</a>
+        <a href="index.html#services" class="gn-link">Service</a>
+        <a href="blog.html"     class="gn-link">Blog</a>
+        <a href="index.html#investor" class="gn-link">Investor</a>
+      </div>
+      <a href="index.html#contact" class="gn-link-cta">Contact Us</a>
+      <a href="https://wa.me/85200000000" class="gn-link-whatsapp" target="_blank" rel="noopener">Chat with Us</a>
+      <button class="gn-hamburger" id="gnToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="gn-mobile-menu" id="gnMobileMenu">
+  <a href="about.html"          class="gn-mobile-link" data-close>About</a>
+  <a href="work.html"           class="gn-mobile-link" data-close>Work</a>
+  <a href="index.html#services" class="gn-mobile-link" data-close>Service</a>
+  <a href="blog.html"     class="gn-mobile-link" data-close>Blog</a>
+  <a href="index.html#investor" class="gn-mobile-link" data-close>Investor</a>
+  <div class="gn-mobile-ctas">
+    <a href="index.html#contact" class="gn-link-cta" data-close>Contact Us</a>
+    <a href="https://wa.me/85200000000" class="gn-link-whatsapp" target="_blank" rel="noopener">Chat with Us</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ HERO -->
+<div class="abt-hero">
+  <div class="abt-hero-tag">About Guru</div>
+  <h1 class="abt-hero-title">About<br>Guru</h1>
+  <div class="abt-hero-bottom">
+    <p class="abt-hero-tagline">
+      Today's Breakthrough Is<br>
+      <em>Tomorrow's Legend.</em>
+    </p>
+    <div class="abt-hero-meta">
+      <strong>Est. 2007</strong>
+      <span>Listed 4A's Agency</span>
+      <span>Hong Kong Headquartered</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ STORY -->
+<div class="abt-story-wrap">
+  <div>
+    <p class="abt-story-label">Our Story</p>
+    <h2 class="abt-story-heading">Built for the<br>Next Era of<br>Marketing</h2>
+  </div>
+  <div class="abt-story-right">
+    <p class="abt-story-p">Since its establishment in 2007, Guru has grown into a publicly listed 4A's digital marketing agency — a true powerhouse driven by over 300 young, creative and future-ready minds across five global offices.</p>
+    <p class="abt-story-p">By synergizing talent from diverse fields, we weave together and deliver high-quality digital solutions to local and international brands. Our vision is to pioneer value creation and forge new breakthroughs in the marketing industry.</p>
+    <p class="abt-story-p">From strategy and creativity to media, data, technology and AI — Guru connects every dimension of modern marketing to unlock growth, accelerate relevance and create measurable business impact for ambitious brands worldwide.</p>
+    <blockquote class="abt-story-quote">
+      <p>"By synergizing talents from diverse fields, we weave together and deliver high-quality digital solutions to our clients."</p>
+      <cite>— Guru, est. 2007</cite>
+    </blockquote>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ STATS -->
+<div class="abt-stats-section">
+  <div class="abt-stats-inner">
+    <p class="abt-stats-label">By the Numbers</p>
+    <div class="abt-stats-grid">
+      <div class="abt-stat-item">
+        <div class="abt-stat-num" data-count="300" data-suffix="+">300+</div>
+        <div class="abt-stat-label">Digital Specialists</div>
+      </div>
+      <div class="abt-stat-item">
+        <div class="abt-stat-num" data-count="600" data-suffix="+">600+</div>
+        <div class="abt-stat-label">International Clients</div>
+      </div>
+      <div class="abt-stat-item">
+        <div class="abt-stat-num" data-count="5" data-suffix="">5</div>
+        <div class="abt-stat-label">Global Offices</div>
+      </div>
+      <div class="abt-stat-item">
+        <div class="abt-stat-num" data-count="100" data-suffix="+">100+</div>
+        <div class="abt-stat-label">Awards &amp; Recognitions</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ VALUES -->
+<div class="abt-values">
+  <div class="abt-values-header">
+    <h2 class="abt-values-heading">What Drives<br>Everything We Do</h2>
+    <p class="abt-values-intro">We are more than a marketing agency. We are a growth partner — built on three principles that guide every strategy, campaign and relationship we build.</p>
+  </div>
+  <div class="abt-values-grid">
+    <div class="abt-value-card">
+      <p class="abt-value-num">01</p>
+      <h3 class="abt-value-title">Integrated Thinking</h3>
+      <p class="abt-value-body">We connect strategy, creativity, media, data, technology and AI as one seamless system — not a collection of separate services. Every touchpoint works together toward a single measurable outcome.</p>
+    </div>
+    <div class="abt-value-card">
+      <p class="abt-value-num">02</p>
+      <h3 class="abt-value-title">Courageous Creativity</h3>
+      <p class="abt-value-body">We believe the best marketing ideas are the ones that challenge convention. Our creative culture is built to push boundaries, take calculated risks and produce work that genuinely moves people.</p>
+    </div>
+    <div class="abt-value-card">
+      <p class="abt-value-num">03</p>
+      <h3 class="abt-value-title">Measurable Impact</h3>
+      <p class="abt-value-body">Every campaign we run is designed to be tracked, optimized and improved. We are obsessed with results — not just reach and impressions, but real business outcomes that drive growth.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ OFFICES -->
+<div class="abt-offices-section">
+  <div class="abt-offices-inner">
+    <div class="abt-offices-header">
+      <div>
+        <p class="abt-offices-label">Where We Are</p>
+        <h2 class="abt-offices-heading">Five Cities.<br>One Vision.</h2>
+      </div>
+    </div>
+    <div class="abt-world-map">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="world-map.mp4" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="abt-offices-grid">
+      <div class="abt-office-card">
+        <div class="abt-office-city">Hong Kong</div>
+        <span class="abt-office-badge">Head Office</span>
+        <div class="abt-office-tel">+852 3952 1100</div>
+      </div>
+      <div class="abt-office-card">
+        <div class="abt-office-city">Guangzhou</div>
+        <div class="abt-office-tel">+86 20-3877 6465</div>
+      </div>
+      <div class="abt-office-card">
+        <div class="abt-office-city">Nanjing</div>
+        <div class="abt-office-tel">+86 25-6610 2145</div>
+      </div>
+      <div class="abt-office-card">
+        <div class="abt-office-city">Taipei</div>
+        <div class="abt-office-tel">+886 2-2370 8433</div>
+      </div>
+      <div class="abt-office-card">
+        <div class="abt-office-city">Beijing</div>
+        <div class="abt-office-tel">Jing'an Center</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ FOOTER -->
+<footer id="contact" class="ftr">
+  <div class="ftr-top">
+    <div class="ftr-inner">
+      <div class="ftr-cta-block">
+        <p class="ftr-cta-label">Ready to start?</p>
+        <h2 class="ftr-cta-heading">Let's Build Something Great Together.</h2>
+        <a href="mailto:hello@guruonline.com.hk" class="btn-primary-lg">Get In Touch →</a>
+      </div>
+    </div>
+  </div>
+  <div class="ftr-bottom">
+    <div class="ftr-inner">
+      <div class="ftr-logo-col">
+        <a href="index.html" class="ftr-logo" aria-label="Guru"></a>
+        <p class="ftr-tagline">Digital Marketing Enabler<br />Hong Kong</p>
+      </div>
+      <div>
+        <p class="ftr-nav-heading">Navigation</p>
+        <a href="index.html"          class="ftr-link">Home</a>
+        <a href="about.html"          class="ftr-link">About Us</a>
+        <a href="work.html"           class="ftr-link">Work</a>
+        <a href="index.html#services" class="ftr-link">Service</a>
+        <a href="blog.html"     class="ftr-link">Blog</a>
+        <a href="index.html#investor" class="ftr-link">Investor</a>
+        <a href="#contact"            class="ftr-link">Contact</a>
+      </div>
+      <div>
+        <p class="ftr-nav-heading">Contact</p>
+        <a href="mailto:hello@guruonline.com.hk" class="ftr-link">hello@guruonline.com.hk</a>
+        <a href="tel:+85200000000" class="ftr-link">+852 0000 0000</a>
+        <p class="ftr-link">Hong Kong</p>
+      </div>
+      <div>
+        <p class="ftr-nav-heading">Follow Us</p>
+        <a href="#" class="ftr-link">Instagram</a>
+        <a href="#" class="ftr-link">LinkedIn</a>
+        <a href="#" class="ftr-link">Facebook</a>
+      </div>
+    </div>
+    <div class="ftr-base">
+      <p class="ftr-copy">© 2026 Guru Online. All rights reserved.</p>
+      <p class="ftr-copy">Designed with ♥ in Hong Kong</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Count-up animation ── */
+(function () {
+  function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+  function animateCount(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    var dur = 1800; var start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var prog = Math.min((ts - start) / dur, 1);
+      var val = Math.round(easeOutQuart(prog) * target);
+      el.textContent = val + (prog === 1 ? suffix : '');
+      if (prog < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) { animateCount(entry.target); observer.unobserve(entry.target); }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.abt-stat-num[data-count]').forEach(function (el) { observer.observe(el); });
+})();
+
+/* ── Hamburger menu ── */
+(function () {
+  var toggle = document.getElementById('gnToggle');
+  var menu   = document.getElementById('gnMobileMenu');
+  if (!toggle || !menu) return;
+  function open()  { menu.classList.add('open'); toggle.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+  function close() { menu.classList.remove('open'); toggle.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+  toggle.addEventListener('click', function () { menu.classList.contains('open') ? close() : open(); });
+  menu.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', close); });
+  document.addEventListener('click', function (e) { if (!menu.contains(e.target) && !toggle.contains(e.target)) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>

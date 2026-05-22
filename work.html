@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Work — Guru Digital Creative Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F2EEDF;
+    --ink: #0e0e10;
+    --ink-2: #2c2c30;
+    --ink-3: #6d6d72;
+    --line: rgba(14,14,16,0.12);
+    --lime: #C8F84A;
+    --blue: #1B23E0;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+  }
+
+  /* ── NAV (identical to homepage) ── */
+  .gn-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    padding: 22px 32px;
+    pointer-events: none;
+  }
+  .gn-nav-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .gn-nav-inner > * { pointer-events: auto; }
+  .gn-logo {
+    display: flex;
+    align-items: center;
+    height: 56px;
+  }
+  .gn-logo img { height: 28px; width: auto; display: block; }
+  .gn-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(247,244,232,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 999px;
+    padding: 8px;
+    box-shadow: 0 2px 18px rgba(14,14,16,0.05);
+  }
+  .gn-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 6px;
+  }
+  .gn-link {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    border-radius: 999px;
+    transition: color .2s, background .2s;
+  }
+  .gn-link:hover { color: var(--blue); }
+  .gn-link.active { color: var(--blue); background: rgba(27,35,224,0.07); }
+  .gn-link-cta {
+    display: inline-flex;
+    align-items: center;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 13px 24px;
+    border-radius: 999px;
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .gn-link-cta:hover { background: var(--blue); transform: translateY(-1px); }
+  .gn-link-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 13px 24px;
+    border-radius: 999px;
+    background: #25D366;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    transition: background 0.18s, transform 0.12s;
+    text-decoration: none;
+  }
+  .gn-link-whatsapp:hover { background: #1ebe5d; transform: scale(1.02); }
+  .gn-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px; height: 40px;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 10px;
+    transition: background 0.15s;
+  }
+  .gn-hamburger:hover { background: rgba(14,14,16,0.07); }
+  .gn-hamburger span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--ink);
+    border-radius: 999px;
+    transition: transform 0.22s, opacity 0.18s;
+    transform-origin: center;
+  }
+  .gn-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .gn-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .gn-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .gn-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 68px;
+    left: 12px; right: 12px;
+    background: rgba(242,238,223,0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1.5px solid var(--line);
+    border-radius: 22px;
+    padding: 8px 20px 24px;
+    z-index: 48;
+    flex-direction: column;
+    box-shadow: 0 16px 40px rgba(14,14,16,0.12);
+    animation: menu-in 0.22s cubic-bezier(0.2,0.8,0.2,1) both;
+  }
+  .gn-mobile-menu.open { display: flex; }
+  @keyframes menu-in {
+    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .gn-mobile-link {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.15s, padding-left 0.15s;
+  }
+  .gn-mobile-link:last-of-type { border-bottom: none; }
+  .gn-mobile-link:hover { color: var(--blue); padding-left: 6px; }
+  .gn-mobile-link::after { content: '↗'; font-size: 20px; color: var(--ink-3); }
+  .gn-mobile-ctas { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .gn-mobile-ctas .gn-link-cta { flex: 1; justify-content: center; text-align: center; }
+  .gn-mobile-ctas .gn-link-whatsapp { flex: 1; justify-content: center; text-align: center; }
+  .gn-link-cta:hover { background: var(--blue); color: #fff; transform: translateY(-1px); }
+
+  /* ── PAGE HEADER ── */
+  .wrk-page-header {
+    padding: 148px 40px 64px;
+    max-width: 1580px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .wrk-page-title {
+    font-size: clamp(72px, 12vw, 200px);
+    font-weight: 800;
+    line-height: 0.84;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .wrk-page-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    padding-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .wrk-page-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ── FILTERS ── */
+  .wrk-filters {
+    padding: 0 40px 48px;
+    max-width: 1580px;
+    margin: 0 auto;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 28px;
+  }
+  .filter-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 20px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: transparent;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .filter-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .filter-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  .filter-btn[data-filter="all"].active {
+    background: var(--blue);
+    border-color: var(--blue);
+  }
+
+  /* ── WORK GRID ── */
+  .wrk-page-grid {
+    padding: 48px 40px 120px;
+    max-width: 1580px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  /* ── PROJECT CARD ── */
+  .prj-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    cursor: pointer;
+    transition: transform 0.35s var(--ease-out-expo);
+  }
+  .prj-card:hover { transform: translateY(-6px); }
+  .prj-card.hidden {
+    display: none;
+  }
+  .prj-card.fade-out {
+    opacity: 0;
+    transform: scale(0.97);
+    pointer-events: none;
+  }
+  .prj-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #d9d5c6;
+  }
+  .prj-card.large .prj-img { aspect-ratio: 16/9; }
+  .prj-img-ph {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(14,14,16,0.3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #e4e0d0 0%, #ccc8b6 100%);
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  /* Unique tints per card */
+  .prj-img-ph.c1 { background: linear-gradient(135deg, #d6cff0 0%, #b8aee8 100%); }
+  .prj-img-ph.c2 { background: linear-gradient(135deg, #c8e8a8 0%, #a4d080 100%); }
+  .prj-img-ph.c3 { background: linear-gradient(135deg, #f4d8c0 0%, #e0b898 100%); }
+  .prj-img-ph.c4 { background: linear-gradient(135deg, #c8e4f4 0%, #9ac8e8 100%); }
+  .prj-img-ph.c5 { background: linear-gradient(135deg, #f4c8d4 0%, #e8a0b4 100%); }
+  .prj-img-ph.c6 { background: linear-gradient(135deg, #d4f4c8 0%, #b0e898 100%); }
+  .prj-img-ph.c7 { background: linear-gradient(135deg, #f0e4c8 0%, #dcc898 100%); }
+  .prj-img-ph.c8 { background: linear-gradient(135deg, #c8d4f4 0%, #98b0e8 100%); }
+  .prj-img-ph.c9 { background: linear-gradient(135deg, #e8c8f4 0%, #c898e8 100%); }
+  .prj-img-ph.c10{ background: linear-gradient(135deg, #f4e8c8 0%, #e8cc98 100%); }
+  .prj-img-ph.c11{ background: linear-gradient(135deg, #c8f4e8 0%, #98e8cc 100%); }
+  .prj-img-ph.c12{ background: linear-gradient(135deg, #2a2030 0%, #1a1020 100%); color: rgba(255,255,255,0.25); }
+
+  .prj-card:hover .prj-img-ph { transform: scale(1.04); }
+  .prj-hover-label {
+    position: absolute;
+    bottom: 16px; right: 16px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .prj-card:hover .prj-hover-label { opacity: 1; transform: translateY(0); }
+
+  .prj-info {
+    padding: 18px 4px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .prj-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .prj-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-3);
+    background: rgba(14,14,16,0.06);
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .prj-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(18px, 1.6vw, 26px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .prj-client {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+
+  /* ── EMPTY STATE ── */
+  .wrk-empty {
+    display: none;
+    grid-column: 1 / -1;
+    padding: 80px 0;
+    text-align: center;
+    color: var(--ink-3);
+    font-size: 16px;
+  }
+  .wrk-empty.show { display: block; }
+
+  /* ── PAGE LOAD ANIMATION ── */
+  .pg-intro {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 9000;
+    pointer-events: none;
+    animation: pgFade 0.5s cubic-bezier(0.16,1,0.3,1) 0.04s both;
+  }
+  @keyframes pgFade { from { opacity: 1; } to { opacity: 0; } }
+
+  .gn-nav { animation: navDown 0.7s cubic-bezier(0.16,1,0.3,1) both 0.1s; }
+  @keyframes navDown { from { opacity:0; transform:translateY(-22px); } to { opacity:1; transform:translateY(0); } }
+
+  .wrk-page-header { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) both 0.2s; }
+  .wrk-filters      { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both 0.32s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:translateY(0); } }
+
+  .prj-card { animation: cardIn 0.65s cubic-bezier(0.16,1,0.3,1) both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pg-intro, .gn-nav, .wrk-page-header, .wrk-filters, .prj-card { animation: none !important; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    .wrk-page-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  }
+  @media (max-width: 768px) {
+    .wrk-page-header { padding: 120px 22px 44px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .wrk-page-meta { align-items: flex-start; }
+    .wrk-filters { padding: 0 22px 24px; }
+    .wrk-page-grid { grid-template-columns: 1fr; padding: 36px 22px 80px; gap: 20px; }
+    .prj-title { font-size: 22px; }
+    .gn-nav { padding: 12px 16px; }
+    .gn-nav-links, .gn-link-cta, .gn-link-whatsapp { display: none; }
+    .gn-hamburger { display: flex; }
+  }
+  @media (max-width: 520px) {
+    .wrk-page-title { font-size: clamp(60px, 18vw, 120px); }
+  }
+</style>
+</head>
+<body>
+<div class="pg-intro" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav class="gn-nav">
+  <div class="gn-nav-inner">
+    <a href="index.html" class="gn-logo">
+      <img src="guru-logo.png" alt="Guru" onerror="this.style.display='none';this.parentElement.innerHTML='GURU';" />
+    </a>
+    <div class="gn-pill">
+      <div class="gn-nav-links">
+        <a href="about.html" class="gn-link">About</a>
+        <a href="work.html"           class="gn-link active">Work</a>
+        <a href="index.html#services" class="gn-link">Service</a>
+        <a href="blog.html"     class="gn-link">Blog</a>
+        <a href="index.html#investor" class="gn-link">Investor</a>
+      </div>
+      <a href="index.html#contact" class="gn-link-cta">Contact Us</a>
+      <a href="https://wa.me/85200000000" class="gn-link-whatsapp" target="_blank" rel="noopener">Chat with Us</a>
+      <button class="gn-hamburger" id="gnToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="gn-mobile-menu" id="gnMobileMenu">
+  <a href="about.html" class="gn-mobile-link" data-close>About</a>
+  <a href="work.html"           class="gn-mobile-link" data-close>Work</a>
+  <a href="index.html#services" class="gn-mobile-link" data-close>Service</a>
+  <a href="blog.html"     class="gn-mobile-link" data-close>Blog</a>
+  <a href="index.html#investor" class="gn-mobile-link" data-close>Investor</a>
+  <div class="gn-mobile-ctas">
+    <a href="index.html#contact" class="gn-link-cta" data-close>Contact Us</a>
+    <a href="https://wa.me/85200000000" class="gn-link-whatsapp" target="_blank" rel="noopener">Chat with Us</a>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="wrk-page-header">
+  <h1 class="wrk-page-title">All<br>Works</h1>
+  <div class="wrk-page-meta">
+    <span class="wrk-page-count" id="projectCount">— Projects</span>
+  </div>
+</div>
+
+<!-- FILTER TABS -->
+<div class="wrk-filters" id="filterBar">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="china">China Digital</button>
+  <button class="filter-btn" data-filter="influencer">Influencer</button>
+  <button class="filter-btn" data-filter="social">Social Media</button>
+  <button class="filter-btn" data-filter="video">Video</button>
+  <button class="filter-btn" data-filter="campaign">Campaign & PR</button>
+  <button class="filter-btn" data-filter="go-global">Go-Global</button>
+</div>
+
+<!-- PROJECT GRID -->
+<div class="wrk-page-grid" id="projectGrid">
+
+  <a class="prj-card large" data-cats="influencer campaign" href="#" style="animation-delay:0.38s">
+    <div class="prj-img">
+      <div class="prj-img-ph c1">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Influencer Marketing</span>
+        <span class="prj-tag">Event</span>
+      </div>
+      <h3 class="prj-title">MGTO × CreatorWeek</h3>
+      <p class="prj-client">MGTO</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="influencer" href="#" style="animation-delay:0.44s">
+    <div class="prj-img">
+      <div class="prj-img-ph c2">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">KOL Campaign</span>
+      </div>
+      <h3 class="prj-title">MGTO × Miyeon</h3>
+      <p class="prj-client">MGTO</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="influencer social" href="#" style="animation-delay:0.50s">
+    <div class="prj-img">
+      <div class="prj-img-ph c3">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Influencer</span>
+        <span class="prj-tag">Social Media</span>
+      </div>
+      <h3 class="prj-title">Pandora × Influencers</h3>
+      <p class="prj-client">Pandora</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="influencer campaign" href="#" style="animation-delay:0.56s">
+    <div class="prj-img">
+      <div class="prj-img-ph c4">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Influencer Marketing</span>
+        <span class="prj-tag">Campaign / PR</span>
+      </div>
+      <h3 class="prj-title">Hennessy KOL Campaign</h3>
+      <p class="prj-client">Hennessy</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="video social campaign" href="#" style="animation-delay:0.62s">
+    <div class="prj-img">
+      <div class="prj-img-ph c5">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Video Production</span>
+        <span class="prj-tag">Social Media</span>
+      </div>
+      <h3 class="prj-title">Mercedes-Benz Brand Film</h3>
+      <p class="prj-client">Mercedes-Benz</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="video social campaign" href="#" style="animation-delay:0.68s">
+    <div class="prj-img">
+      <div class="prj-img-ph c6">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Video Production</span>
+        <span class="prj-tag">Campaign / PR</span>
+      </div>
+      <h3 class="prj-title">Uniqlo Season Campaign</h3>
+      <p class="prj-client">Uniqlo</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="china" href="#" style="animation-delay:0.74s">
+    <div class="prj-img">
+      <div class="prj-img-ph c7">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">China Digital</span>
+        <span class="prj-tag">Xiaohongshu</span>
+      </div>
+      <h3 class="prj-title">香港故宮文化博物館</h3>
+      <p class="prj-client">Hong Kong Palace Museum</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="china social" href="#" style="animation-delay:0.80s">
+    <div class="prj-img">
+      <div class="prj-img-ph c8">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">China Digital</span>
+        <span class="prj-tag">WeChat</span>
+      </div>
+      <h3 class="prj-title">區九 China Launch</h3>
+      <p class="prj-client">區九</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="video" href="#" style="animation-delay:0.86s">
+    <div class="prj-img">
+      <div class="prj-img-ph c9">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Video Production</span>
+      </div>
+      <h3 class="prj-title">Caltex Brand Video</h3>
+      <p class="prj-client">Caltex</p>
+    </div>
+  </a>
+
+  <a class="prj-card large" data-cats="social campaign" href="#" style="animation-delay:0.92s">
+    <div class="prj-img">
+      <div class="prj-img-ph c10">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Social Media</span>
+        <span class="prj-tag">Campaign / PR</span>
+      </div>
+      <h3 class="prj-title">MEHK Tourism Campaign</h3>
+      <p class="prj-client">Mega Events Hong Kong</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="social" href="#" style="animation-delay:0.98s">
+    <div class="prj-img">
+      <div class="prj-img-ph c11">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Social Media</span>
+      </div>
+      <h3 class="prj-title">Prince Sports Social</h3>
+      <p class="prj-client">Prince</p>
+    </div>
+  </a>
+
+  <a class="prj-card" data-cats="campaign go-global" href="#" style="animation-delay:1.04s">
+    <div class="prj-img">
+      <div class="prj-img-ph c12">Image Placeholder</div>
+      <div class="prj-hover-label">View Project ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Campaign / PR</span>
+        <span class="prj-tag">Go-Global</span>
+      </div>
+      <h3 class="prj-title">Hennessy Global Event</h3>
+      <p class="prj-client">Hennessy</p>
+    </div>
+  </a>
+
+  <div class="wrk-empty" id="emptyState">No projects in this category yet.</div>
+
+</div>
+
+<script>
+/* ── Filter logic ── */
+(function () {
+  var btns  = document.querySelectorAll('.filter-btn');
+  var cards = document.querySelectorAll('.prj-card');
+  var count = document.getElementById('projectCount');
+  var empty = document.getElementById('emptyState');
+
+  function updateCount(n) {
+    count.textContent = n + ' Project' + (n !== 1 ? 's' : '');
+  }
+
+  function filter(cat) {
+    var visible = 0;
+    cards.forEach(function (card, i) {
+      var cats = (card.getAttribute('data-cats') || '').split(' ');
+      var show = cat === 'all' || cats.indexOf(cat) !== -1;
+      if (show) {
+        card.style.display = '';
+        card.style.animationDelay = (0.38 + visible * 0.06) + 's';
+        card.style.animation = 'none';
+        void card.offsetWidth; /* reflow */
+        card.style.animation = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    empty.classList.toggle('show', visible === 0);
+    updateCount(visible);
+  }
+
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      filter(btn.getAttribute('data-filter'));
+    });
+  });
+
+  /* Initial count */
+  updateCount(cards.length);
+})();
+
+/* ── Hamburger ── */
+(function () {
+  var toggle = document.getElementById('gnToggle');
+  var menu   = document.getElementById('gnMobileMenu');
+  if (!toggle || !menu) return;
+  function open()  { menu.classList.add('open'); toggle.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+  function close() { menu.classList.remove('open'); toggle.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+  toggle.addEventListener('click', function () { menu.classList.contains('open') ? close() : open(); });
+  menu.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', close); });
+  document.addEventListener('click', function (e) { if (!menu.contains(e.target) && !toggle.contains(e.target)) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>
