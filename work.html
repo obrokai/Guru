@@ -367,6 +367,136 @@
     color: var(--ink-3);
   }
 
+  /* ── VIDEO CARD ── */
+  .prj-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .prj-play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.18);
+    transition: background 0.25s;
+  }
+  .prj-play-btn::after {
+    content: '';
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230e0e10'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 55% 50%;
+    background-size: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .prj-card:hover .prj-play-btn { background: rgba(0,0,0,0.06); }
+  .prj-card:hover .prj-play-btn::after { transform: scale(1.1); box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
+
+  /* ── VIDEO LIGHTBOX ── */
+  .vmodal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,8,12,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  .vmodal-overlay.open { opacity: 1; pointer-events: auto; }
+  .vmodal-box {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.32s cubic-bezier(.2,.8,.3,1);
+  }
+  .vmodal-overlay.open .vmodal-box { transform: translateY(0) scale(1); }
+  .vmodal-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+  }
+  .vmodal-meta { display: flex; flex-direction: column; gap: 2px; }
+  .vmodal-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(18px, 2vw, 26px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .vmodal-client {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+  }
+  .vmodal-close {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s;
+    flex-shrink: 0;
+  }
+  .vmodal-close:hover { background: rgba(255,255,255,0.18); }
+  .vmodal-video-wrap {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    line-height: 0;
+  }
+  #vmodalVideo {
+    width: 100%;
+    display: block;
+    max-height: calc(100vh - 180px);
+    object-fit: contain;
+    background: #000;
+  }
+  .vmodal-tags {
+    display: flex;
+    gap: 6px;
+    padding-top: 14px;
+    flex-wrap: wrap;
+  }
+  .vmodal-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.08);
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
   /* ── EMPTY STATE ── */
   .wrk-empty {
     display: none;
@@ -481,7 +611,120 @@
 <!-- PROJECT GRID -->
 <div class="wrk-page-grid" id="projectGrid">
 
-  <a class="prj-card large" data-cats="influencer campaign" href="#" style="animation-delay:0.38s">
+  <!-- ░░ VIDEO CARDS — real footage ░░ -->
+
+  <!-- Hennessy × NBA Season 2 Recap (16:9) -->
+  <div class="prj-card large" data-cats="influencer campaign"
+       data-video="influencer-1.mp4"
+       data-title="Hennessy × NBA Season 2 Recap"
+       data-client="Hennessy"
+       data-tags="Influencer Marketing,Campaign / PR"
+       style="animation-delay:0.38s">
+    <div class="prj-img">
+      <video class="prj-video" src="influencer-1.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      <div class="prj-play-btn"></div>
+      <div class="prj-hover-label">Watch Film ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Influencer Marketing</span>
+        <span class="prj-tag">Campaign / PR</span>
+      </div>
+      <h3 class="prj-title">Hennessy × NBA Season 2 Recap</h3>
+      <p class="prj-client">Hennessy</p>
+    </div>
+  </div>
+
+  <!-- Hennessy KOL Campaign Film (16:9) -->
+  <div class="prj-card" data-cats="influencer video"
+       data-video="influencer-3.mp4"
+       data-title="Hennessy KOL Campaign Film"
+       data-client="Hennessy"
+       data-tags="Influencer Marketing,Video Production"
+       style="animation-delay:0.44s">
+    <div class="prj-img">
+      <video class="prj-video" src="influencer-3.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      <div class="prj-play-btn"></div>
+      <div class="prj-hover-label">Watch Film ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Influencer Marketing</span>
+        <span class="prj-tag">Video Production</span>
+      </div>
+      <h3 class="prj-title">Hennessy KOL Campaign Film</h3>
+      <p class="prj-client">Hennessy</p>
+    </div>
+  </div>
+
+  <!-- Guru Video Production Reel -->
+  <div class="prj-card" data-cats="video"
+       data-video="video-production.mp4"
+       data-title="Guru Video Production Reel"
+       data-client="Guru"
+       data-tags="Video Production"
+       style="animation-delay:0.50s">
+    <div class="prj-img">
+      <video class="prj-video" src="video-production.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      <div class="prj-play-btn"></div>
+      <div class="prj-hover-label">Watch Reel ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Video Production</span>
+      </div>
+      <h3 class="prj-title">Guru Video Production Reel</h3>
+      <p class="prj-client">Guru</p>
+    </div>
+  </div>
+
+  <!-- Hennessy × NBA K11 Party (1:1) -->
+  <div class="prj-card" data-cats="influencer campaign"
+       data-video="influencer-2.mp4"
+       data-title="Hennessy × NBA K11 Party"
+       data-client="Hennessy"
+       data-tags="Influencer Marketing,Campaign / PR,Event"
+       style="animation-delay:0.56s">
+    <div class="prj-img">
+      <video class="prj-video" src="influencer-2.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      <div class="prj-play-btn"></div>
+      <div class="prj-hover-label">Watch Film ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Influencer Marketing</span>
+        <span class="prj-tag">Event</span>
+      </div>
+      <h3 class="prj-title">Hennessy × NBA K11 Party</h3>
+      <p class="prj-client">Hennessy</p>
+    </div>
+  </div>
+
+  <!-- Hennessy × NBA 3D OOH (1:1) -->
+  <div class="prj-card" data-cats="campaign"
+       data-video="influencer-4.mp4"
+       data-title="Hennessy × NBA 3D OOH"
+       data-client="Hennessy"
+       data-tags="Campaign / PR,3D OOH"
+       style="animation-delay:0.62s">
+    <div class="prj-img">
+      <video class="prj-video" src="influencer-4.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      <div class="prj-play-btn"></div>
+      <div class="prj-hover-label">Watch Film ↗</div>
+    </div>
+    <div class="prj-info">
+      <div class="prj-tags">
+        <span class="prj-tag">Campaign / PR</span>
+        <span class="prj-tag">3D OOH</span>
+      </div>
+      <h3 class="prj-title">Hennessy × NBA 3D OOH</h3>
+      <p class="prj-client">Hennessy</p>
+    </div>
+  </div>
+
+  <!-- ░░ PLACEHOLDER CARDS — existing portfolio ░░ -->
+
+  <a class="prj-card large" data-cats="influencer campaign" href="#" style="animation-delay:0.68s">
     <div class="prj-img">
       <div class="prj-img-ph c1">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -496,7 +739,7 @@
     </div>
   </a>
 
-  <a class="prj-card" data-cats="influencer" href="#" style="animation-delay:0.44s">
+  <a class="prj-card" data-cats="influencer" href="#" style="animation-delay:0.74s">
     <div class="prj-img">
       <div class="prj-img-ph c2">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -510,7 +753,7 @@
     </div>
   </a>
 
-  <a class="prj-card" data-cats="influencer social" href="#" style="animation-delay:0.50s">
+  <a class="prj-card" data-cats="influencer social" href="#" style="animation-delay:0.80s">
     <div class="prj-img">
       <div class="prj-img-ph c3">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -525,52 +768,7 @@
     </div>
   </a>
 
-  <a class="prj-card" data-cats="influencer campaign" href="#" style="animation-delay:0.56s">
-    <div class="prj-img">
-      <div class="prj-img-ph c4">Image Placeholder</div>
-      <div class="prj-hover-label">View Project ↗</div>
-    </div>
-    <div class="prj-info">
-      <div class="prj-tags">
-        <span class="prj-tag">Influencer Marketing</span>
-        <span class="prj-tag">Campaign / PR</span>
-      </div>
-      <h3 class="prj-title">Hennessy KOL Campaign</h3>
-      <p class="prj-client">Hennessy</p>
-    </div>
-  </a>
-
-  <a class="prj-card" data-cats="video social campaign" href="#" style="animation-delay:0.62s">
-    <div class="prj-img">
-      <div class="prj-img-ph c5">Image Placeholder</div>
-      <div class="prj-hover-label">View Project ↗</div>
-    </div>
-    <div class="prj-info">
-      <div class="prj-tags">
-        <span class="prj-tag">Video Production</span>
-        <span class="prj-tag">Social Media</span>
-      </div>
-      <h3 class="prj-title">Mercedes-Benz Brand Film</h3>
-      <p class="prj-client">Mercedes-Benz</p>
-    </div>
-  </a>
-
-  <a class="prj-card" data-cats="video social campaign" href="#" style="animation-delay:0.68s">
-    <div class="prj-img">
-      <div class="prj-img-ph c6">Image Placeholder</div>
-      <div class="prj-hover-label">View Project ↗</div>
-    </div>
-    <div class="prj-info">
-      <div class="prj-tags">
-        <span class="prj-tag">Video Production</span>
-        <span class="prj-tag">Campaign / PR</span>
-      </div>
-      <h3 class="prj-title">Uniqlo Season Campaign</h3>
-      <p class="prj-client">Uniqlo</p>
-    </div>
-  </a>
-
-  <a class="prj-card" data-cats="china" href="#" style="animation-delay:0.74s">
+  <a class="prj-card" data-cats="china" href="#" style="animation-delay:0.86s">
     <div class="prj-img">
       <div class="prj-img-ph c7">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -585,7 +783,7 @@
     </div>
   </a>
 
-  <a class="prj-card" data-cats="china social" href="#" style="animation-delay:0.80s">
+  <a class="prj-card" data-cats="china social" href="#" style="animation-delay:0.92s">
     <div class="prj-img">
       <div class="prj-img-ph c8">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -595,26 +793,12 @@
         <span class="prj-tag">China Digital</span>
         <span class="prj-tag">WeChat</span>
       </div>
-      <h3 class="prj-title">區九 China Launch</h3>
-      <p class="prj-client">區九</p>
+      <h3 class="prj-title">西九 China Launch</h3>
+      <p class="prj-client">West Kowloon</p>
     </div>
   </a>
 
-  <a class="prj-card" data-cats="video" href="#" style="animation-delay:0.86s">
-    <div class="prj-img">
-      <div class="prj-img-ph c9">Image Placeholder</div>
-      <div class="prj-hover-label">View Project ↗</div>
-    </div>
-    <div class="prj-info">
-      <div class="prj-tags">
-        <span class="prj-tag">Video Production</span>
-      </div>
-      <h3 class="prj-title">Caltex Brand Video</h3>
-      <p class="prj-client">Caltex</p>
-    </div>
-  </a>
-
-  <a class="prj-card large" data-cats="social campaign" href="#" style="animation-delay:0.92s">
+  <a class="prj-card large" data-cats="social campaign" href="#" style="animation-delay:0.98s">
     <div class="prj-img">
       <div class="prj-img-ph c10">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -629,7 +813,7 @@
     </div>
   </a>
 
-  <a class="prj-card" data-cats="social" href="#" style="animation-delay:0.98s">
+  <a class="prj-card" data-cats="social" href="#" style="animation-delay:1.04s">
     <div class="prj-img">
       <div class="prj-img-ph c11">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -643,7 +827,7 @@
     </div>
   </a>
 
-  <a class="prj-card" data-cats="campaign go-global" href="#" style="animation-delay:1.04s">
+  <a class="prj-card" data-cats="campaign go-global" href="#" style="animation-delay:1.10s">
     <div class="prj-img">
       <div class="prj-img-ph c12">Image Placeholder</div>
       <div class="prj-hover-label">View Project ↗</div>
@@ -653,13 +837,30 @@
         <span class="prj-tag">Campaign / PR</span>
         <span class="prj-tag">Go-Global</span>
       </div>
-      <h3 class="prj-title">Hennessy Global Event</h3>
-      <p class="prj-client">Hennessy</p>
+      <h3 class="prj-title">Ricqles × Go-Global</h3>
+      <p class="prj-client">Ricqles</p>
     </div>
   </a>
 
   <div class="wrk-empty" id="emptyState">No projects in this category yet.</div>
 
+</div>
+
+<!-- VIDEO LIGHTBOX -->
+<div class="vmodal-overlay" id="vmodal">
+  <div class="vmodal-box">
+    <div class="vmodal-topbar">
+      <div class="vmodal-meta">
+        <h3 class="vmodal-title" id="vmodalTitle"></h3>
+        <p class="vmodal-client" id="vmodalClient"></p>
+      </div>
+      <button class="vmodal-close" id="vmodalClose">×</button>
+    </div>
+    <div class="vmodal-video-wrap">
+      <video id="vmodalVideo" controls playsinline></video>
+    </div>
+    <div class="vmodal-tags" id="vmodalTags"></div>
+  </div>
 </div>
 
 <script>
@@ -704,6 +905,57 @@
 
   /* Initial count */
   updateCount(cards.length);
+})();
+
+/* ── Video lightbox ── */
+(function () {
+  var overlay   = document.getElementById('vmodal');
+  var videoEl   = document.getElementById('vmodalVideo');
+  var titleEl   = document.getElementById('vmodalTitle');
+  var clientEl  = document.getElementById('vmodalClient');
+  var tagsEl    = document.getElementById('vmodalTags');
+  var closeBtn  = document.getElementById('vmodalClose');
+
+  function openModal(src, title, client, tags) {
+    videoEl.src = src;
+    titleEl.textContent = title;
+    clientEl.textContent = client;
+    tagsEl.innerHTML = tags.split(',').map(function(t) {
+      return '<span class="vmodal-tag">' + t.trim() + '</span>';
+    }).join('');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    videoEl.play();
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    videoEl.pause();
+    videoEl.src = '';
+  }
+
+  // Attach click to all video cards
+  document.querySelectorAll('.prj-card[data-video]').forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      e.preventDefault();
+      openModal(
+        card.getAttribute('data-video'),
+        card.getAttribute('data-title'),
+        card.getAttribute('data-client'),
+        card.getAttribute('data-tags')
+      );
+    });
+    card.style.cursor = 'pointer';
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+  });
 })();
 
 /* ── Hamburger ── */
