@@ -245,14 +245,14 @@
   #webgl {
     position: absolute;
     top: 0; right: 0;
-    width: 60%;
+    width: 78%;
     height: 100%;
     z-index: 1;
     pointer-events: none;
     will-change: transform;
   }
   @media (max-width: 1100px) {
-    #webgl { width: 50%; opacity: 0.85; }
+    #webgl { width: 68%; opacity: 0.90; }
   }
   .gh-content {
     position: relative;
@@ -317,7 +317,13 @@
     color: var(--blue);
     text-transform: uppercase;
   }
-  .gh-line-b .gh-period { color: var(--lime); }
+  .gh-line-b .gh-period {
+    color: var(--lime);
+    font-size: 0.62em;
+    display: inline-block;
+    vertical-align: 0.06em;
+    margin-left: -0.04em;
+  }
   /* Line C — pill tag */
   .gh-line-c { margin-top: 22px; }
   .gh-tag {
@@ -1264,9 +1270,9 @@
       width: 100%;
       height: 100%;
       top: 0;
-      opacity: 0.92;
-      -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 88%);
-      mask-image: linear-gradient(to bottom, black 55%, transparent 88%);
+      opacity: 0.88;
+      -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 90%);
+      mask-image: linear-gradient(to bottom, black 60%, transparent 90%);
     }
     .gh-content {
       flex: 1;
@@ -2164,9 +2170,9 @@ function sizeRenderer() {
 
 function adjustMobile() {
   const mobile = window.innerWidth < 980;
-  group.position.x = mobile ?  0.15 : 0;
-  group.position.y = mobile ?  0.55 : 0;
-  camera.fov = mobile ? 60 : 38;
+  group.position.x = mobile ?  0.5 : 0;
+  group.position.y = mobile ?  0.3 : 0;
+  camera.fov = mobile ? 64 : 38;
   camera.updateProjectionMatrix();
 }
 
@@ -2186,11 +2192,16 @@ const group = new THREE.Group();
 scene.add(group);
 
 const shapeDefs = [
-  { type: 'squircle', size: 2.4,  color: 0x5A1AB8, pos: [ 0.6,  2.6,  0.0], rot: [0.15,  0.2,   0.05] },
-  { type: 'sphere',   size: 1.9,  color: 0xA8E83A, pos: [ 3.5,  0.8,  0.5], rot: [0,     0,     0   ] },
-  { type: 'squircle', size: 2.0,  color: 0x1F8A4F, pos: [ 1.2, -1.2,  0.0], rot: [-0.1, -0.15, 0.08 ] },
-  { type: 'sphere',   size: 1.55, color: 0xFFB822, pos: [ 3.8, -2.8,  0.3], rot: [0,     0,     0   ] },
-  { type: 'sphere',   size: 1.2,  color: 0xFFD8D0, pos: [-2.8,  3.4, -3.0], rot: [0,     0,     0   ], soft: true },
+  // orange cube — sits LEFT of centre, high up, drifts behind the headline
+  { type: 'squircle', size: 2.4,  color: 0xF37021, pos: [-1.0,  2.8,  0.0], rot: [0.15,  0.2,   0.05] },
+  // magenta sphere — upper right
+  { type: 'sphere',   size: 1.85, color: 0xE2056F, pos: [ 3.2,  1.0,  0.5], rot: [0,     0,     0   ] },
+  // teal cube — centre-right, low
+  { type: 'squircle', size: 2.0,  color: 0x00757A, pos: [ 1.8, -1.5, -0.2], rot: [-0.1, -0.15, 0.08 ] },
+  // yellow sphere — far right, low
+  { type: 'sphere',   size: 1.5,  color: 0xFFCC00, pos: [ 3.6, -2.8,  0.3], rot: [0,     0,     0   ] },
+  // peach soft sphere — left side, mid-height — creates balance & depth
+  { type: 'sphere',   size: 1.25, color: 0xFCC7A1, pos: [-2.4,  0.4, -2.5], rot: [0,     0,     0   ], soft: true },
 ];
 
 // outlines removed — photorealistic mode
