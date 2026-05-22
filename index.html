@@ -717,35 +717,120 @@
   }
   .wrk-img-ph-2::after { content: "MGTO × Miyeon"; }
 
-  .background-video {
+  /* ── Video card (real footage) ── */
+  .wrk-video-card {
     position: relative;
     width: 100%;
-    aspect-ratio: 5/4;
+    aspect-ratio: 4/3;
     border-radius: 24px;
     overflow: hidden;
-    background: #1a1a20;
+    background: #111;
     transition: transform .5s cubic-bezier(.2,.7,.3,1);
+    will-change: transform;
   }
-  .background-video::before {
-    content: "▶ Video Reel";
+  .wrk-video-card video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .wrk-video-card .wrk-play-btn {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255,255,255,0.55);
-    font-size: 13px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-weight: 600;
-    background:
-      radial-gradient(ellipse at 35% 50%, rgba(90,26,184,0.45), transparent 60%),
-      radial-gradient(ellipse at 70% 60%, rgba(46,170,99,0.3), transparent 60%),
-      linear-gradient(135deg, #2a2530, #1a1620);
-    z-index: 0;
+    background: rgba(0,0,0,0.15);
+    transition: background 0.25s;
   }
-  .background-video video { display: none; }
-  .wrk-card:hover .background-video { transform: translateY(-6px); }
+  .wrk-video-card .wrk-play-btn::after {
+    content: '';
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.90);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230e0e10'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 55% 50%;
+    background-size: 26px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.28);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .wrk-card:hover .wrk-video-card { transform: translateY(-6px); }
+  .wrk-card:hover .wrk-play-btn { background: rgba(0,0,0,0.04); }
+  .wrk-card:hover .wrk-play-btn::after { transform: scale(1.1); box-shadow: 0 8px 32px rgba(0,0,0,0.32); }
+
+  /* ── Homepage video lightbox ── */
+  .hw-vmodal {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,8,12,0.90);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  .hw-vmodal.open { opacity: 1; pointer-events: auto; }
+  .hw-vmodal-box {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.32s cubic-bezier(.2,.8,.3,1);
+  }
+  .hw-vmodal.open .hw-vmodal-box { transform: none; }
+  .hw-vmodal-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+  }
+  .hw-vmodal-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(16px, 2vw, 24px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #fff;
+  }
+  .hw-vmodal-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  .hw-vmodal-close {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s;
+    flex-shrink: 0;
+  }
+  .hw-vmodal-close:hover { background: rgba(255,255,255,0.2); }
+  .hw-vmodal-video-wrap {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    line-height: 0;
+  }
+  #hwVmodalVideo {
+    width: 100%;
+    display: block;
+    max-height: calc(100vh - 160px);
+    object-fit: contain;
+    background: #000;
+  }
 
   .wrk-card-hover-label {
     position: absolute;
@@ -1847,27 +1932,45 @@
         </div>
       </a>
 
-      <a href="#" class="wrk-card wrk-card-small">
-        <div class="background-video"></div>
+      <div class="wrk-card wrk-card-small hw-video-card"
+           data-video="influencer-1.mp4"
+           data-title="Hennessy × NBA Season 2 Recap"
+           data-sub="Influencer Marketing · Campaign / PR">
+        <div class="wrk-video-card">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="influencer-1.mp4" type="video/mp4" />
+          </video>
+          <div class="wrk-play-btn"></div>
+          <div class="wrk-card-hover-label">Watch Film ↗</div>
+        </div>
         <div class="wrk-card-info">
           <div class="wrk-card-meta">
-            <span class="wrk-tag">Influencer</span>
-            <span class="wrk-tag">Social Media</span>
+            <span class="wrk-tag">Influencer Marketing</span>
+            <span class="wrk-tag">Campaign / PR</span>
           </div>
-          <h3 class="wrk-card-title">Pandora × Influencers</h3>
+          <h3 class="wrk-card-title">Hennessy × NBA Season 2</h3>
         </div>
-      </a>
+      </div>
 
-      <a href="#" class="wrk-card wrk-card-small">
-        <div class="background-video"></div>
+      <div class="wrk-card wrk-card-small hw-video-card"
+           data-video="influencer-3.mp4"
+           data-title="Hennessy KOL Campaign Film"
+           data-sub="Influencer Marketing · Video Production">
+        <div class="wrk-video-card">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="influencer-3.mp4" type="video/mp4" />
+          </video>
+          <div class="wrk-play-btn"></div>
+          <div class="wrk-card-hover-label">Watch Film ↗</div>
+        </div>
         <div class="wrk-card-info">
           <div class="wrk-card-meta">
-            <span class="wrk-tag">Influencer</span>
-            <span class="wrk-tag">Social Media</span>
+            <span class="wrk-tag">Influencer Marketing</span>
+            <span class="wrk-tag">Video Production</span>
           </div>
-          <h3 class="wrk-card-title">Pandora × Influencers</h3>
+          <h3 class="wrk-card-title">Hennessy KOL Campaign Film</h3>
         </div>
-      </a>
+      </div>
     </div>
   </div>
 </section>
@@ -1974,6 +2077,22 @@
     </div>
   </div>
 </footer>
+
+<!-- Homepage video lightbox -->
+<div class="hw-vmodal" id="hwVmodal">
+  <div class="hw-vmodal-box">
+    <div class="hw-vmodal-bar">
+      <div>
+        <div class="hw-vmodal-title" id="hwVmodalTitle"></div>
+        <div class="hw-vmodal-sub" id="hwVmodalSub"></div>
+      </div>
+      <button class="hw-vmodal-close" id="hwVmodalClose">×</button>
+    </div>
+    <div class="hw-vmodal-video-wrap">
+      <video id="hwVmodalVideo" controls playsinline></video>
+    </div>
+  </div>
+</div>
 
 <!-- Scroll-driven curve draw -->
 <script>
@@ -2389,6 +2508,47 @@ rafId = requestAnimationFrame(tick);
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
   });
+})();
+</script>
+
+<!-- Homepage video lightbox JS -->
+<script>
+(function () {
+  var overlay  = document.getElementById('hwVmodal');
+  var videoEl  = document.getElementById('hwVmodalVideo');
+  var titleEl  = document.getElementById('hwVmodalTitle');
+  var subEl    = document.getElementById('hwVmodalSub');
+  var closeBtn = document.getElementById('hwVmodalClose');
+
+  function openModal(src, title, sub) {
+    videoEl.src = src;
+    titleEl.textContent = title;
+    subEl.textContent = sub;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    videoEl.play();
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    videoEl.pause();
+    videoEl.src = '';
+  }
+
+  document.querySelectorAll('.hw-video-card').forEach(function (card) {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function () {
+      openModal(
+        card.getAttribute('data-video'),
+        card.getAttribute('data-title'),
+        card.getAttribute('data-sub')
+      );
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 })();
 </script>
 
