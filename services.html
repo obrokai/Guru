@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Services — Guru Digital Creative Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f3f3f1;
+    --ink: #0e0e10;
+    --ink-2: #2c2c30;
+    --ink-3: #6d6d72;
+    --line: rgba(14,14,16,0.12);
+    --lime: #58B947;
+    --lime-2: #4aA33d;
+    --cream: #f3f3f1;
+    --blue: #1B23E0;
+    --purple: #5A1AB8;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+  }
+
+  /* ══════════════════════════════════════════════════ NAV */
+  .gn-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    padding: 22px 32px;
+    pointer-events: none;
+  }
+  .gn-nav-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .gn-nav-inner > * { pointer-events: auto; }
+  .gn-logo { display: flex; align-items: center; height: 56px; }
+  .gn-logo img { height: 28px; width: auto; display: block; }
+  .gn-pill {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(247,244,232,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 999px; padding: 8px;
+    box-shadow: 0 2px 18px rgba(14,14,16,0.05);
+  }
+  .gn-nav-links { display: flex; align-items: center; gap: 2px; padding: 0 6px; }
+  .gn-link {
+    padding: 12px 20px; font-size: 16px; font-weight: 600;
+    color: var(--ink); border-radius: 999px;
+    transition: color .2s, background .2s;
+  }
+  .gn-link:hover { color: var(--blue); }
+  .gn-link.active { color: var(--blue); background: rgba(27,35,224,0.07); }
+  .gn-link-cta {
+    display: inline-flex; align-items: center;
+    background: var(--ink); color: #fff;
+    font-weight: 600; font-size: 15px;
+    padding: 13px 24px; border-radius: 999px;
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .gn-link-cta:hover { background: var(--blue); transform: translateY(-1px); }
+  .gn-link-whatsapp {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 13px 24px; border-radius: 999px;
+    background: #25D366; color: #fff;
+    font-weight: 600; font-size: 15px; white-space: nowrap;
+    transition: background 0.18s, transform 0.12s;
+  }
+  .gn-link-whatsapp:hover { background: #1ebe5d; transform: scale(1.02); }
+  .gn-hamburger {
+    display: none; flex-direction: column;
+    justify-content: center; gap: 5px;
+    width: 40px; height: 40px; padding: 8px;
+    background: none; border: none; cursor: pointer;
+    pointer-events: auto; border-radius: 10px;
+    transition: background 0.15s;
+  }
+  .gn-hamburger:hover { background: rgba(14,14,16,0.07); }
+  .gn-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--ink); border-radius: 999px;
+    transition: transform 0.22s, opacity 0.18s;
+    transform-origin: center;
+  }
+  .gn-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .gn-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .gn-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .gn-mobile-menu {
+    display: none; position: fixed;
+    top: 68px; left: 12px; right: 12px;
+    background: rgba(243,243,241,0.97);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border: 1.5px solid var(--line); border-radius: 22px;
+    padding: 8px 20px 24px; z-index: 48;
+    flex-direction: column;
+    box-shadow: 0 16px 40px rgba(14,14,16,0.12);
+    animation: menu-in 0.22s cubic-bezier(0.2,0.8,0.2,1) both;
+  }
+  .gn-mobile-menu.open { display: flex; }
+  @keyframes menu-in {
+    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)     scale(1);    }
+  }
+  .gn-mobile-link {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: 32px; font-weight: 700;
+    color: var(--ink); padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    letter-spacing: -0.025em;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: color 0.15s, padding-left 0.15s;
+  }
+  .gn-mobile-link:last-of-type { border-bottom: none; }
+  .gn-mobile-link:hover { color: var(--blue); padding-left: 6px; }
+  @media (max-width: 980px) {
+    .gn-nav { padding: 12px 14px; }
+    .gn-nav-inner { gap: 8px; }
+    .gn-pill { padding: 4px; gap: 0; }
+    .gn-nav-links { display: none; }
+    .gn-link-cta { display: none; }
+    .gn-link-whatsapp { display: none; }
+    .gn-logo img { height: 22px; }
+    .gn-hamburger { display: flex; }
+  }
+
+  /* ══════════════════════════════════════════════════ SERVICES LAYOUT */
+  .srv-wrap {
+    display: grid;
+    grid-template-columns: 272px 1fr;
+    min-height: 100vh;
+    padding-top: 80px;
+  }
+
+  /* ── Sidebar ── */
+  .srv-sidebar {
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    border-right: 1.5px solid var(--line);
+    padding: 40px 28px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .srv-sidebar::-webkit-scrollbar { width: 4px; }
+  .srv-sidebar::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+  .srv-sidebar-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 24px;
+  }
+
+  .srv-nav { display: flex; flex-direction: column; gap: 0; flex: 1; }
+
+  .srv-nav-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    border-left: 2.5px solid transparent;
+    margin-left: -12px;
+    text-decoration: none;
+    color: var(--ink-3);
+  }
+  .srv-nav-item:hover {
+    background: rgba(14,14,16,0.04);
+    color: var(--ink);
+  }
+  .srv-nav-item.active {
+    color: var(--blue);
+    border-left-color: var(--blue);
+    background: rgba(27,35,224,0.05);
+  }
+  .srv-nav-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: inherit;
+    margin-top: 2px;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+  .srv-nav-item.active .srv-nav-num { opacity: 1; }
+  .srv-nav-name {
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: inherit;
+  }
+
+  .srv-sidebar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-3);
+    margin-top: 24px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    transition: color 0.15s, border-color 0.15s;
+    text-align: center;
+    justify-content: center;
+  }
+  .srv-sidebar-back:hover { color: var(--ink); border-color: var(--ink-3); }
+
+  /* ── Main content ── */
+  .srv-main {
+    padding: 52px 72px 100px;
+    max-width: 900px;
+  }
+
+  /* ── Panels ── */
+  .srv-panel { display: none; animation: panel-in 0.38s var(--ease-out-expo) both; }
+  .srv-panel.active { display: block; }
+  @keyframes panel-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .srv-panel-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 20px;
+  }
+  .srv-panel-tag-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--lime);
+    flex-shrink: 0;
+  }
+
+  .srv-panel-title {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-weight: 800;
+    font-size: clamp(40px, 5.5vw, 72px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--blue);
+    margin-bottom: 28px;
+  }
+
+  .srv-panel-desc {
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.7;
+    color: var(--ink-2);
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+
+  /* ── Media label ── */
+  .srv-media-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .srv-media-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── Phone gallery ── */
+  .srv-phones-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 48px;
+    align-items: flex-start;
+  }
+  .srv-phone-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .srv-phone {
+    width: 100%;
+    max-width: 180px;
+    background: #111;
+    border-radius: 28px;
+    padding: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.08);
+  }
+  .srv-phone-screen {
+    width: 100%;
+    aspect-ratio: 9/19.5;
+    border-radius: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    cursor: grab;
+    -ms-overflow-style: none; scrollbar-width: none;
+  }
+  .srv-phone-screen::-webkit-scrollbar { display: none; }
+  .srv-phone-screen img { width: 100%; display: block; height: auto; }
+  .srv-phone-cap {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-3);
+    text-align: center;
+  }
+
+  /* ── Video (single) ── */
+  .srv-video-wrap {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #111;
+    margin-bottom: 48px;
+    aspect-ratio: 16/9;
+  }
+  .srv-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ── Carousel ── */
+  .srv-carousel-outer { margin-bottom: 48px; }
+  .srv-carousel-track-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    aspect-ratio: 9/16;
+    max-width: 340px;
+    background: #111;
+  }
+  .srv-carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.42s var(--ease-out-expo);
+  }
+  .srv-carousel-slide {
+    flex: 0 0 100%;
+    height: 100%;
+  }
+  .srv-carousel-slide video {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .srv-carousel-btn {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.88);
+    border: none; border-radius: 50%;
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, transform 0.15s;
+    z-index: 2;
+  }
+  .srv-carousel-btn:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+  .srv-carousel-prev { left: 12px; }
+  .srv-carousel-next { right: 12px; }
+  .srv-carousel-count {
+    position: absolute; bottom: 14px; right: 16px;
+    font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7);
+    z-index: 2;
+  }
+  .srv-carousel-dots {
+    display: flex; gap: 6px; margin-top: 14px;
+  }
+  .srv-carousel-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--line); cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .srv-carousel-dot.active { background: var(--blue); transform: scale(1.3); }
+
+  /* ── CTA row at bottom of panel ── */
+  .srv-panel-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 40px;
+    border-top: 1.5px solid var(--line);
+    margin-top: 8px;
+  }
+  .srv-panel-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 26px;
+    border-radius: 999px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .srv-panel-cta:hover { background: var(--blue); transform: translateY(-1px); }
+  .srv-panel-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-3);
+    padding: 14px 22px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, transform 0.15s;
+    background: none;
+  }
+  .srv-panel-next:hover { color: var(--blue); border-color: var(--blue); transform: translateX(3px); }
+  .srv-panel-next .next-label { font-size: 12px; font-weight: 700; color: var(--ink-3); opacity: 0.6; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* ── Icon-only text services ── */
+  .srv-highlights {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .srv-highlight {
+    padding: 22px 22px;
+    background: rgba(14,14,16,0.04);
+    border-radius: 16px;
+    border: 1.5px solid var(--line);
+  }
+  .srv-highlight-icon { font-size: 24px; margin-bottom: 10px; }
+  .srv-highlight-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .srv-highlight-desc { font-size: 13px; color: var(--ink-3); line-height: 1.55; }
+
+  /* ══════════════════════════════════════════════════ MOBILE */
+  @media (max-width: 980px) {
+    .srv-wrap {
+      grid-template-columns: 1fr;
+      padding-top: 64px;
+    }
+    .srv-sidebar {
+      position: static;
+      height: auto;
+      overflow-x: auto;
+      overflow-y: visible;
+      border-right: none;
+      border-bottom: 1.5px solid var(--line);
+      padding: 14px 16px;
+      flex-direction: row;
+      gap: 6px;
+      align-items: center;
+    }
+    .srv-sidebar-label { display: none; }
+    .srv-sidebar-back { display: none; }
+    .srv-nav {
+      flex-direction: row;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -ms-overflow-style: none; scrollbar-width: none;
+    }
+    .srv-nav::-webkit-scrollbar { display: none; }
+    .srv-nav-item {
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border-left: none;
+      margin-left: 0;
+      white-space: nowrap;
+      background: rgba(14,14,16,0.05);
+      flex-shrink: 0;
+    }
+    .srv-nav-item.active {
+      background: var(--blue);
+      color: #fff;
+      border-left: none;
+    }
+    .srv-nav-item.active .srv-nav-num { color: rgba(255,255,255,0.7); }
+    .srv-nav-item.active .srv-nav-name { color: #fff; }
+    .srv-nav-num { font-size: 10px; opacity: 0.6; }
+    .srv-nav-name { font-size: 13px; }
+    .srv-main {
+      padding: 32px 20px 72px;
+      max-width: 100%;
+    }
+    .srv-panel-title { margin-bottom: 20px; }
+    .srv-panel-desc { margin-bottom: 28px; }
+    .srv-phones-row { gap: 12px; }
+    .srv-phone { max-width: 140px; }
+    .srv-carousel-track-wrap { max-width: 260px; }
+    .srv-highlights { grid-template-columns: 1fr; }
+    .srv-panel-footer { flex-direction: column; align-items: flex-start; }
+    .srv-panel-cta, .srv-panel-next { width: 100%; justify-content: center; }
+  }
+  @media (max-width: 520px) {
+    .srv-phones-row { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; }
+    .srv-phone-wrap { flex: 0 0 130px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ NAV -->
+<nav class="gn-nav" aria-label="Main navigation">
+  <div class="gn-nav-inner">
+    <a href="index.html" class="gn-logo" aria-label="Guru">
+      <img src="guru-logo.png" alt="Guru" />
+    </a>
+    <div class="gn-pill">
+      <div class="gn-nav-links">
+        <a href="about.html" class="gn-link">About</a>
+        <a href="work.html" class="gn-link">Work</a>
+        <a href="services.html" class="gn-link active">Service</a>
+        <a href="blog.html" class="gn-link">Blog</a>
+        <a href="index.html#investor" class="gn-link">Investor</a>
+      </div>
+      <a href="index.html#contact" class="gn-link-cta">Contact Us</a>
+      <a href="https://wa.me/85200000000" class="gn-link-whatsapp" target="_blank" rel="noopener">Chat with Us</a>
+      <button class="gn-hamburger" id="gnToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="gn-mobile-menu" id="gnMenu">
+  <a href="about.html"          class="gn-mobile-link">About <span>→</span></a>
+  <a href="work.html"           class="gn-mobile-link">Work <span>→</span></a>
+  <a href="services.html"       class="gn-mobile-link">Services <span>→</span></a>
+  <a href="blog.html"           class="gn-mobile-link">Blog <span>→</span></a>
+  <a href="index.html#investor" class="gn-mobile-link">Investor <span>→</span></a>
+  <a href="index.html#contact"  class="gn-mobile-link">Contact Us <span>→</span></a>
+</div>
+
+<!-- ══════════════════════ SERVICES LAYOUT -->
+<div class="srv-wrap">
+
+  <!-- ── Sidebar ── -->
+  <aside class="srv-sidebar" id="srvSidebar">
+    <div class="srv-sidebar-label">What We Do</div>
+    <nav class="srv-nav" aria-label="Services">
+      <a class="srv-nav-item" href="#" data-panel="01"><span class="srv-nav-num">01</span><span class="srv-nav-name">China Digital Expansion</span></a>
+      <a class="srv-nav-item" href="#" data-panel="02"><span class="srv-nav-num">02</span><span class="srv-nav-name">Influencer Marketing</span></a>
+      <a class="srv-nav-item" href="#" data-panel="03"><span class="srv-nav-num">03</span><span class="srv-nav-name">Video Production</span></a>
+      <a class="srv-nav-item" href="#" data-panel="04"><span class="srv-nav-num">04</span><span class="srv-nav-name">Go-Global</span></a>
+      <a class="srv-nav-item" href="#" data-panel="05"><span class="srv-nav-num">05</span><span class="srv-nav-name">Threads Management</span></a>
+      <a class="srv-nav-item" href="#" data-panel="06"><span class="srv-nav-num">06</span><span class="srv-nav-name">Social Media Marketing</span></a>
+      <a class="srv-nav-item" href="#" data-panel="07"><span class="srv-nav-num">07</span><span class="srv-nav-name">GEO &amp; Search Strategy</span></a>
+      <a class="srv-nav-item" href="#" data-panel="08"><span class="srv-nav-num">08</span><span class="srv-nav-name">AI &amp; Development</span></a>
+      <a class="srv-nav-item" href="#" data-panel="09"><span class="srv-nav-num">09</span><span class="srv-nav-name">Campaign / PR Events</span></a>
+    </nav>
+    <a href="index.html" class="srv-sidebar-back">← Back to Home</a>
+  </aside>
+
+  <!-- ── Main content ── -->
+  <main class="srv-main" id="srvMain">
+
+    <!-- 01 China Digital Expansion -->
+    <div class="srv-panel" id="panel-01">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>01 / China Digital</div>
+      <h1 class="srv-panel-title">China Digital Expansion</h1>
+      <p class="srv-panel-desc">Your Gateway to China's Digital Growth. China growth requires more than market access — it needs local intelligence, platform fluency and a connected digital strategy. From Xiaohongshu (RedNote) to WeChat, Weibo, creative strategy, media, websites, influencers, PR and video, Guru connects every touchpoint into one growth journey. With branches in Guangzhou and Nanjing.</p>
+
+      <div class="srv-media-label">WeChat Content &middot; Case Study</div>
+      <div class="srv-phones-row">
+        <div class="srv-phone-wrap">
+          <div class="srv-phone"><div class="srv-phone-screen" id="ps1"><img src="china-digital-1.png" alt="West Kowloon Cultural District Guide" draggable="false" /></div></div>
+          <p class="srv-phone-cap">文化區指南</p>
+        </div>
+        <div class="srv-phone-wrap">
+          <div class="srv-phone"><div class="srv-phone-screen" id="ps2"><img src="china-digital-2.png" alt="Picnic at Victoria Harbour" draggable="false" /></div></div>
+          <p class="srv-phone-cap">維港野餐活動</p>
+        </div>
+        <div class="srv-phone-wrap">
+          <div class="srv-phone"><div class="srv-phone-screen" id="ps3"><img src="china-digital-3.png" alt="West Kowloon Transport Guide" draggable="false" /></div></div>
+          <p class="srv-phone-cap">交通指南</p>
+        </div>
+      </div>
+
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="02"><span class="next-label">Next</span>&nbsp;Influencer Marketing →</button>
+      </div>
+    </div>
+
+    <!-- 02 Influencer Marketing -->
+    <div class="srv-panel" id="panel-02">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>02 / Influencer Marketing</div>
+      <h1 class="srv-panel-title">Influencer Marketing</h1>
+      <p class="srv-panel-desc">Beyond KOLs. Into Communities, Trust, And Cultural Relevance. Influence is no longer just about exposure — it is about trust, relevance and measurable growth. We connect brands with the right celebrities, KOLs, MIs and creators across Facebook, Instagram, Threads, TikTok, Xiaohongshu, WeChat, Weibo and global platforms.</p>
+
+      <div class="srv-media-label">Hennessy &times; NBA &middot; Campaign</div>
+      <div class="srv-carousel-outer">
+        <div class="srv-carousel-track-wrap">
+          <div class="srv-carousel-track" id="cTrack">
+            <div class="srv-carousel-slide"><video muted loop playsinline preload="none"><source src="influencer-1.mp4" type="video/mp4"/></video></div>
+            <div class="srv-carousel-slide"><video muted loop playsinline preload="none"><source src="influencer-2.mp4" type="video/mp4"/></video></div>
+            <div class="srv-carousel-slide"><video muted loop playsinline preload="none"><source src="influencer-3.mp4" type="video/mp4"/></video></div>
+            <div class="srv-carousel-slide"><video muted loop playsinline preload="none"><source src="influencer-4.mp4" type="video/mp4"/></video></div>
+          </div>
+          <button class="srv-carousel-btn srv-carousel-prev" id="cPrev" aria-label="Previous">&#8592;</button>
+          <button class="srv-carousel-btn srv-carousel-next" id="cNext" aria-label="Next">&#8594;</button>
+          <span class="srv-carousel-count" id="cCount">1 / 4</span>
+        </div>
+        <div class="srv-carousel-dots" id="cDots">
+          <div class="srv-carousel-dot active" data-idx="0"></div>
+          <div class="srv-carousel-dot" data-idx="1"></div>
+          <div class="srv-carousel-dot" data-idx="2"></div>
+          <div class="srv-carousel-dot" data-idx="3"></div>
+        </div>
+      </div>
+
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="03"><span class="next-label">Next</span>&nbsp;Video Production →</button>
+      </div>
+    </div>
+
+    <!-- 03 Video Production -->
+    <div class="srv-panel" id="panel-03">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>03 / Video Production</div>
+      <h1 class="srv-panel-title">Video Production</h1>
+      <p class="srv-panel-desc">Engineered for Growth. Designed for Brand. From concept and storytelling to studio shooting, editing and post-production, we deliver end-to-end video solutions — brand videos, product videos, social content and campaign stories that inspire audiences, improve product understanding and drive engagement across every digital touchpoint.</p>
+
+      <div class="srv-media-label">Brand Film &middot; Showreel</div>
+      <div class="srv-video-wrap">
+        <video id="srvVideo03" autoplay muted loop playsinline preload="metadata">
+          <source src="video-production.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="04"><span class="next-label">Next</span>&nbsp;Go-Global →</button>
+      </div>
+    </div>
+
+    <!-- 04 Go-Global -->
+    <div class="srv-panel" id="panel-04">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>04 / Go-Global</div>
+      <h1 class="srv-panel-title">Go-Global</h1>
+      <p class="srv-panel-desc">Bring the World's Attention to Your Business. Going global is not just market expansion — it is building relevance across cultures, platforms and customer journeys. From social media, websites and advertising to communications, exhibitions, events and installations, we create connected touchpoints that turn international visibility into trust and lasting business growth.</p>
+      <div class="srv-highlights">
+        <div class="srv-highlight"><div class="srv-highlight-icon">🌏</div><div class="srv-highlight-title">Cross-Cultural Strategy</div><div class="srv-highlight-desc">Localised messaging that resonates across markets and cultural contexts.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📣</div><div class="srv-highlight-title">International PR</div><div class="srv-highlight-desc">Media outreach and communications that build credibility globally.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">🖥️</div><div class="srv-highlight-title">Digital Presence</div><div class="srv-highlight-desc">Websites, landing pages and digital assets built for global audiences.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">🎪</div><div class="srv-highlight-title">Exhibitions &amp; Events</div><div class="srv-highlight-desc">Brand activations and installations that create lasting impressions.</div></div>
+      </div>
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="05"><span class="next-label">Next</span>&nbsp;Threads Management →</button>
+      </div>
+    </div>
+
+    <!-- 05 Threads Management -->
+    <div class="srv-panel" id="panel-05">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>05 / Threads Management</div>
+      <h1 class="srv-panel-title">Threads Management</h1>
+      <p class="srv-panel-desc">Your Digital Marketing Enabler — From Insight to Impact. Threads is becoming a powerful space for real-time conversations, cultural moments and community discovery. We monitor hot topics, audience conversations and platform signals — turning them into timely content, replies and engagement opportunities that build faster brand relevance and deeper visibility.</p>
+      <div class="srv-highlights">
+        <div class="srv-highlight"><div class="srv-highlight-icon">🔥</div><div class="srv-highlight-title">Trend Monitoring</div><div class="srv-highlight-desc">Real-time tracking of hot topics and cultural conversations on Threads.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">✍️</div><div class="srv-highlight-title">Content Creation</div><div class="srv-highlight-desc">Timely, brand-aligned posts that join the right conversations at the right moment.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">💬</div><div class="srv-highlight-title">Community Engagement</div><div class="srv-highlight-desc">Replies, threads and interactions that build genuine audience relationships.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📊</div><div class="srv-highlight-title">Performance Reporting</div><div class="srv-highlight-desc">Clear visibility into reach, engagement and brand sentiment growth.</div></div>
+      </div>
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="06"><span class="next-label">Next</span>&nbsp;Social Media Marketing →</button>
+      </div>
+    </div>
+
+    <!-- 06 Social Media Marketing -->
+    <div class="srv-panel" id="panel-06">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>06 / Social Media Marketing</div>
+      <h1 class="srv-panel-title">Social Media Marketing</h1>
+      <p class="srv-panel-desc">Curated Digital Solutions For A World That Changes Fast. Social media is no longer just about posting — it is about speed, relevance, creativity and measurable impact. Trusted by 500+ clients across industries, Guru delivers full-stack social management: strategy, content, creative, media, community engagement, social listening and performance optimization.</p>
+      <div class="srv-highlights">
+        <div class="srv-highlight"><div class="srv-highlight-icon">🎯</div><div class="srv-highlight-title">Strategy &amp; Planning</div><div class="srv-highlight-desc">Data-driven content calendars and platform strategies tailored to your goals.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">🎨</div><div class="srv-highlight-title">Creative Production</div><div class="srv-highlight-desc">Scroll-stopping visuals, videos and copy that drive genuine engagement.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📈</div><div class="srv-highlight-title">Paid Social Media</div><div class="srv-highlight-desc">Precision-targeted ad campaigns across Meta, TikTok, LinkedIn and beyond.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">👂</div><div class="srv-highlight-title">Social Listening</div><div class="srv-highlight-desc">Brand monitoring and sentiment analysis to stay ahead of the conversation.</div></div>
+      </div>
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="07"><span class="next-label">Next</span>&nbsp;GEO &amp; Search Strategy →</button>
+      </div>
+    </div>
+
+    <!-- 07 GEO & Search Strategy -->
+    <div class="srv-panel" id="panel-07">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>07 / GEO &amp; Search</div>
+      <h1 class="srv-panel-title">GEO &amp; Search Strategy</h1>
+      <p class="srv-panel-desc">From Pixels to Performance. Search is evolving from keywords to answers — customers now discover brands through Google, traditional search and AI-powered generative experiences. We combine keyword research, intent analysis, on-page SEO, technical optimization and quality content to attract high-intent traffic across search engines and AI discovery, converting demand into leads and revenue.</p>
+      <div class="srv-highlights">
+        <div class="srv-highlight"><div class="srv-highlight-icon">🔍</div><div class="srv-highlight-title">SEO &amp; Technical Audit</div><div class="srv-highlight-desc">Full-site analysis and optimization for peak search engine performance.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">🤖</div><div class="srv-highlight-title">GEO (AI Search)</div><div class="srv-highlight-desc">Visibility in AI-powered search results like ChatGPT, Perplexity and Google AI.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📝</div><div class="srv-highlight-title">Content Strategy</div><div class="srv-highlight-desc">High-intent content that ranks, converts and builds long-term authority.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📍</div><div class="srv-highlight-title">Local &amp; Regional SEO</div><div class="srv-highlight-desc">Targeted visibility for Hong Kong, China and key APAC markets.</div></div>
+      </div>
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="08"><span class="next-label">Next</span>&nbsp;AI &amp; Development →</button>
+      </div>
+    </div>
+
+    <!-- 08 AI & Development -->
+    <div class="srv-panel" id="panel-08">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>08 / AI &amp; Development</div>
+      <h1 class="srv-panel-title">AI &amp; Development</h1>
+      <p class="srv-panel-desc">Writing What's Next, in AI. Guru enables brands to unlock growth through AI-enabled strategy, automation and development — connecting creativity, data, technology and platform expertise into smarter marketing systems. From content ideation and SEO to reporting automation, websites, landing pages, chatbots and customer interaction tools.</p>
+      <div class="srv-highlights">
+        <div class="srv-highlight"><div class="srv-highlight-icon">⚡</div><div class="srv-highlight-title">AI-Powered Automation</div><div class="srv-highlight-desc">Marketing workflows, reporting and content pipelines powered by AI.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">🌐</div><div class="srv-highlight-title">Web Development</div><div class="srv-highlight-desc">Custom websites and landing pages built for conversion and performance.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">💬</div><div class="srv-highlight-title">Chatbots &amp; Tools</div><div class="srv-highlight-desc">Intelligent customer interaction tools that scale engagement 24/7.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📊</div><div class="srv-highlight-title">Data &amp; Analytics</div><div class="srv-highlight-desc">Custom dashboards and reporting that turn data into actionable growth insights.</div></div>
+      </div>
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="09"><span class="next-label">Next</span>&nbsp;Campaign / PR Events →</button>
+      </div>
+    </div>
+
+    <!-- 09 Campaign / PR Events -->
+    <div class="srv-panel" id="panel-09">
+      <div class="srv-panel-tag"><span class="srv-panel-tag-dot"></span>09 / Campaign &amp; PR</div>
+      <h1 class="srv-panel-title">Campaign / PR Events</h1>
+      <p class="srv-panel-desc">Beyond Campaigns, Toward Growth. Campaigns and PR events are no longer one-off activations — they are brand moments built to travel across media, social platforms, influencers, communities and customer conversations. From product launches and media previews to pop-ups, exhibitions and social-first activations, Guru turns ideas into moments that attract attention and create long-term brand equity.</p>
+      <div class="srv-highlights">
+        <div class="srv-highlight"><div class="srv-highlight-icon">🚀</div><div class="srv-highlight-title">Product Launches</div><div class="srv-highlight-desc">360° launch campaigns that create buzz, coverage and lasting brand memory.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📰</div><div class="srv-highlight-title">Media &amp; PR</div><div class="srv-highlight-desc">Earned media, press previews and journalist relationships that build credibility.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">🎭</div><div class="srv-highlight-title">Pop-ups &amp; Activations</div><div class="srv-highlight-desc">Immersive brand experiences that drive social sharing and community connection.</div></div>
+        <div class="srv-highlight"><div class="srv-highlight-icon">📱</div><div class="srv-highlight-title">Social-First Campaigns</div><div class="srv-highlight-desc">Campaigns designed to spread — creative that travels across platforms organically.</div></div>
+      </div>
+      <div class="srv-panel-footer">
+        <a href="work.html" class="srv-panel-cta">View Our Work →</a>
+        <button class="srv-panel-next" data-next="01"><span class="next-label">Back to first</span>&nbsp;China Digital Expansion →</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function() {
+  // ── Nav hamburger ──
+  var toggle = document.getElementById('gnToggle');
+  var menu   = document.getElementById('gnMenu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', function() {
+      var open = menu.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open);
+    });
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove('open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', false);
+      }
+    });
+  }
+
+  // ── Panel switching ──
+  var navItems = document.querySelectorAll('.srv-nav-item');
+  var panels   = document.querySelectorAll('.srv-panel');
+  var nextBtns = document.querySelectorAll('.srv-panel-next');
+
+  function showPanel(id) {
+    var padded = id.toString().padStart(2, '0');
+    panels.forEach(function(p) { p.classList.remove('active'); });
+    navItems.forEach(function(n) { n.classList.remove('active'); });
+
+    var target = document.getElementById('panel-' + padded);
+    var navItem = document.querySelector('[data-panel="' + padded + '"]');
+    if (target) {
+      target.classList.add('active');
+      // pause videos in non-active panels, play in active
+      panels.forEach(function(p) {
+        p.querySelectorAll('video').forEach(function(v) { v.pause(); });
+      });
+      target.querySelectorAll('video').forEach(function(v) {
+        if (v.hasAttribute('autoplay') || v.closest('.srv-video-wrap')) { v.play().catch(function(){}); }
+      });
+    }
+    if (navItem) {
+      navItem.classList.add('active');
+      // on mobile, scroll nav item into view
+      navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+    // scroll main back to top on mobile
+    if (window.innerWidth < 980) {
+      window.scrollTo({ top: document.getElementById('srvMain').offsetTop - 120, behavior: 'smooth' });
+    } else {
+      document.getElementById('srvMain').scrollTop = 0;
+    }
+    // update URL hash without jumping
+    history.replaceState(null, '', '#' + padded);
+  }
+
+  navItems.forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      showPanel(item.getAttribute('data-panel'));
+    });
+  });
+
+  nextBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      showPanel(btn.getAttribute('data-next'));
+    });
+  });
+
+  // ── Phone drag-to-scroll ──
+  document.querySelectorAll('.srv-phone-screen').forEach(function(screen) {
+    var isDown = false, startY = 0, scrollTop = 0;
+    screen.addEventListener('mousedown', function(e) {
+      isDown = true; screen.style.cursor = 'grabbing';
+      startY = e.pageY - screen.offsetTop;
+      scrollTop = screen.scrollTop;
+    });
+    screen.addEventListener('mouseleave', function() { isDown = false; screen.style.cursor = 'grab'; });
+    screen.addEventListener('mouseup',    function() { isDown = false; screen.style.cursor = 'grab'; });
+    screen.addEventListener('mousemove',  function(e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var y = e.pageY - screen.offsetTop;
+      screen.scrollTop = scrollTop - (y - startY) * 1.4;
+    });
+    // touch scroll
+    var tStartY = 0;
+    screen.addEventListener('touchstart', function(e) { tStartY = e.touches[0].clientY; }, { passive: true });
+    screen.addEventListener('touchmove', function(e) {
+      var dy = tStartY - e.touches[0].clientY;
+      screen.scrollTop += dy * 1.2;
+      tStartY = e.touches[0].clientY;
+    }, { passive: true });
+  });
+
+  // ── Carousel (panel 02) ──
+  var cTrack  = document.getElementById('cTrack');
+  var cCount  = document.getElementById('cCount');
+  var cDots   = document.querySelectorAll('#cDots .srv-carousel-dot');
+  var cPrev   = document.getElementById('cPrev');
+  var cNext   = document.getElementById('cNext');
+  var cSlides = document.querySelectorAll('#panel-02 .srv-carousel-slide video');
+  var cCur    = 0;
+  var cTotal  = cSlides.length;
+
+  function goSlide(n) {
+    cCur = (n + cTotal) % cTotal;
+    if (cTrack) cTrack.style.transform = 'translateX(-' + (cCur * 100) + '%)';
+    if (cCount) cCount.textContent = (cCur + 1) + ' / ' + cTotal;
+    cDots.forEach(function(d, i) { d.classList.toggle('active', i === cCur); });
+    cSlides.forEach(function(v, i) {
+      if (i === cCur) { v.play().catch(function(){}); }
+      else            { v.pause(); v.currentTime = 0; }
+    });
+  }
+  if (cPrev) cPrev.addEventListener('click', function() { goSlide(cCur - 1); });
+  if (cNext) cNext.addEventListener('click', function() { goSlide(cCur + 1); });
+  cDots.forEach(function(d) { d.addEventListener('click', function() { goSlide(+d.getAttribute('data-idx')); }); });
+
+  // touch swipe on carousel
+  var cTouchX = 0;
+  if (cTrack) {
+    cTrack.addEventListener('touchstart', function(e) { cTouchX = e.touches[0].clientX; }, { passive: true });
+    cTrack.addEventListener('touchend',   function(e) {
+      var dx = cTouchX - e.changedTouches[0].clientX;
+      if (Math.abs(dx) > 40) goSlide(dx > 0 ? cCur + 1 : cCur - 1);
+    });
+  }
+
+  // ── Initialise from hash or default to 01 ──
+  var hash = window.location.hash.replace('#', '') || '01';
+  showPanel(hash);
+})();
+</script>
+
+</body>
+</html>
