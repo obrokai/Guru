@@ -350,15 +350,20 @@
   .srv-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   /* ── Carousel ── */
-  .srv-carousel-outer { margin-bottom: 48px; }
+  .srv-carousel-outer {
+    margin-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .srv-carousel-track-wrap {
     position: relative;
     overflow: hidden;
     border-radius: 20px;
     aspect-ratio: 9/16;
-    max-width: 340px;
+    width: 340px;
+    max-width: calc(100vw - 340px); /* never wider than viewport minus sidebar */
     background: #111;
-    margin: 0 auto;
   }
   .srv-carousel-track {
     display: flex;
@@ -516,8 +521,7 @@
     .srv-panel-desc { margin-bottom: 28px; }
     .srv-phones-row { gap: 12px; }
     .srv-phone { max-width: 140px; }
-    .srv-carousel-outer { display: flex; flex-direction: column; align-items: center; }
-    .srv-carousel-track-wrap { max-width: min(340px, calc(100vw - 40px)); width: 100%; margin: 0 auto; }
+    .srv-carousel-track-wrap { width: min(340px, calc(100vw - 40px)); max-width: none; }
     .srv-carousel-dots { justify-content: center; }
     .srv-highlights { grid-template-columns: 1fr; }
     .srv-panel-footer { flex-direction: column; align-items: flex-start; }
