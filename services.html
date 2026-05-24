@@ -352,17 +352,14 @@
   /* ── Carousel ── */
   .srv-carousel-outer {
     margin-bottom: 48px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
   .srv-carousel-track-wrap {
     position: relative;
     overflow: hidden;
     border-radius: 20px;
-    aspect-ratio: 9/16;
-    width: 340px;
-    max-width: calc(100vw - 340px); /* never wider than viewport minus sidebar */
+    aspect-ratio: 16/9;
+    width: 100%;
+    max-width: 100%;
     background: #111;
   }
   .srv-carousel-track {
@@ -521,8 +518,7 @@
     .srv-panel-desc { margin-bottom: 28px; }
     .srv-phones-row { gap: 12px; }
     .srv-phone { max-width: 140px; }
-    .srv-carousel-track-wrap { width: min(340px, calc(100vw - 40px)); max-width: none; }
-    .srv-carousel-dots { justify-content: center; }
+    .srv-carousel-dots { justify-content: flex-start; }
     .srv-highlights { grid-template-columns: 1fr; }
     .srv-panel-footer { flex-direction: column; align-items: flex-start; }
     .srv-panel-cta, .srv-panel-next { width: 100%; justify-content: center; }
