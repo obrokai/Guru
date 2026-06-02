@@ -37,7 +37,8 @@
 
   /* ══════════ NAV */
   .gn-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 22px 32px; pointer-events: none; }
-  .gn-nav-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .gn-nav-inner {
+    transition: transform 0.45s cubic-bezier(0.16,1,0.3,1); max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
   .gn-nav-inner > * { pointer-events: auto; }
   .gn-logo { display: flex; align-items: center; height: 56px; padding: 0 22px; background: rgba(247, 244, 232, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 999px; box-shadow: 0 2px 18px rgba(14,14,16,0.05); }
   .gn-logo img { height: 28px; width: auto; display: block; }
@@ -288,6 +289,7 @@
     .inv-doc-item { flex-direction: column; gap: 8px; }
     .inv-doc-date { min-width: auto; }
   }
+  .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }
 </style>
 </head>
 <body>
@@ -555,5 +557,28 @@
 })();
 </script>
 
+
+<script>
+/* Hide nav on scroll down, reveal on scroll up */
+(function () {
+  var nav  = document.querySelector('.gn-nav');
+  var menu = document.querySelector('.gn-mobile-menu');
+  if (!nav) return;
+  var lastY = window.scrollY || 0;
+  var ticking = false;
+  function apply() {
+    var y = window.scrollY || 0;
+    var menuOpen = menu && menu.classList.contains('open');
+    if (menuOpen || y <= 80) { nav.classList.remove('nav-hidden'); }
+    else if (y > lastY + 6) { nav.classList.add('nav-hidden'); }
+    else if (y < lastY - 6) { nav.classList.remove('nav-hidden'); }
+    lastY = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+  }, { passive: true });
+})();
+</script>
 </body>
 </html>

@@ -81,6 +81,7 @@
     pointer-events: none;
   }
   .gn-nav-inner {
+    transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
     max-width: 1500px;
     margin: 0 auto;
     display: flex;
@@ -1248,6 +1249,9 @@
     }
   }
 
+  /* Hide-on-scroll-down / show-on-scroll-up */
+  .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }
+
   /* ================================================== RESPONSIVE */
   @media (max-width: 1100px) {
     .gh-line-b { font-size: clamp(56px, 11vw, 150px); }
@@ -2088,6 +2092,33 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   }, { threshold: 0.4 });
 
   els.forEach(function (el) { observer.observe(el); });
+})();
+</script>
+
+<script>
+/* ── Hide nav on scroll down, reveal on scroll up ── */
+(function () {
+  var nav  = document.querySelector('.gn-nav');
+  var menu = document.querySelector('.gn-mobile-menu');
+  if (!nav) return;
+  var lastY = window.scrollY || 0;
+  var ticking = false;
+  function apply() {
+    var y = window.scrollY || 0;
+    var menuOpen = menu && menu.classList.contains('open');
+    if (menuOpen || y <= 80) {
+      nav.classList.remove('nav-hidden');          // always visible near top / when menu open
+    } else if (y > lastY + 6) {
+      nav.classList.add('nav-hidden');             // scrolling down
+    } else if (y < lastY - 6) {
+      nav.classList.remove('nav-hidden');          // scrolling up
+    }
+    lastY = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+  }, { passive: true });
 })();
 </script>
 

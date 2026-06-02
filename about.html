@@ -46,6 +46,7 @@
     pointer-events: none;
   }
   .gn-nav-inner {
+    transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
     max-width: 1500px;
     margin: 0 auto;
     display: flex;
@@ -695,6 +696,7 @@
     .abt-values-grid { grid-template-columns: 1fr; }
     .ftr-bottom .ftr-inner { grid-template-columns: 1fr; }
   }
+  .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }
 </style>
 </head>
 <body>
@@ -944,6 +946,29 @@
   menu.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', close); });
   document.addEventListener('click', function (e) { if (!menu.contains(e.target) && !toggle.contains(e.target)) close(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+
+<script>
+/* Hide nav on scroll down, reveal on scroll up */
+(function () {
+  var nav  = document.querySelector('.gn-nav');
+  var menu = document.querySelector('.gn-mobile-menu');
+  if (!nav) return;
+  var lastY = window.scrollY || 0;
+  var ticking = false;
+  function apply() {
+    var y = window.scrollY || 0;
+    var menuOpen = menu && menu.classList.contains('open');
+    if (menuOpen || y <= 80) { nav.classList.remove('nav-hidden'); }
+    else if (y > lastY + 6) { nav.classList.add('nav-hidden'); }
+    else if (y < lastY - 6) { nav.classList.remove('nav-hidden'); }
+    lastY = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+  }, { passive: true });
 })();
 </script>
 </body>
