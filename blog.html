@@ -183,69 +183,55 @@
     text-transform: uppercase; color: var(--ink-3); margin-bottom: 24px;
   }
   .blg-featured-card {
-    display: grid; grid-template-columns: 1fr 420px;
-    border-radius: 24px; overflow: hidden;
+    display: grid; grid-template-columns: 1.25fr 1fr; gap: 64px;
+    border-radius: 24px;
     border: 1.5px solid var(--line);
-    transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s;
+    background: #fdfdfb;
+    padding: 56px 60px;
+    transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s, border-color 0.4s;
     cursor: pointer;
   }
-  .blg-featured-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(14,14,16,0.10); }
-  .blg-feat-img {
-    aspect-ratio: 16/9;
-    background: linear-gradient(135deg, #060b30 0%, #1B23E0 55%, #4050ff 100%);
-    position: relative; overflow: hidden;
+  .blg-featured-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(14,14,16,0.08);
+    border-color: rgba(14,14,16,0.18);
   }
-  .blg-feat-img::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to right, transparent 60%, rgba(242,238,223,0.08) 100%);
-  }
-  .blg-feat-pattern {
-    position: absolute; inset: 0; opacity: 0.06;
-    background-image: repeating-linear-gradient(
-      45deg, transparent 0, transparent 30px,
-      #fff 30px, #fff 31px
-    );
-  }
-  .blg-feat-label-img {
-    position: absolute; bottom: 28px; left: 32px;
-    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
-    font-variation-settings: 'opsz' 96;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
-    text-transform: uppercase; color: rgba(255,255,255,0.4);
-  }
-  .blg-feat-content {
-    background: var(--ink); padding: 44px 40px;
-    display: flex; flex-direction: column; justify-content: space-between; gap: 28px;
-  }
-  .blg-feat-top {}
+  .blg-feat-left { display: flex; flex-direction: column; }
   .blg-feat-cat {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 7px;
     font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--lime);
-    background: rgba(200,248,74,0.12); border: 1px solid rgba(200,248,74,0.25);
-    border-radius: 999px; padding: 5px 14px; margin-bottom: 20px;
+    text-transform: uppercase; color: var(--blue);
+    background: rgba(27,35,224,0.08);
+    border-radius: 999px; padding: 6px 14px; margin-bottom: 28px;
+    width: fit-content;
+  }
+  .blg-feat-cat::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue); display: inline-block;
   }
   .blg-feat-title {
-    font-size: clamp(22px, 2.4vw, 34px); font-weight: 800;
-    line-height: 1.12; letter-spacing: -0.025em;
-    color: var(--bg); margin-bottom: 16px;
+    font-size: clamp(30px, 3.4vw, 52px); font-weight: 800;
+    line-height: 1.05; letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .blg-feat-right {
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 0;
   }
   .blg-feat-excerpt {
-    font-size: 15px; line-height: 1.65; color: rgba(242,238,223,0.6);
+    font-size: 16px; line-height: 1.7; color: var(--ink-2);
+    margin-bottom: 28px;
   }
-  .blg-feat-bottom {}
   .blg-feat-meta {
-    display: flex; align-items: center; gap: 12px;
-    font-size: 12px; color: rgba(242,238,223,0.35);
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    font-size: 12px; color: var(--ink-3);
     font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-    padding-top: 24px; border-top: 1px solid rgba(242,238,223,0.10);
+    padding-top: 24px; border-top: 1px solid var(--line);
   }
   .blg-feat-meta span + span::before { content: '·'; margin-right: 12px; }
   .blg-feat-cta {
     display: inline-flex; align-items: center; gap: 8px;
-    font-size: 13px; font-weight: 700; color: var(--lime);
-    margin-top: 20px; transition: gap 0.2s;
+    font-size: 14px; font-weight: 700; color: var(--lime);
+    margin-top: 24px; transition: gap 0.2s;
   }
   .blg-featured-card:hover .blg-feat-cta { gap: 14px; }
 
@@ -423,9 +409,8 @@
     .blg-hero-right { align-items: flex-start; }
     .blg-hero-desc { text-align: left; }
     .blg-featured { padding: 48px 22px 0; }
-    .blg-featured-card { grid-template-columns: 1fr; }
-    .blg-feat-img { aspect-ratio: 16/7; }
-    .blg-feat-content { padding: 32px 28px; }
+    .blg-featured-card { grid-template-columns: 1fr; gap: 28px; padding: 36px 28px; }
+    .blg-feat-title { font-size: clamp(28px, 8vw, 40px); }
     .blg-filters { padding: 36px 22px 24px; }
     .blg-grid { grid-template-columns: repeat(2, 1fr); padding: 36px 22px 80px; gap: 20px; }
     .blg-newsletter { padding: 72px 22px; }
@@ -496,24 +481,18 @@
 <div class="blg-featured">
   <p class="blg-featured-label">Featured Article</p>
   <a href="#" class="blg-featured-card">
-    <div class="blg-feat-img">
-      <div class="blg-feat-pattern"></div>
-      <div class="blg-feat-label-img">Guru × Strategy 2025</div>
+    <div class="blg-feat-left">
+      <div class="blg-feat-cat">Strategy</div>
+      <h2 class="blg-feat-title">Why Integrated Marketing Is the Only Way Forward in 2025</h2>
     </div>
-    <div class="blg-feat-content">
-      <div class="blg-feat-top">
-        <div class="blg-feat-cat">● Strategy</div>
-        <h2 class="blg-feat-title">Why Integrated Marketing Is the Only Way Forward in 2025</h2>
-        <p class="blg-feat-excerpt">Brands that silo their marketing functions are losing ground. The winners are those who connect strategy, creativity, media, data and technology into one seamless growth engine — and treat every channel as a conversation, not a broadcast.</p>
+    <div class="blg-feat-right">
+      <p class="blg-feat-excerpt">Brands that silo their marketing functions are losing ground. The winners are those who connect strategy, creativity, media, data and technology into one seamless growth engine — and treat every channel as a conversation, not a broadcast.</p>
+      <div class="blg-feat-meta">
+        <span>May 2025</span>
+        <span>8 min read</span>
+        <span>Guru Editorial</span>
       </div>
-      <div class="blg-feat-bottom">
-        <div class="blg-feat-meta">
-          <span>May 2025</span>
-          <span>8 min read</span>
-          <span>Guru Editorial</span>
-        </div>
-        <div class="blg-feat-cta">Read Article →</div>
-      </div>
+      <div class="blg-feat-cta">Read Article →</div>
     </div>
   </a>
 </div>
