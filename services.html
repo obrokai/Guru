@@ -530,6 +530,35 @@
     .srv-phone-wrap { flex: 0 0 130px; }
   }
   .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }
+
+  /* ── Site Footer ── */
+  .ftr-top { padding: 120px 40px; border-bottom: 1px solid var(--line); }
+  .ftr-inner { max-width: 1500px; margin: 0 auto; }
+  .ftr-cta-block { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .ftr-cta-label { font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+  .ftr-cta-heading { font-size: clamp(56px, 8vw, 160px); font-weight: 800; line-height: 0.92; letter-spacing: -0.045em; color: var(--blue); max-width: 1300px; text-transform: uppercase; }
+  .btn-primary-lg { margin-top: 22px; padding: 22px 44px; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 600; font-size: 18px; display: inline-flex; align-items: center; gap: 12px; transition: all .2s; }
+  .btn-primary-lg:hover { background: var(--blue); transform: translateY(-2px); }
+  .ftr-bottom { padding: 60px 40px 30px; }
+  .ftr-bottom .ftr-inner { display: grid; grid-template-columns: 1.4fr 1fr 1.2fr 1fr; gap: 40px; align-items: start; }
+  .ftr-logo-col { display: flex; flex-direction: column; gap: 18px; }
+  .ftr-logo { display: block; height: 28px; width: fit-content; }
+  .ftr-logo::before { content: "GURU"; font-size: 28px; font-weight: 800; letter-spacing: 0.18em; color: var(--ink); font-family: 'Bricolage Grotesque', system-ui, sans-serif; }
+  .ftr-tagline { font-size: 14px; color: var(--ink-3); line-height: 1.5; }
+  .ftr-nav-heading { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-bottom: 18px; }
+  .ftr-link { display: block; font-size: 15px; color: var(--ink-2); padding: 6px 0; transition: color .2s; }
+  .ftr-link:hover { color: var(--blue); }
+  .ftr-base { max-width: 1500px; margin: 60px auto 0; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-top: 30px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .ftr-copy { font-size: 13px; color: var(--ink-3); }
+  @media (max-width: 980px) {
+    .ftr-top { padding: 80px 22px; }
+    .ftr-cta-heading { font-size: clamp(44px, 14vw, 90px); }
+    .ftr-bottom { padding: 50px 22px 24px; }
+    .ftr-bottom .ftr-inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
+  }
+  @media (max-width: 520px) {
+    .ftr-bottom .ftr-inner { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -774,6 +803,53 @@
 
   </main>
 </div>
+
+
+<footer id="contact" class="ftr">
+  <div class="ftr-top">
+    <div class="ftr-inner">
+      <div class="ftr-cta-block">
+        <p class="ftr-cta-label">Ready to start?</p>
+        <h2 class="ftr-cta-heading">Let's Build Something Great Together.</h2>
+        <a href="mailto:hello@guruonline.com.hk" class="btn-primary-lg">Get In Touch →</a>
+      </div>
+    </div>
+  </div>
+  <div class="ftr-bottom">
+    <div class="ftr-inner">
+      <div class="ftr-logo-col">
+        <a href="index.html" class="ftr-logo" aria-label="Guru"></a>
+        <p class="ftr-tagline">Digital Marketing Enabler<br />Hong Kong</p>
+      </div>
+      <div>
+        <p class="ftr-nav-heading">Navigation</p>
+        <a href="index.html" class="ftr-link">Home</a>
+        <a href="about.html" class="ftr-link">About Us</a>
+        <a href="work.html" class="ftr-link">Work</a>
+        <a href="services.html" class="ftr-link">Solution</a>
+        <a href="blog.html" class="ftr-link">Blog</a>
+        <a href="investor.html" class="ftr-link">Investor</a>
+        <a href="#contact" class="ftr-link">Contact</a>
+      </div>
+      <div>
+        <p class="ftr-nav-heading">Contact</p>
+        <a href="mailto:hello@guruonline.com.hk" class="ftr-link">hello@guruonline.com.hk</a>
+        <a href="tel:+85200000000" class="ftr-link">+852 0000 0000</a>
+        <p class="ftr-link">Hong Kong</p>
+      </div>
+      <div>
+        <p class="ftr-nav-heading">Follow Us</p>
+        <a href="#" class="ftr-link">Instagram</a>
+        <a href="#" class="ftr-link">LinkedIn</a>
+        <a href="#" class="ftr-link">Facebook</a>
+      </div>
+    </div>
+    <div class="ftr-base">
+      <p class="ftr-copy">© 2026 Guru Online. All rights reserved.</p>
+      <p class="ftr-copy">Designed with ♥ in Hong Kong</p>
+    </div>
+  </div>
+</footer>
 
 <script>
 (function() {
