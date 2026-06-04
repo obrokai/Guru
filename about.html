@@ -575,6 +575,42 @@
     line-height: 1.6;
   }
 
+  /* ══════════════════════════════════════════ CLIENT LOGO TICKER */
+  .logo-ticker {
+    position: relative; overflow: hidden;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .logo-ticker::before, .logo-ticker::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 2; pointer-events: none;
+  }
+  .logo-ticker::before { left: 0;  background: linear-gradient(to right, var(--bg) 30%, transparent); }
+  .logo-ticker::after  { right: 0; background: linear-gradient(to left,  var(--bg) 30%, transparent); }
+  .logo-ticker-track {
+    display: flex; align-items: center; width: max-content; padding: 24px 0;
+    animation: logoScroll 28s linear infinite; will-change: transform;
+  }
+  .logo-ticker:hover .logo-ticker-track { animation-play-state: paused; }
+  @keyframes logoScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .logo-item {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    height: 34px; padding: 0 56px; opacity: 0.45; transition: opacity 0.35s; position: relative;
+  }
+  .logo-item::after {
+    content: ''; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background: var(--line);
+  }
+  .logo-ticker:hover .logo-item { opacity: 0.3; }
+  .logo-ticker:hover .logo-item:hover { opacity: 1; }
+  .logo-item svg { height: 100%; width: auto; display: block; color: var(--ink); fill: currentColor; }
+  .logo-item img { height: 100%; width: auto; max-width: 140px; display: block; object-fit: contain; filter: grayscale(1) contrast(0.8); }
+  .logo-ticker:hover .logo-item img { filter: grayscale(1) contrast(0.6); }
+  .logo-ticker:hover .logo-item:hover img { filter: grayscale(0) contrast(1); }
+  .logo-ticker-label {
+    text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3); padding: 64px 20px 0;
+  }
+  .logo-ticker { margin-bottom: 64px; }
+
   /* ══════════════════════════════════════════ FOOTER CTA */
   .ftr { position: relative; }
   .ftr-top {
@@ -827,28 +863,46 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════ VALUES -->
-<div class="abt-values">
-  <div class="abt-values-header">
-    <h2 class="abt-values-heading">What Drives<br>Everything We Do</h2>
-    <p class="abt-values-intro">We are more than a marketing agency. We are a growth partner — built on three principles that guide every strategy, campaign and relationship we build.</p>
-  </div>
-  <div class="abt-values-grid">
-    <div class="abt-value-card">
-      <p class="abt-value-num">01</p>
-      <h3 class="abt-value-title">Integrated Thinking</h3>
-      <p class="abt-value-body">We connect strategy, creativity, media, data, technology and AI as one seamless system — not a collection of separate services. Every touchpoint works together toward a single measurable outcome.</p>
+<!-- ══════════════════════════════════════════ CLIENT LOGO TICKER -->
+<p class="logo-ticker-label">Trusted by Leading Brands</p>
+<div class="logo-ticker" aria-label="Clients we've worked with">
+  <div class="logo-ticker-track">
+    <!-- Set A -->
+    <div class="logo-item" aria-label="Ricqles"><img src="logo-ricqles.webp" alt="Ricqles" /></div>
+    <div class="logo-item" aria-label="Lancôme"><img src="logo-lancome.png" alt="Lancôme" /></div>
+    <div class="logo-item" aria-label="Audi">
+      <svg viewBox="0 0 164 54" xmlns="http://www.w3.org/2000/svg" role="img">
+        <circle cx="27"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+        <circle cx="57"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+        <circle cx="87"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+        <circle cx="117" cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+      </svg>
     </div>
-    <div class="abt-value-card">
-      <p class="abt-value-num">02</p>
-      <h3 class="abt-value-title">Courageous Creativity</h3>
-      <p class="abt-value-body">We believe the best marketing ideas are the ones that challenge convention. Our creative culture is built to push boundaries, take calculated risks and produce work that genuinely moves people.</p>
+    <div class="logo-item" aria-label="Mercedes-Benz"><img src="logo-benz.png" alt="Mercedes-Benz" /></div>
+    <div class="logo-item" aria-label="Hennessy">
+      <svg viewBox="0 0 190 44" xmlns="http://www.w3.org/2000/svg" role="img">
+        <text x="4" y="34" font-family="Georgia,'Times New Roman',serif" font-weight="400" font-size="32" letter-spacing="2" fill="currentColor">Hennessy</text>
+      </svg>
     </div>
-    <div class="abt-value-card">
-      <p class="abt-value-num">03</p>
-      <h3 class="abt-value-title">Measurable Impact</h3>
-      <p class="abt-value-body">Every campaign we run is designed to be tracked, optimized and improved. We are obsessed with results — not just reach and impressions, but real business outcomes that drive growth.</p>
+    <div class="logo-item" aria-label="Uniqlo"><img src="logo-uniqlo.png" alt="Uniqlo" /></div>
+    <!-- Set B (duplicate for seamless loop) -->
+    <div class="logo-item" aria-label="Ricqles"><img src="logo-ricqles.webp" alt="Ricqles" /></div>
+    <div class="logo-item" aria-label="Lancôme"><img src="logo-lancome.png" alt="Lancôme" /></div>
+    <div class="logo-item" aria-label="Audi">
+      <svg viewBox="0 0 164 54" xmlns="http://www.w3.org/2000/svg" role="img">
+        <circle cx="27"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+        <circle cx="57"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+        <circle cx="87"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+        <circle cx="117" cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
+      </svg>
     </div>
+    <div class="logo-item" aria-label="Mercedes-Benz"><img src="logo-benz.png" alt="Mercedes-Benz" /></div>
+    <div class="logo-item" aria-label="Hennessy">
+      <svg viewBox="0 0 190 44" xmlns="http://www.w3.org/2000/svg" role="img">
+        <text x="4" y="34" font-family="Georgia,'Times New Roman',serif" font-weight="400" font-size="32" letter-spacing="2" fill="currentColor">Hennessy</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Uniqlo"><img src="logo-uniqlo.png" alt="Uniqlo" /></div>
   </div>
 </div>
 
