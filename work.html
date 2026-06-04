@@ -491,7 +491,10 @@
     max-height: calc(100vh - 180px);
     object-fit: contain;
     background: #000;
+    transition: max-height 0.45s cubic-bezier(.2,.8,.3,1);
   }
+  /* Shrink the video to make room when the contact form is open */
+  .vmodal-box.form-open #vmodalVideo { max-height: 38vh !important; }
   .vmodal-tags {
     display: flex;
     gap: 6px;
@@ -544,7 +547,7 @@
     transition: max-height 0.5s cubic-bezier(.2,.8,.3,1), opacity 0.35s ease;
     opacity: 0;
   }
-  .vmodal-form-wrap.open { max-height: 1000px; opacity: 1; }
+  .vmodal-form-wrap.open { max-height: 1600px; opacity: 1; }
   .vmf-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1158,6 +1161,7 @@
   var clientEl  = document.getElementById('vmodalClient');
   var tagsEl    = document.getElementById('vmodalTags');
   var closeBtn  = document.getElementById('vmodalClose');
+  var modalBox  = overlay.querySelector('.vmodal-box');
   var contactBtn= document.getElementById('vmodalContactBtn');
   var formWrap  = document.getElementById('vmodalFormWrap');
   var modalForm = document.getElementById('vmodalForm');
@@ -1166,6 +1170,7 @@
   function collapseForm() {
     if (formWrap) formWrap.classList.remove('open');
     if (contactBtn) contactBtn.classList.remove('active');
+    if (modalBox) modalBox.classList.remove('form-open');
     if (formNote) formNote.textContent = '';
   }
 
@@ -1195,12 +1200,13 @@
     contactBtn.addEventListener('click', function () {
       var isOpen = formWrap.classList.toggle('open');
       contactBtn.classList.toggle('active', isOpen);
+      if (modalBox) modalBox.classList.toggle('form-open', isOpen);
       if (isOpen) {
         setTimeout(function () {
           formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           var first = document.getElementById('vmf-name');
           if (first) first.focus();
-        }, 120);
+        }, 480);
       }
     });
   }
