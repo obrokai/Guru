@@ -431,12 +431,17 @@
   .vmodal-box {
     width: 100%;
     max-width: 900px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 0;
     transform: translateY(20px) scale(0.97);
     transition: transform 0.32s cubic-bezier(.2,.8,.3,1);
+    scrollbar-width: thin;
   }
+  .vmodal-box::-webkit-scrollbar { width: 6px; }
+  .vmodal-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 6px; }
   .vmodal-overlay.open .vmodal-box { transform: translateY(0) scale(1); }
   .vmodal-topbar {
     display: flex;
@@ -502,6 +507,101 @@
     border-radius: 999px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+  }
+
+  /* ── In-modal contact CTA + form ── */
+  .vmodal-cta-row {
+    display: flex;
+    gap: 10px;
+    padding-top: 20px;
+    margin-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    flex-wrap: wrap;
+  }
+  .vmodal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 26px;
+    border-radius: 999px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.18s, transform 0.12s, color 0.18s;
+    text-decoration: none;
+  }
+  .vmodal-btn-contact { background: #fff; color: #0e0e10; }
+  .vmodal-btn-contact:hover { background: var(--blue); color: #fff; transform: translateY(-1px); }
+  .vmodal-btn-contact.active { background: var(--blue); color: #fff; }
+  .vmodal-btn-wa { background: #25D366; color: #fff; }
+  .vmodal-btn-wa:hover { background: #1ebe5d; transform: translateY(-1px); }
+
+  .vmodal-form-wrap {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(.2,.8,.3,1), opacity 0.35s ease;
+    opacity: 0;
+  }
+  .vmodal-form-wrap.open { max-height: 1000px; opacity: 1; }
+  .vmf-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 16px;
+    padding-top: 22px;
+  }
+  .vmf-field { display: flex; flex-direction: column; gap: 7px; }
+  .vmf-field.full { grid-column: 1 / -1; }
+  .vmf-label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: rgba(255,255,255,0.55); }
+  .vmf-label .req { color: var(--lime); margin-left: 2px; }
+  .vmf-input, .vmf-select, .vmf-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid rgba(255,255,255,0.14);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .vmf-input::placeholder, .vmf-textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .vmf-input:focus, .vmf-select:focus, .vmf-textarea:focus {
+    outline: none;
+    border-color: var(--lime);
+    box-shadow: 0 0 0 3px rgba(88,185,71,0.18);
+  }
+  .vmf-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-opacity='0.5' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+    cursor: pointer;
+  }
+  .vmf-select option { color: #0e0e10; }
+  .vmf-textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
+  .vmf-submit {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 4px;
+    padding: 15px 38px;
+    border: none;
+    border-radius: 999px;
+    background: var(--lime);
+    color: #0e0e10;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 9px;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .vmf-submit:hover { background: var(--lime-2, #4aA33d); transform: translateY(-2px); }
+  .vmf-note { grid-column: 1 / -1; font-size: 13px; font-weight: 600; min-height: 16px; color: var(--lime); }
+  @media (max-width: 600px) {
+    .vmf-form { grid-template-columns: 1fr; }
   }
 
   /* ── EMPTY STATE ── */
@@ -899,6 +999,63 @@
       <video id="vmodalVideo" controls playsinline></video>
     </div>
     <div class="vmodal-tags" id="vmodalTags"></div>
+
+    <div class="vmodal-cta-row">
+      <button type="button" class="vmodal-btn vmodal-btn-contact" id="vmodalContactBtn">Contact Us</button>
+      <a href="https://wa.me/85200000000" class="vmodal-btn vmodal-btn-wa" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+
+    <div class="vmodal-form-wrap" id="vmodalFormWrap">
+      <form class="vmf-form" id="vmodalForm" novalidate>
+        <div class="vmf-field">
+          <label class="vmf-label" for="vmf-name">Name <span class="req">*</span></label>
+          <input class="vmf-input" type="text" id="vmf-name" name="name" placeholder="Your name" required />
+        </div>
+        <div class="vmf-field">
+          <label class="vmf-label" for="vmf-email">Business Email <span class="req">*</span></label>
+          <input class="vmf-input" type="email" id="vmf-email" name="email" placeholder="you@company.com" required />
+        </div>
+        <div class="vmf-field">
+          <label class="vmf-label" for="vmf-phone">Contact No. <span class="req">*</span></label>
+          <input class="vmf-input" type="tel" id="vmf-phone" name="phone" placeholder="+852 0000 0000" required />
+        </div>
+        <div class="vmf-field">
+          <label class="vmf-label" for="vmf-company">Company Name <span class="req">*</span></label>
+          <input class="vmf-input" type="text" id="vmf-company" name="company" placeholder="Your company" required />
+        </div>
+        <div class="vmf-field">
+          <label class="vmf-label" for="vmf-enquiry">Enquiry Type</label>
+          <select class="vmf-select" id="vmf-enquiry" name="enquiry">
+            <option value="" selected>Please select</option>
+            <option>Business</option>
+            <option>Career</option>
+            <option>Investment</option>
+            <option>Media</option>
+            <option>General</option>
+          </select>
+        </div>
+        <div class="vmf-field">
+          <label class="vmf-label" for="vmf-service">Service You're Looking For</label>
+          <select class="vmf-select" id="vmf-service" name="service">
+            <option value="" selected>Please select</option>
+            <option>Content Marketing</option>
+            <option>Creative and Production</option>
+            <option>Digital Campaign</option>
+            <option>Digital Media Placement</option>
+            <option>E-Commerce Solution</option>
+            <option>Influencer Marketing</option>
+            <option>Social Media Marketing</option>
+            <option>Others</option>
+          </select>
+        </div>
+        <div class="vmf-field full">
+          <label class="vmf-label" for="vmf-message">Tell Us More</label>
+          <textarea class="vmf-textarea" id="vmf-message" name="message" placeholder="Tell us about your project or enquiry…"></textarea>
+        </div>
+        <p class="vmf-note" id="vmfNote"></p>
+        <button class="vmf-submit" type="submit">Send <span>→</span></button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -1001,6 +1158,16 @@
   var clientEl  = document.getElementById('vmodalClient');
   var tagsEl    = document.getElementById('vmodalTags');
   var closeBtn  = document.getElementById('vmodalClose');
+  var contactBtn= document.getElementById('vmodalContactBtn');
+  var formWrap  = document.getElementById('vmodalFormWrap');
+  var modalForm = document.getElementById('vmodalForm');
+  var formNote  = document.getElementById('vmfNote');
+
+  function collapseForm() {
+    if (formWrap) formWrap.classList.remove('open');
+    if (contactBtn) contactBtn.classList.remove('active');
+    if (formNote) formNote.textContent = '';
+  }
 
   function openModal(src, title, client, tags) {
     videoEl.src = src;
@@ -1009,6 +1176,7 @@
     tagsEl.innerHTML = tags.split(',').map(function(t) {
       return '<span class="vmodal-tag">' + t.trim() + '</span>';
     }).join('');
+    collapseForm();
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     videoEl.play();
@@ -1019,6 +1187,56 @@
     document.body.style.overflow = '';
     videoEl.pause();
     videoEl.src = '';
+    collapseForm();
+  }
+
+  // Toggle the contact form open/closed
+  if (contactBtn) {
+    contactBtn.addEventListener('click', function () {
+      var isOpen = formWrap.classList.toggle('open');
+      contactBtn.classList.toggle('active', isOpen);
+      if (isOpen) {
+        setTimeout(function () {
+          formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          var first = document.getElementById('vmf-name');
+          if (first) first.focus();
+        }, 120);
+      }
+    });
+  }
+
+  // Contact form submit (mailto delivery)
+  if (modalForm) {
+    modalForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var required = ['name','email','phone','company'];
+      for (var i = 0; i < required.length; i++) {
+        var f = modalForm.elements[required[i]];
+        if (!f.value.trim()) {
+          f.focus();
+          formNote.style.color = '#ff6b6b';
+          formNote.textContent = 'Please fill in all required (*) fields.';
+          return;
+        }
+      }
+      var v = function (n) { return (modalForm.elements[n] && modalForm.elements[n].value.trim()) || '—'; };
+      var subject = 'Website Enquiry — ' + v('company');
+      var body =
+        'Name: ' + v('name') + '\n' +
+        'Business Email: ' + v('email') + '\n' +
+        'Contact No.: ' + v('phone') + '\n' +
+        'Company: ' + v('company') + '\n' +
+        'Enquiry Type: ' + v('enquiry') + '\n' +
+        'Service: ' + v('service') + '\n' +
+        'Project: ' + (titleEl.textContent || '—') + '\n\n' +
+        'Message:\n' + v('message') + '\n';
+      window.location.href = 'mailto:hello@guruonline.com.hk'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+      formNote.style.color = 'var(--lime)';
+      formNote.textContent = 'Thank you! Your email app should now open to send the enquiry.';
+      modalForm.reset();
+    });
   }
 
   // Attach click to all video cards
