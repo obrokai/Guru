@@ -254,6 +254,14 @@
     gap: 40px;
     flex-wrap: wrap;
   }
+  .abt-hero-lead {
+    font-size: clamp(18px, 1.6vw, 24px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 600px;
+    font-weight: 500;
+  }
+  .abt-hero-lead em { font-style: normal; color: var(--blue); font-weight: 600; }
   .abt-hero-tagline {
     font-family: 'Bricolage Grotesque', system-ui, sans-serif;
     font-variation-settings: 'opsz' 96;
@@ -370,7 +378,7 @@
   }
   .abt-stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0;
   }
   .abt-stat-item {
@@ -533,16 +541,13 @@
   }
   .abt-offices-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 0;
-    border-top: 1px solid rgba(246,244,230,0.10);
   }
   .abt-office-card {
-    padding: 44px 32px 44px 0;
-    border-right: 1px solid rgba(246,244,230,0.10);
+    padding: 32px 28px 32px 0;
+    border-top: 1px solid rgba(246,244,230,0.14);
   }
-  .abt-office-card + .abt-office-card { padding-left: 32px; }
-  .abt-office-card:last-child { border-right: none; }
   .abt-office-city {
     font-family: 'Bricolage Grotesque', system-ui, sans-serif;
     font-variation-settings: 'opsz' 96;
@@ -708,20 +713,15 @@
     .abt-hero-title { font-size: clamp(44px, 13vw, 88px); }
     .abt-story-wrap { grid-template-columns: 1fr; gap: 48px; padding: 72px 22px; }
     .abt-stats-section { padding: 72px 22px; }
-    .abt-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0; }
-    .abt-stat-item { padding: 32px 0 !important; border-right: none; border-bottom: 1px solid rgba(246,244,230,0.10); }
-    .abt-stat-item:nth-child(odd) { border-right: 1px solid rgba(246,244,230,0.10); padding-right: 24px !important; }
-    .abt-stat-item:nth-child(even) { padding-left: 24px !important; }
-    .abt-stat-item:nth-last-child(-n+2) { border-bottom: none; }
+    .abt-stats-grid { grid-template-columns: 1fr; gap: 0; }
+    .abt-stat-item { padding: 26px 0 !important; border-right: none; border-top: 1px solid rgba(246,244,230,0.12); }
+    .abt-stat-item:first-child { border-top: none; }
     .abt-values { padding: 72px 22px; }
     .abt-values-header { grid-template-columns: 1fr; gap: 24px; }
     .abt-values-grid { grid-template-columns: 1fr; gap: 2px; }
     .abt-offices-section { padding: 72px 22px; }
     .abt-offices-grid { grid-template-columns: repeat(2, 1fr); }
-    .abt-office-card { padding: 32px 0 !important; border-right: none; border-bottom: 1px solid rgba(246,244,230,0.10); }
-    .abt-office-card:nth-child(odd) { border-right: 1px solid rgba(246,244,230,0.10); padding-right: 20px !important; }
-    .abt-office-card:nth-child(even) { padding-left: 20px !important; }
-    .abt-office-card:nth-last-child(-n+2) { border-bottom: none; }
+    .abt-office-card { padding: 26px 16px 26px 0 !important; }
     .ftr-top { padding: 80px 22px; }
     .ftr-contact { grid-template-columns: 1fr; gap: 44px; }
     .ftr-cta-block { position: static; top: auto; }
@@ -783,6 +783,7 @@
   <div class="abt-hero-tag">About Guru</div>
   <h1 class="abt-hero-title">About<br>Guru</h1>
   <div class="abt-hero-bottom">
+    <p class="abt-hero-lead">A Hong Kong–headquartered <em>digital marketing enabler</em> connecting strategy, creativity, media, data, technology and AI for ambitious brands.</p>
     <div class="abt-hero-meta">
       <strong>Est. 2007</strong>
       <span>Listed 4A's Agency</span>
