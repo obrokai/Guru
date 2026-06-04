@@ -542,15 +542,49 @@
   .abt-offices-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0;
+    gap: 16px;
   }
   .abt-office-card {
-    padding: 36px 28px 36px 0;
-    border-top: 1px solid rgba(246,244,230,0.14);
+    position: relative;
+    overflow: hidden;
+    padding: 26px 24px 24px;
+    min-height: 188px;
+    border: 1px solid rgba(246,244,230,0.10);
+    border-radius: 18px;
+    background: rgba(246,244,230,0.025);
     display: flex;
     flex-direction: column;
+    transition: transform 0.4s var(--ease-out-expo), border-color 0.3s, background 0.3s;
   }
-  .abt-office-card.featured { grid-column: span 2; }
+  .abt-office-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(88,185,71,0.45);
+    background: rgba(246,244,230,0.05);
+  }
+  /* corner index number */
+  .abt-office-num {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(246,244,230,0.35);
+    margin-bottom: 22px;
+    transition: color 0.3s;
+  }
+  .abt-office-card:hover .abt-office-num { color: var(--lime); }
+  .abt-office-card.featured {
+    grid-column: span 2;
+    background: rgba(88,185,71,0.07);
+    border-color: rgba(88,185,71,0.28);
+  }
+  .abt-office-card.featured::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--lime);
+  }
   .abt-office-region {
     font-size: 14px;
     color: rgba(246,244,230,0.45);
@@ -560,12 +594,14 @@
   .abt-office-city {
     font-family: 'Bricolage Grotesque', system-ui, sans-serif;
     font-variation-settings: 'opsz' 96;
-    font-size: clamp(24px, 2vw, 32px);
+    font-size: clamp(24px, 2vw, 34px);
     font-weight: 800;
     color: var(--cream);
     letter-spacing: -0.03em;
     margin-bottom: 12px;
+    transition: color 0.3s;
   }
+  .abt-office-card:hover .abt-office-city { color: var(--lime); }
   .abt-office-badge {
     display: inline-block;
     font-size: 9px;
@@ -573,15 +609,17 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--lime);
-    border: 1px solid rgba(200,248,74,0.35);
+    border: 1px solid rgba(88,185,71,0.4);
     border-radius: 999px;
     padding: 3px 10px;
     margin-bottom: 16px;
+    width: fit-content;
   }
   .abt-office-tel {
     font-size: 14px;
-    color: rgba(246,244,230,0.42);
+    color: rgba(246,244,230,0.5);
     line-height: 1.6;
+    margin-top: auto;
   }
 
   /* ══════════════════════════════════════════ CLIENT LOGO TICKER */
@@ -765,8 +803,9 @@
     .abt-values-header { grid-template-columns: 1fr; gap: 24px; }
     .abt-values-grid { grid-template-columns: 1fr; gap: 2px; }
     .abt-offices-section { padding: 72px 22px; }
-    .abt-offices-grid { grid-template-columns: repeat(2, 1fr); }
-    .abt-office-card { padding: 26px 16px 26px 0 !important; }
+    .abt-offices-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .abt-office-card { padding: 22px 18px 20px !important; min-height: 150px; }
+    .abt-office-card.featured { grid-column: span 2; }
     .ftr-top { padding: 80px 22px; }
     .ftr-contact { grid-template-columns: 1fr; gap: 44px; }
     .ftr-cta-block { position: static; top: auto; }
@@ -932,31 +971,38 @@
 
     <div class="abt-offices-grid">
       <div class="abt-office-card featured">
+        <div class="abt-office-num">01</div>
         <div class="abt-office-city">Hong Kong</div>
         <span class="abt-office-badge">Head Office</span>
         <div class="abt-office-tel">Unit 1201 &amp; 1216, Two Harbour Square,<br>180 Wai Yip Street, Kwun Tong, Kowloon</div>
       </div>
       <div class="abt-office-card">
+        <div class="abt-office-num">02</div>
         <div class="abt-office-city">Guangzhou</div>
         <div class="abt-office-region">Mainland China</div>
       </div>
       <div class="abt-office-card">
+        <div class="abt-office-num">03</div>
         <div class="abt-office-city">Nanjing</div>
         <div class="abt-office-region">Mainland China</div>
       </div>
       <div class="abt-office-card">
+        <div class="abt-office-num">04</div>
         <div class="abt-office-city">Taipei</div>
         <div class="abt-office-region">Taiwan</div>
       </div>
       <div class="abt-office-card">
+        <div class="abt-office-num">05</div>
         <div class="abt-office-city">Beijing</div>
         <div class="abt-office-region">Mainland China</div>
       </div>
       <div class="abt-office-card">
+        <div class="abt-office-num">06</div>
         <div class="abt-office-city">Singapore</div>
         <div class="abt-office-region">Southeast Asia</div>
       </div>
       <div class="abt-office-card">
+        <div class="abt-office-num">07</div>
         <div class="abt-office-city">Macao</div>
         <div class="abt-office-region">Macao SAR</div>
       </div>
