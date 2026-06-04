@@ -993,11 +993,20 @@
     max-width: 1500px;
     margin: 0 auto;
   }
+  /* Contact section (two-column) */
+  .ftr-contact {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: 72px;
+    align-items: start;
+  }
   .ftr-cta-block {
     display: flex;
     flex-direction: column;
     gap: 18px;
     align-items: flex-start;
+    position: sticky;
+    top: 120px;
   }
   .ftr-cta-label {
     font-size: 13px;
@@ -1007,13 +1016,86 @@
     color: var(--ink-3);
   }
   .ftr-cta-heading {
-    font-size: clamp(56px, 8vw, 160px);
+    font-size: clamp(32px, 3.6vw, 56px);
     font-weight: 800;
-    line-height: 0.92;
-    letter-spacing: -0.045em;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
     color: var(--blue);
-    max-width: 1300px;
-    text-transform: uppercase;
+    max-width: 520px;
+    text-transform: none;
+  }
+  .ftr-contact-info {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .ftr-ci-row { display: flex; flex-direction: column; gap: 3px; }
+  .ftr-ci-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .ftr-ci-val { font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+  .ftr-ci-val a { color: var(--ink-2); transition: color .2s; }
+  .ftr-ci-val a:hover { color: var(--blue); }
+
+  /* Contact form */
+  .cf-form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+  .cf-field { display: flex; flex-direction: column; gap: 8px; }
+  .cf-field.full { grid-column: 1 / -1; }
+  .cf-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--ink-2);
+  }
+  .cf-label .req { color: var(--blue); margin-left: 2px; }
+  .cf-input, .cf-select, .cf-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    background: #fdfdfb;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color .2s, box-shadow .2s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .cf-input::placeholder, .cf-textarea::placeholder { color: var(--ink-3); }
+  .cf-input:focus, .cf-select:focus, .cf-textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(27,35,224,0.10);
+  }
+  .cf-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236d6d72' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+  .cf-textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+  .cf-submit {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 6px;
+    padding: 17px 44px;
+    border: none;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: background .2s, transform .2s;
+  }
+  .cf-submit:hover { background: var(--blue); transform: translateY(-2px); }
+  .cf-note {
+    grid-column: 1 / -1;
+    font-size: 13px; color: var(--lime); font-weight: 600;
+    min-height: 18px;
   }
   .btn-primary-lg {
     margin-top: 22px;
@@ -1347,7 +1429,10 @@
     .inf-grid { grid-template-columns: 1fr; gap: 14px; }
     .inf-card { padding: 26px 22px; }
     .inf-card-title { font-size: 22px; }
-    .ftr-cta-heading { font-size: clamp(44px, 14vw, 90px); }
+    .ftr-contact { grid-template-columns: 1fr; gap: 44px; }
+    .ftr-cta-block { position: static; top: auto; }
+    .ftr-cta-heading { font-size: clamp(30px, 8vw, 44px); }
+    .cf-form { grid-template-columns: 1fr; gap: 16px; }
     .btn-primary-lg { padding: 18px 32px; font-size: 16px; }
     .ftr-bottom { padding: 50px 20px 24px; }
     .ftr-bottom .ftr-inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
@@ -1703,10 +1788,75 @@
 <footer id="contact" class="ftr">
   <div class="ftr-top">
     <div class="ftr-inner">
-      <div class="ftr-cta-block">
-        <p class="ftr-cta-label">Ready to start?</p>
-        <h2 class="ftr-cta-heading">Let's Build Something Great Together.</h2>
-        <a href="mailto:hello@guruonline.com.hk" class="btn-primary-lg">Get In Touch →</a>
+      <div class="ftr-contact">
+        <div class="ftr-cta-block">
+          <p class="ftr-cta-label">Ready to start?</p>
+          <h2 class="ftr-cta-heading">Let's Build Something Great Together.</h2>
+          <div class="ftr-contact-info">
+            <div class="ftr-ci-row">
+              <span class="ftr-ci-label">Hong Kong — Head Office</span>
+              <span class="ftr-ci-val">Unit 1201 &amp; 16, 12/F, Two Harbour Square,<br />180 Wai Yip Street, Kwun Tong, Kowloon</span>
+            </div>
+            <div class="ftr-ci-row">
+              <span class="ftr-ci-label">Phone</span>
+              <span class="ftr-ci-val"><a href="tel:+85239521100">+852 3952 1100</a></span>
+            </div>
+            <div class="ftr-ci-row">
+              <span class="ftr-ci-label">Email</span>
+              <span class="ftr-ci-val"><a href="mailto:hello@guruonline.com.hk">hello@guruonline.com.hk</a></span>
+            </div>
+          </div>
+        </div>
+
+        <form class="cf-form" id="contactForm" novalidate>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-name">Name <span class="req">*</span></label>
+            <input class="cf-input" type="text" id="cf-name" name="name" placeholder="Your name" required />
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-email">Business Email <span class="req">*</span></label>
+            <input class="cf-input" type="email" id="cf-email" name="email" placeholder="you@company.com" required />
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-phone">Contact No. <span class="req">*</span></label>
+            <input class="cf-input" type="tel" id="cf-phone" name="phone" placeholder="+852 0000 0000" required />
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-company">Company Name <span class="req">*</span></label>
+            <input class="cf-input" type="text" id="cf-company" name="company" placeholder="Your company" required />
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-enquiry">Enquiry Type</label>
+            <select class="cf-select" id="cf-enquiry" name="enquiry">
+              <option value="" selected>Please select</option>
+              <option>Business</option>
+              <option>Career</option>
+              <option>Investment</option>
+              <option>Media</option>
+              <option>General</option>
+            </select>
+          </div>
+          <div class="cf-field">
+            <label class="cf-label" for="cf-service">Service You're Looking For</label>
+            <select class="cf-select" id="cf-service" name="service">
+              <option value="" selected>Please select</option>
+              <option>Content Marketing</option>
+              <option>Creative and Production</option>
+              <option>Digital Campaign</option>
+              <option>Digital Media Placement</option>
+              <option>E-Commerce Solution</option>
+              <option>Influencer Marketing</option>
+              <option>Social Media Marketing</option>
+              <option>Others</option>
+            </select>
+          </div>
+          <div class="cf-field full">
+            <label class="cf-label" for="cf-message">Tell Us More</label>
+            <textarea class="cf-textarea" id="cf-message" name="message" placeholder="Tell us about your project or enquiry…"></textarea>
+          </div>
+          <p class="cf-note" id="cfNote"></p>
+          <button class="cf-submit" type="submit">Send <span>→</span></button>
+        </form>
       </div>
     </div>
   </div>
@@ -2119,6 +2269,44 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(apply); }
   }, { passive: true });
+})();
+</script>
+
+<script>
+/* ── Contact form ── (delivers via mailto; swap for Formspree/Web3Forms backend when ready) */
+(function () {
+  var form = document.getElementById('contactForm');
+  var note = document.getElementById('cfNote');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var required = ['name','email','phone','company'];
+    for (var i = 0; i < required.length; i++) {
+      var f = form.elements[required[i]];
+      if (!f.value.trim()) {
+        f.focus();
+        note.style.color = '#c0392b';
+        note.textContent = 'Please fill in all required (*) fields.';
+        return;
+      }
+    }
+    var v = function (n) { return (form.elements[n] && form.elements[n].value.trim()) || '—'; };
+    var subject = 'Website Enquiry — ' + v('company');
+    var body =
+      'Name: ' + v('name') + '\n' +
+      'Business Email: ' + v('email') + '\n' +
+      'Contact No.: ' + v('phone') + '\n' +
+      'Company: ' + v('company') + '\n' +
+      'Enquiry Type: ' + v('enquiry') + '\n' +
+      'Service: ' + v('service') + '\n\n' +
+      'Message:\n' + v('message') + '\n';
+    window.location.href = 'mailto:hello@guruonline.com.hk'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+    note.style.color = 'var(--lime)';
+    note.textContent = 'Thank you! Your email app should now open to send the enquiry.';
+    form.reset();
+  });
 })();
 </script>
 
