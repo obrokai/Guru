@@ -423,35 +423,37 @@
     position: relative;
     z-index: 1;
   }
-  .svc-header {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 40px;
-    margin-bottom: 80px;
-    align-items: end;
-  }
   .svc-label {
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-3);
+    margin-bottom: 56px;
   }
-  .svc-header-right {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: 32px;
-    flex-wrap: wrap;
+  /* Two-column: intro left, accordion right */
+  .svc-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 80px;
+    align-items: start;
   }
+  .svc-intro { position: sticky; top: 120px; }
   .svc-title {
-    font-size: clamp(48px, 7vw, 120px);
+    font-size: clamp(40px, 4.6vw, 76px);
     font-weight: 800;
-    line-height: 0.92;
-    letter-spacing: -0.04em;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
     color: var(--blue);
-    max-width: 1100px;
-    text-transform: uppercase;
+    text-transform: none;
+    margin-bottom: 28px;
+  }
+  .svc-lead {
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 440px;
+    margin-bottom: 36px;
   }
   .svc-all-link {
     display: inline-flex;
@@ -466,60 +468,64 @@
     transition: all .2s;
     white-space: nowrap;
   }
-  .svc-all-link:hover {
-    background: var(--ink);
-    color: #fff;
-  }
+  .svc-all-link:hover { background: var(--ink); color: #fff; }
   .svc-arrow { display: inline-block; transition: transform .22s; }
   .svc-all-link:hover .svc-arrow { transform: translateX(4px); }
 
-  .svc-list {
-    border-top: 1px solid rgba(14,14,16,0.18);
-  }
-  .svc-item {
-    display: grid;
-    grid-template-columns: 1fr 60px;
-    gap: 30px;
-    align-items: center;
-    padding: 32px 0;
-    border-bottom: 1px solid rgba(14,14,16,0.18);
+  /* Accordion */
+  .svc-accordion { border-top: 1px solid rgba(14,14,16,0.16); }
+  .svc-acc-item { border-bottom: 1px solid rgba(14,14,16,0.16); }
+  .svc-acc-head {
+    width: 100%;
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: transform .3s cubic-bezier(.2,.8,.3,1), color .3s;
-    will-change: transform;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 26px 4px;
+    text-align: left;
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    transition: padding-left .3s var(--ease-out-expo);
   }
-  .svc-item:hover {
-    transform: translateX(24px);
-    color: var(--blue);
-  }
-  .svc-name {
-    font-size: clamp(28px, 4vw, 64px);
+  .svc-acc-head:hover { padding-left: 14px; }
+  .svc-acc-name {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(22px, 2.4vw, 36px);
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.025em;
     color: var(--ink);
-    line-height: 0.98;
-    transition: color .3s;
+    line-height: 1.05;
+    transition: color .25s;
   }
-  .svc-item:hover .svc-name { color: var(--blue); }
-  .svc-arrow-r {
-    font-size: 28px;
-    color: var(--ink);
-    text-align: right;
-    transition: transform .3s, color .3s;
+  .svc-acc-head:hover .svc-acc-name,
+  .svc-acc-item.open .svc-acc-name { color: var(--blue); }
+  .svc-acc-chevron {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    color: var(--ink-3);
+    transition: transform .35s var(--ease-out-expo), color .25s;
   }
-  .svc-item:hover .svc-arrow-r {
-    color: var(--blue);
-    transform: translate(6px, -6px);
+  .svc-acc-head:hover .svc-acc-chevron,
+  .svc-acc-item.open .svc-acc-chevron { color: var(--blue); }
+  .svc-acc-item.open .svc-acc-chevron { transform: rotate(180deg); }
+  .svc-acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s var(--ease-out-expo), opacity .3s;
+    opacity: 0;
   }
-  .svc-body {
-    display: none;
-    padding: 0 0 32px 130px;
-    max-width: 900px;
-    font-size: 17px;
-    line-height: 1.55;
-    color: var(--ink-2);
-    border-bottom: 1px solid rgba(14,14,16,0.18);
+  .svc-acc-item.open .svc-acc-body { max-height: 240px; opacity: 1; }
+  .svc-acc-inner { padding: 0 4px 30px; max-width: 520px; }
+  .svc-acc-desc { font-size: 16px; line-height: 1.6; color: var(--ink-2); margin-bottom: 16px; }
+  .svc-acc-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 14px; font-weight: 700; color: var(--blue);
+    transition: gap .2s;
   }
-  .svc-body.open { display: block; }
+  .svc-acc-link:hover { gap: 12px; }
 
   /* ================================================== ABOUT */
   .abt {
@@ -1404,9 +1410,13 @@
 
     .svc, .abt, .wrk, .ftr-top { padding: 80px 20px; }
     .inf { padding: 80px 20px; }
-    .svc-header, .wrk-header { grid-template-columns: 1fr; gap: 16px; margin-bottom: 48px; }
-    .svc-header-right, .wrk-header-right { gap: 16px; align-items: flex-start; flex-direction: column; }
-    .svc-title, .wrk-title { font-size: clamp(40px, 12vw, 80px); }
+    .wrk-header { grid-template-columns: 1fr; gap: 16px; margin-bottom: 48px; }
+    .wrk-header-right { gap: 16px; align-items: flex-start; flex-direction: column; }
+    .wrk-title { font-size: clamp(40px, 12vw, 80px); }
+    .svc-title { font-size: clamp(38px, 11vw, 64px); }
+    .svc-layout { grid-template-columns: 1fr; gap: 40px; }
+    .svc-intro { position: static; top: auto; }
+    .svc-lead { font-size: 17px; max-width: none; }
     .svc-all-link, .wrk-all { padding: 14px 22px; font-size: 14px; }
     .abt-inner { grid-template-columns: 1fr; gap: 50px; }
     .abt-title { font-size: clamp(36px, 10vw, 64px); margin-bottom: 40px; }
@@ -1417,11 +1427,8 @@
     .wrk-card-large { grid-column: span 1; }
     .wrk-card-img, .wrk-card-small .wrk-card-img, .background-video { aspect-ratio: 4/3; border-radius: 18px; }
     .wrk-card-title { font-size: 22px; }
-    .svc-item { grid-template-columns: 1fr 32px; gap: 14px; padding: 22px 0; }
-    .svc-item:hover { transform: translateX(8px); }
-    .svc-name { font-size: clamp(24px, 6.5vw, 40px); }
-    .svc-arrow-r { font-size: 22px; }
-    .svc-body { padding: 0 0 24px 0; font-size: 15px; }
+    .svc-acc-head { padding: 22px 4px; }
+    .svc-acc-name { font-size: clamp(22px, 6vw, 30px); }
     .inf-tag { font-size: 11px; margin-bottom: 22px; }
     .inf-heading { font-size: clamp(36px, 10vw, 60px); margin-bottom: 28px; }
     .inf-desc { font-size: 16px; }
@@ -1606,23 +1613,106 @@
 
 <section id="services" class="svc">
   <div class="svc-inner">
-    <div class="svc-header">
-      <div class="svc-label">What We Do</div>
-      <div class="svc-header-right">
+    <div class="svc-label">What We Do</div>
+    <div class="svc-layout">
+      <div class="svc-intro">
         <h2 class="svc-title">Our Solutions</h2>
-        <a href="#work" class="svc-all-link">View Our Work <span class="svc-arrow">→</span></a>
+        <p class="svc-lead">We craft integrated digital marketing solutions for ambitious brands — blending strategy, creativity, media, data, technology and AI into measurable growth.</p>
+        <a href="services.html" class="svc-all-link">View All Solutions <span class="svc-arrow">→</span></a>
       </div>
-    </div>
-    <div class="svc-list">
-      <a class="svc-item" href="services.html#01"><span class="svc-name">China Digital Expansion</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#02"><span class="svc-name">Influencer Marketing</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#03"><span class="svc-name">Video Production</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#04"><span class="svc-name">Go-Global</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#05"><span class="svc-name">Threads Management</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#06"><span class="svc-name">Social Media Marketing</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#07"><span class="svc-name">GEO &amp; Search Strategy</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#08"><span class="svc-name">AI &amp; Development</span><span class="svc-arrow-r">↗</span></a>
-      <a class="svc-item" href="services.html#09"><span class="svc-name">Campaign / PR Events</span><span class="svc-arrow-r">↗</span></a>
+
+      <div class="svc-accordion" id="svcAccordion">
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">China Digital Expansion</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">Enter and scale on RedNote, WeChat, Douyin, Weibo and Tmall with localized strategy, content and operations.</p>
+            <a href="services.html#01" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">Influencer Marketing</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">MI, KOL, celebrity and creator partnerships turned into a strategic, measurable growth channel.</p>
+            <a href="services.html#02" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">Video Production</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">Concept-to-delivery video and motion content built for every platform, format and campaign.</p>
+            <a href="services.html#03" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">Go-Global</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">Take brands across borders with cross-market strategy, localized content and media activation.</p>
+            <a href="services.html#04" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">Threads Management</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">Real-time monitoring, content and community engagement that builds faster brand relevance.</p>
+            <a href="services.html#05" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">Social Media Marketing</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">Always-on social strategy, content and community across the platforms that matter most.</p>
+            <a href="services.html#06" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">GEO &amp; Search Strategy</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">Visibility across traditional and generative search — SEO, GEO and AI-driven discovery.</p>
+            <a href="services.html#07" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">AI &amp; Development</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">Custom websites, apps and AI tools that turn ideas into working, scalable products.</p>
+            <a href="services.html#08" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+        <div class="svc-acc-item">
+          <button class="svc-acc-head" type="button">
+            <span class="svc-acc-name">Campaign / PR Events</span>
+            <svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="svc-acc-body"><div class="svc-acc-inner">
+            <p class="svc-acc-desc">360° campaigns, launches and activations that create buzz, coverage and lasting brand memory.</p>
+            <a href="services.html#09" class="svc-acc-link">Explore <span>→</span></a>
+          </div></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2269,6 +2359,23 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(apply); }
   }, { passive: true });
+})();
+</script>
+
+<script>
+/* ── Solutions accordion ── */
+(function () {
+  var acc = document.getElementById('svcAccordion');
+  if (!acc) return;
+  var items = acc.querySelectorAll('.svc-acc-item');
+  items.forEach(function (item) {
+    var head = item.querySelector('.svc-acc-head');
+    head.addEventListener('click', function () {
+      var isOpen = item.classList.contains('open');
+      items.forEach(function (i) { i.classList.remove('open'); });   // single-open
+      if (!isOpen) item.classList.add('open');
+    });
+  });
 })();
 </script>
 
