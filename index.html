@@ -1429,7 +1429,7 @@
     .gn-hamburger { display: flex; }
 
     .gh {
-      padding: 0 20px 44px;
+      padding: 0 20px calc(72px + env(safe-area-inset-bottom));
       min-height: 100svh;
       max-height: none;
       overflow: hidden;
@@ -1451,8 +1451,8 @@
       align-items: flex-start;
       padding-top: 86px;
     }
-    /* Hide eyebrow on mobile — let title dominate */
-    .gh-eyebrow { display: none; }
+    /* Blue solution pill — show on mobile */
+    .gh-eyebrow { display: inline-flex; font-size: 11px; padding: 9px 16px; gap: 9px; margin-bottom: 20px; }
     .gh-line-a {
       font-size: 9px;
       letter-spacing: 0.30em;
@@ -1520,7 +1520,7 @@
     .scroll-curve path { stroke-width: 12; }
   }
   @media (max-width: 520px) {
-    .gh { padding: 0 18px 40px; }
+    .gh { padding: 0 18px calc(64px + env(safe-area-inset-bottom)); }
     .gh-line-b { font-size: clamp(72px, 21.5vw, 120px); line-height: 0.80; letter-spacing: -0.054em; white-space: nowrap; }
     .gh-line-a { font-size: 9px; letter-spacing: 0.28em; }
     .gh-tag { font-size: 12px; padding: 10px 17px; gap: 8px; }
