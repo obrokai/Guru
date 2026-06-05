@@ -789,17 +789,25 @@
     -webkit-backdrop-filter: blur(14px);
     z-index: 500;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 32px 24px;
+    overflow-y: auto;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.28s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.5) rgba(255,255,255,0.08);
   }
   .hw-vmodal.open { opacity: 1; pointer-events: auto; }
+  .hw-vmodal::-webkit-scrollbar { width: 12px; }
+  .hw-vmodal::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); }
+  .hw-vmodal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.42); border-radius: 12px; border: 3px solid transparent; background-clip: content-box; }
+  .hw-vmodal::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.65); background-clip: content-box; }
   .hw-vmodal-box {
     width: 100%;
     max-width: 960px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -849,7 +857,71 @@
     max-height: calc(100vh - 160px);
     object-fit: contain;
     background: #000;
+    transition: max-height 0.45s cubic-bezier(.2,.8,.3,1);
   }
+  .hw-vmodal-box.form-open #hwVmodalVideo { max-height: 38vh !important; }
+  .hw-vmodal-video-wrap.is-hidden { display: none; }
+
+  /* In-modal contact CTA + form (homepage) */
+  .hw-cta-row {
+    display: flex; gap: 10px; padding-top: 20px; margin-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.12); flex-wrap: wrap;
+  }
+  .hw-cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 26px; border-radius: 999px;
+    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 600; font-size: 15px;
+    cursor: pointer; border: none; text-decoration: none;
+    transition: background 0.18s, transform 0.12s, color 0.18s;
+  }
+  .hw-cta-btn-contact { background: #fff; color: #0e0e10; }
+  .hw-cta-btn-contact:hover { background: var(--blue); color: #fff; transform: translateY(-1px); }
+  .hw-cta-btn-contact.active { background: var(--blue); color: #fff; }
+  .hw-cta-btn-wa { background: #25D366; color: #fff; }
+  .hw-cta-btn-wa:hover { background: #1ebe5d; transform: translateY(-1px); }
+  .hw-form-wrap { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.5s cubic-bezier(.2,.8,.3,1), opacity 0.35s ease; }
+  .hw-form-wrap.open { max-height: 1600px; opacity: 1; }
+  .hwf-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; padding-top: 22px; }
+  .hwf-field { display: flex; flex-direction: column; gap: 7px; }
+  .hwf-field.full { grid-column: 1 / -1; }
+  .hwf-label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: rgba(255,255,255,0.55); }
+  .hwf-label .req { color: var(--lime); margin-left: 2px; }
+  .hwf-input, .hwf-select, .hwf-textarea {
+    width: 100%; padding: 12px 14px; border: 1.5px solid rgba(255,255,255,0.14);
+    border-radius: 10px; background: rgba(255,255,255,0.06);
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: 14px; color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none;
+  }
+  .hwf-input::placeholder, .hwf-textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .hwf-input:focus, .hwf-select:focus, .hwf-textarea:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 0 3px rgba(88,185,71,0.18); }
+  .hwf-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-opacity='0.5' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; cursor: pointer;
+  }
+  .hwf-select option { color: #0e0e10; }
+  .hwf-textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
+  .hwf-submit {
+    grid-column: 1 / -1; justify-self: start; margin-top: 4px; padding: 15px 38px;
+    border: none; border-radius: 999px; background: var(--lime); color: #0e0e10;
+    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 9px; transition: background 0.2s, transform 0.2s;
+  }
+  .hwf-submit:hover { background: var(--lime-2, #4aA33d); transform: translateY(-2px); }
+  .hwf-note { grid-column: 1 / -1; font-size: 13px; font-weight: 600; min-height: 16px; color: var(--lime); }
+  .hw-scroll-hint {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px);
+    display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px;
+    border: none; border-radius: 999px; background: var(--lime); color: #0e0e10;
+    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 13px;
+    letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35); opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease; z-index: 510;
+  }
+  .hw-scroll-hint.show { opacity: 1; pointer-events: auto; animation: hwHintBounce 1.6s ease-in-out infinite; }
+  .hw-scroll-hint svg { display: block; }
+  @keyframes hwHintBounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(5px); } }
+  @media (prefers-reduced-motion: reduce) { .hw-scroll-hint.show { animation: none; } }
+  @media (max-width: 600px) { .hwf-form { grid-template-columns: 1fr; } }
 
   .wrk-card-hover-label {
     position: absolute;
@@ -1727,7 +1799,7 @@
       </div>
     </div>
     <div class="wrk-grid">
-      <a href="#" class="wrk-card wrk-card-large">
+      <div class="wrk-card wrk-card-large hw-info-card" data-title="MGTO × CreatorWeek" data-sub="Influencer Marketing · Event">
         <div class="wrk-card-img">
           <div class="wrk-img-ph"></div>
           <div class="wrk-card-hover-label">View Project ↗</div>
@@ -1739,9 +1811,9 @@
           </div>
           <h3 class="wrk-card-title">MGTO × CreatorWeek</h3>
         </div>
-      </a>
+      </div>
 
-      <a href="#" class="wrk-card wrk-card-small">
+      <div class="wrk-card wrk-card-small hw-info-card" data-title="MGTO × Miyeon" data-sub="KOL Campaign">
         <div class="wrk-card-img">
           <div class="wrk-img-ph wrk-img-ph-2"></div>
           <div class="wrk-card-hover-label">View Project ↗</div>
@@ -1752,7 +1824,7 @@
           </div>
           <h3 class="wrk-card-title">MGTO × Miyeon</h3>
         </div>
-      </a>
+      </div>
 
       <div class="wrk-card wrk-card-small hw-video-card"
            data-video="influencer-1.mp4"
@@ -1996,10 +2068,71 @@
       </div>
       <button class="hw-vmodal-close" id="hwVmodalClose">×</button>
     </div>
-    <div class="hw-vmodal-video-wrap">
+    <div class="hw-vmodal-video-wrap" id="hwVmodalVideoWrap">
       <video id="hwVmodalVideo" controls playsinline></video>
     </div>
+
+    <div class="hw-cta-row">
+      <button type="button" class="hw-cta-btn hw-cta-btn-contact" id="hwContactBtn">Contact Us</button>
+      <a href="https://wa.me/85200000000" class="hw-cta-btn hw-cta-btn-wa" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+
+    <div class="hw-form-wrap" id="hwFormWrap">
+      <form class="hwf-form" id="hwContactForm" novalidate>
+        <div class="hwf-field">
+          <label class="hwf-label" for="hwf-name">Name <span class="req">*</span></label>
+          <input class="hwf-input" type="text" id="hwf-name" name="name" placeholder="Your name" required />
+        </div>
+        <div class="hwf-field">
+          <label class="hwf-label" for="hwf-email">Business Email <span class="req">*</span></label>
+          <input class="hwf-input" type="email" id="hwf-email" name="email" placeholder="you@company.com" required />
+        </div>
+        <div class="hwf-field">
+          <label class="hwf-label" for="hwf-phone">Contact No. <span class="req">*</span></label>
+          <input class="hwf-input" type="tel" id="hwf-phone" name="phone" placeholder="+852 0000 0000" required />
+        </div>
+        <div class="hwf-field">
+          <label class="hwf-label" for="hwf-company">Company Name <span class="req">*</span></label>
+          <input class="hwf-input" type="text" id="hwf-company" name="company" placeholder="Your company" required />
+        </div>
+        <div class="hwf-field">
+          <label class="hwf-label" for="hwf-enquiry">Enquiry Type</label>
+          <select class="hwf-select" id="hwf-enquiry" name="enquiry">
+            <option value="" selected>Please select</option>
+            <option>Business</option>
+            <option>Career</option>
+            <option>Investment</option>
+            <option>Media</option>
+            <option>General</option>
+          </select>
+        </div>
+        <div class="hwf-field">
+          <label class="hwf-label" for="hwf-service">Service You're Looking For</label>
+          <select class="hwf-select" id="hwf-service" name="service">
+            <option value="" selected>Please select</option>
+            <option>Content Marketing</option>
+            <option>Creative and Production</option>
+            <option>Digital Campaign</option>
+            <option>Digital Media Placement</option>
+            <option>E-Commerce Solution</option>
+            <option>Influencer Marketing</option>
+            <option>Social Media Marketing</option>
+            <option>Others</option>
+          </select>
+        </div>
+        <div class="hwf-field full">
+          <label class="hwf-label" for="hwf-message">Tell Us More</label>
+          <textarea class="hwf-textarea" id="hwf-message" name="message" placeholder="Tell us about your project or enquiry…"></textarea>
+        </div>
+        <p class="hwf-note" id="hwfNote"></p>
+        <button class="hwf-submit" type="submit">Send <span>→</span></button>
+      </form>
+    </div>
   </div>
+  <button type="button" class="hw-scroll-hint" id="hwScrollHint" aria-label="Scroll down for more">
+    <span>More</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
 </div>
 
 <!-- Scroll-driven curve draw -->
@@ -2208,28 +2341,60 @@ rafId = requestAnimationFrame(tick);
 <!-- Homepage video lightbox JS -->
 <script>
 (function () {
-  var overlay  = document.getElementById('hwVmodal');
-  var videoEl  = document.getElementById('hwVmodalVideo');
-  var titleEl  = document.getElementById('hwVmodalTitle');
-  var subEl    = document.getElementById('hwVmodalSub');
-  var closeBtn = document.getElementById('hwVmodalClose');
+  var overlay   = document.getElementById('hwVmodal');
+  var box       = overlay.querySelector('.hw-vmodal-box');
+  var videoEl   = document.getElementById('hwVmodalVideo');
+  var videoWrap = document.getElementById('hwVmodalVideoWrap');
+  var titleEl   = document.getElementById('hwVmodalTitle');
+  var subEl     = document.getElementById('hwVmodalSub');
+  var closeBtn  = document.getElementById('hwVmodalClose');
+  var contactBtn= document.getElementById('hwContactBtn');
+  var formWrap  = document.getElementById('hwFormWrap');
+  var modalForm = document.getElementById('hwContactForm');
+  var formNote  = document.getElementById('hwfNote');
+  var scrollHint= document.getElementById('hwScrollHint');
+
+  function updateScrollHint() {
+    if (!scrollHint) return;
+    var canScroll = overlay.scrollHeight - overlay.clientHeight > 8;
+    var atBottom  = overlay.scrollTop + overlay.clientHeight >= overlay.scrollHeight - 16;
+    scrollHint.classList.toggle('show', canScroll && !atBottom);
+  }
+  function collapseForm() {
+    formWrap.classList.remove('open');
+    contactBtn.classList.remove('active');
+    box.classList.remove('form-open');
+    formNote.textContent = '';
+    scrollHint.classList.remove('show');
+  }
 
   function openModal(src, title, sub) {
-    videoEl.src = src;
     titleEl.textContent = title;
     subEl.textContent = sub;
+    if (src) {
+      videoWrap.classList.remove('is-hidden');
+      videoEl.src = src;
+      videoEl.play();
+    } else {
+      videoWrap.classList.add('is-hidden');
+      videoEl.removeAttribute('src');
+    }
+    collapseForm();
     overlay.classList.add('open');
+    overlay.scrollTop = 0;
     document.body.style.overflow = 'hidden';
-    videoEl.play();
+    setTimeout(updateScrollHint, 100);
   }
   function closeModal() {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
     videoEl.pause();
-    videoEl.src = '';
+    videoEl.removeAttribute('src');
+    collapseForm();
   }
 
-  document.querySelectorAll('.hw-video-card').forEach(function (card) {
+  // All work cards open the modal (video + non-video)
+  document.querySelectorAll('.hw-video-card, .hw-info-card').forEach(function (card) {
     card.style.cursor = 'pointer';
     card.addEventListener('click', function () {
       openModal(
@@ -2239,6 +2404,56 @@ rafId = requestAnimationFrame(tick);
       );
     });
   });
+
+  // Contact form toggle
+  contactBtn.addEventListener('click', function () {
+    var isOpen = formWrap.classList.toggle('open');
+    contactBtn.classList.toggle('active', isOpen);
+    box.classList.toggle('form-open', isOpen);
+    if (isOpen) {
+      setTimeout(function () {
+        formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        var first = document.getElementById('hwf-name');
+        if (first) first.focus();
+        updateScrollHint();
+      }, 480);
+    } else { updateScrollHint(); }
+  });
+
+  // Form submit (mailto delivery)
+  modalForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var required = ['name','email','phone','company'];
+    for (var i = 0; i < required.length; i++) {
+      var f = modalForm.elements[required[i]];
+      if (!f.value.trim()) {
+        f.focus();
+        formNote.style.color = '#ff6b6b';
+        formNote.textContent = 'Please fill in all required (*) fields.';
+        return;
+      }
+    }
+    var v = function (n) { return (modalForm.elements[n] && modalForm.elements[n].value.trim()) || '—'; };
+    var subject = 'Website Enquiry — ' + v('company');
+    var body =
+      'Name: ' + v('name') + '\n' +
+      'Business Email: ' + v('email') + '\n' +
+      'Contact No.: ' + v('phone') + '\n' +
+      'Company: ' + v('company') + '\n' +
+      'Enquiry Type: ' + v('enquiry') + '\n' +
+      'Service: ' + v('service') + '\n' +
+      'Project: ' + (titleEl.textContent || '—') + '\n\n' +
+      'Message:\n' + v('message') + '\n';
+    window.location.href = 'mailto:hello@guruonline.com.hk'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+    formNote.style.color = 'var(--lime)';
+    formNote.textContent = 'Thank you! Your email app should now open to send the enquiry.';
+    modalForm.reset();
+  });
+
+  overlay.addEventListener('scroll', updateScrollHint, { passive: true });
+  if (scrollHint) scrollHint.addEventListener('click', function () { overlay.scrollBy({ top: overlay.clientHeight * 0.7, behavior: 'smooth' }); });
 
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
