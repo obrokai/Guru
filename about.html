@@ -97,7 +97,7 @@
   .gn-link-cta {
     display: inline-flex;
     align-items: center;
-    background: var(--ink);
+    background: var(--blue);
     color: #fff;
     font-weight: 600;
     font-size: 15px;
@@ -105,7 +105,7 @@
     border-radius: 999px;
     transition: background .2s, color .2s, transform .2s;
   }
-  .gn-link-cta:hover { background: var(--blue); transform: translateY(-1px); }
+  .gn-link-cta:hover { background: var(--ink); transform: translateY(-1px); }
   .gn-link-whatsapp {
     display: inline-flex;
     align-items: center;
@@ -699,14 +699,19 @@
   .ftr-ci-val a:hover { color: var(--blue); }
 
   /* Contact form */
-  .cf-form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+  .cf-form {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px 16px;
+    background: #fdfdfb;
+    border: 1.5px solid rgba(14,14,16,0.16);
+    border-radius: 24px;
+    padding: 36px 32px;
+    box-shadow: 0 18px 50px rgba(14,14,16,0.07);
+  }
   .cf-field { display: flex; flex-direction: column; gap: 8px; }
   .cf-field.full { grid-column: 1 / -1; }
-  .cf-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-2); }
-  .cf-label .req { color: var(--blue); margin-left: 2px; }
   .cf-input, .cf-select, .cf-textarea {
-    width: 100%; padding: 14px 16px; border: 1.5px solid var(--line); border-radius: 12px;
-    background: #fdfdfb; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; color: var(--ink);
+    width: 100%; padding: 15px 18px; border: 1.5px solid rgba(14,14,16,0.16); border-radius: 12px;
+    background: #fff; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; color: var(--ink);
     transition: border-color .2s, box-shadow .2s; -webkit-appearance: none; appearance: none;
   }
   .cf-input::placeholder, .cf-textarea::placeholder { color: var(--ink-3); }
@@ -717,12 +722,14 @@
   }
   .cf-textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
   .cf-submit {
-    grid-column: 1 / -1; justify-self: start; margin-top: 6px; padding: 17px 44px;
-    border: none; border-radius: 999px; background: var(--ink); color: #fff;
-    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.02em;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: background .2s, transform .2s;
+    grid-column: 1 / -1; width: 100%; margin-top: 6px; padding: 18px 44px;
+    border: none; border-radius: 14px; background: var(--lime); color: #fff;
+    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.02em;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 10px 28px rgba(88,185,71,0.35);
+    transition: background .2s, transform .2s, box-shadow .2s;
   }
-  .cf-submit:hover { background: var(--blue); transform: translateY(-2px); }
+  .cf-submit:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 14px 34px rgba(27,35,224,0.35); }
   .cf-note { grid-column: 1 / -1; font-size: 13px; color: var(--lime); font-weight: 600; min-height: 18px; }
   .btn-primary-lg {
     margin-top: 22px;
@@ -1032,36 +1039,20 @@
 
         <form class="cf-form" id="contactForm" novalidate>
           <div class="cf-field">
-            <label class="cf-label" for="cf-name">Name <span class="req">*</span></label>
-            <input class="cf-input" type="text" id="cf-name" name="name" placeholder="Your name" required />
+            <input class="cf-input" type="text" id="cf-name" name="name" placeholder="Name *" aria-label="Name" required />
           </div>
           <div class="cf-field">
-            <label class="cf-label" for="cf-email">Business Email <span class="req">*</span></label>
-            <input class="cf-input" type="email" id="cf-email" name="email" placeholder="you@company.com" required />
+            <input class="cf-input" type="email" id="cf-email" name="email" placeholder="Business Email *" aria-label="Business Email" required />
           </div>
           <div class="cf-field">
-            <label class="cf-label" for="cf-phone">Contact No. <span class="req">*</span></label>
-            <input class="cf-input" type="tel" id="cf-phone" name="phone" placeholder="+852 0000 0000" required />
+            <input class="cf-input" type="tel" id="cf-phone" name="phone" placeholder="Contact No. *" aria-label="Contact No." required />
           </div>
           <div class="cf-field">
-            <label class="cf-label" for="cf-company">Company Name <span class="req">*</span></label>
-            <input class="cf-input" type="text" id="cf-company" name="company" placeholder="Your company" required />
+            <input class="cf-input" type="text" id="cf-company" name="company" placeholder="Company Name *" aria-label="Company Name" required />
           </div>
-          <div class="cf-field">
-            <label class="cf-label" for="cf-enquiry">Enquiry Type</label>
-            <select class="cf-select" id="cf-enquiry" name="enquiry">
-              <option value="" selected>Please select</option>
-              <option>Business</option>
-              <option>Career</option>
-              <option>Investment</option>
-              <option>Media</option>
-              <option>General</option>
-            </select>
-          </div>
-          <div class="cf-field">
-            <label class="cf-label" for="cf-service">Service You're Looking For</label>
-            <select class="cf-select" id="cf-service" name="service">
-              <option value="" selected>Please select</option>
+          <div class="cf-field full">
+            <select class="cf-select" id="cf-service" name="service" aria-label="Service You're Looking For">
+              <option value="" selected>Service You're Looking For</option>
               <option>Content Marketing</option>
               <option>Creative and Production</option>
               <option>Digital Campaign</option>
@@ -1073,11 +1064,10 @@
             </select>
           </div>
           <div class="cf-field full">
-            <label class="cf-label" for="cf-message">Tell Us More</label>
-            <textarea class="cf-textarea" id="cf-message" name="message" placeholder="Tell us about your project or enquiry…"></textarea>
+            <textarea class="cf-textarea" id="cf-message" name="message" aria-label="Tell Us More" placeholder="How can we help you?"></textarea>
           </div>
           <p class="cf-note" id="cfNote"></p>
-          <button class="cf-submit" type="submit">Send <span>→</span></button>
+          <button class="cf-submit" type="submit">Send Message <span>→</span></button>
         </form>
       </div>
     </div>
@@ -1205,7 +1195,6 @@
       'Business Email: ' + v('email') + '\n' +
       'Contact No.: ' + v('phone') + '\n' +
       'Company: ' + v('company') + '\n' +
-      'Enquiry Type: ' + v('enquiry') + '\n' +
       'Service: ' + v('service') + '\n\n' +
       'Message:\n' + v('message') + '\n';
     window.location.href = 'mailto:hello@guruonline.com.hk'
