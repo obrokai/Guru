@@ -531,6 +531,61 @@
   }
   .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }
 
+  /* ── Per-solution contact form ── */
+  .spf {
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  .spf-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 8px;
+  }
+  .spf-heading {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-variation-settings: 'opsz' 96;
+    font-size: clamp(22px, 2.2vw, 32px);
+    font-weight: 800; letter-spacing: -0.025em; color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .spf-form {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px 14px;
+    background: #fdfdfb;
+    border: 1.5px solid rgba(14,14,16,0.16);
+    border-radius: 20px;
+    padding: 30px 28px;
+    box-shadow: 0 18px 50px rgba(14,14,16,0.07);
+    max-width: 760px;
+  }
+  .spf-field { display: flex; flex-direction: column; gap: 7px; }
+  .spf-field.full { grid-column: 1 / -1; }
+  .spf-input, .spf-select, .spf-textarea {
+    width: 100%; padding: 14px 16px; border: 1.5px solid rgba(14,14,16,0.16);
+    border-radius: 11px; background: #fff;
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; color: var(--ink);
+    transition: border-color .2s, box-shadow .2s; -webkit-appearance: none; appearance: none;
+  }
+  .spf-input::placeholder, .spf-textarea::placeholder { color: var(--ink-3); }
+  .spf-input:focus, .spf-select:focus, .spf-textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(27,35,224,0.10); }
+  .spf-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236d6d72' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer;
+  }
+  .spf-textarea { min-height: 104px; resize: vertical; line-height: 1.55; }
+  .spf-submit {
+    grid-column: 1 / -1; width: 100%; margin-top: 4px; padding: 17px 40px;
+    border: none; border-radius: 13px; background: var(--lime); color: #fff;
+    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 16px;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    box-shadow: 0 10px 28px rgba(88,185,71,0.32);
+    transition: background .2s, transform .2s, box-shadow .2s;
+  }
+  .spf-submit:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 14px 34px rgba(27,35,224,0.35); }
+  .spf-note { grid-column: 1 / -1; font-size: 13px; font-weight: 600; min-height: 16px; color: var(--lime); }
+  @media (max-width: 720px) {
+    .spf-form { grid-template-columns: 1fr; padding: 24px 20px; }
+  }
+
   /* ── Site Footer ── */
   .ftr-top { padding: 120px 40px; border-bottom: 1px solid var(--line); }
   .ftr-inner { max-width: 1500px; margin: 0 auto; }
@@ -805,16 +860,33 @@
 </div>
 
 
-<footer id="contact" class="ftr">
-  <div class="ftr-top">
-    <div class="ftr-inner">
-      <div class="ftr-cta-block">
-        <p class="ftr-cta-label">Ready to start?</p>
-        <h2 class="ftr-cta-heading">Let's Build Something Great Together.</h2>
-        <a href="mailto:hello@guruonline.com.hk" class="btn-primary-lg">Get In Touch →</a>
+<template id="spfTemplate">
+  <div class="spf">
+    <p class="spf-label">Ready to start?</p>
+    <h3 class="spf-heading">Talk to Us About This Solution</h3>
+    <form class="spf-form" novalidate>
+      <div class="spf-field">
+        <input class="spf-input" type="text" name="name" placeholder="Name *" aria-label="Name" required />
       </div>
-    </div>
+      <div class="spf-field">
+        <input class="spf-input" type="email" name="email" placeholder="Business Email *" aria-label="Business Email" required />
+      </div>
+      <div class="spf-field">
+        <input class="spf-input" type="tel" name="phone" placeholder="Contact No. *" aria-label="Contact No." required />
+      </div>
+      <div class="spf-field">
+        <input class="spf-input" type="text" name="company" placeholder="Company Name *" aria-label="Company Name" required />
+      </div>
+      <div class="spf-field full">
+        <textarea class="spf-textarea" name="message" aria-label="Tell Us More" placeholder="How can we help you?"></textarea>
+      </div>
+      <p class="spf-note"></p>
+      <button class="spf-submit" type="submit">Send Message <span>→</span></button>
+    </form>
   </div>
+</template>
+
+<footer id="contact" class="ftr">
   <div class="ftr-bottom">
     <div class="ftr-inner">
       <div class="ftr-logo-col">
@@ -1008,6 +1080,50 @@
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(apply); }
   }, { passive: true });
+})();
+</script>
+
+<script>
+/* ── Per-solution contact forms ── (mailto delivery; swap for a form backend when ready) */
+(function () {
+  var tpl = document.getElementById('spfTemplate');
+  if (!tpl) return;
+  document.querySelectorAll('.srv-panel').forEach(function (panel) {
+    panel.appendChild(tpl.content.cloneNode(true));
+  });
+  document.querySelectorAll('.spf-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var note = form.querySelector('.spf-note');
+      var required = ['name','email','phone','company'];
+      for (var i = 0; i < required.length; i++) {
+        var f = form.elements[required[i]];
+        if (!f.value.trim()) {
+          f.focus();
+          note.style.color = '#c0392b';
+          note.textContent = 'Please fill in all required (*) fields.';
+          return;
+        }
+      }
+      var panel = form.closest('.srv-panel');
+      var solution = panel ? (panel.querySelector('.srv-panel-title') || {}).textContent || '—' : '—';
+      var v = function (n) { return (form.elements[n] && form.elements[n].value.trim()) || '—'; };
+      var subject = 'Website Enquiry — ' + v('company');
+      var body =
+        'Name: ' + v('name') + '\n' +
+        'Business Email: ' + v('email') + '\n' +
+        'Contact No.: ' + v('phone') + '\n' +
+        'Company: ' + v('company') + '\n' +
+        'Solution: ' + solution + '\n\n' +
+        'Message:\n' + v('message') + '\n';
+      window.location.href = 'mailto:hello@guruonline.com.hk'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+      note.style.color = 'var(--lime)';
+      note.textContent = 'Thank you! Your email app should now open to send the enquiry.';
+      form.reset();
+    });
+  });
 })();
 </script>
 </body>
