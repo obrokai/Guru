@@ -884,18 +884,23 @@
   .hw-cta-btn-wa:hover { background: #1ebe5d; transform: translateY(-1px); }
   .hw-form-wrap { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.5s cubic-bezier(.2,.8,.3,1), opacity 0.35s ease; }
   .hw-form-wrap.open { max-height: 1600px; opacity: 1; }
-  .hwf-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; padding-top: 22px; }
+  .hwf-form {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px 14px;
+    margin-top: 22px;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.16);
+    border-radius: 20px;
+    padding: 28px 26px;
+  }
   .hwf-field { display: flex; flex-direction: column; gap: 7px; }
   .hwf-field.full { grid-column: 1 / -1; }
-  .hwf-label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: rgba(255,255,255,0.55); }
-  .hwf-label .req { color: var(--lime); margin-left: 2px; }
   .hwf-input, .hwf-select, .hwf-textarea {
-    width: 100%; padding: 12px 14px; border: 1.5px solid rgba(255,255,255,0.14);
-    border-radius: 10px; background: rgba(255,255,255,0.06);
+    width: 100%; padding: 13px 16px; border: 1.5px solid rgba(255,255,255,0.16);
+    border-radius: 10px; background: rgba(255,255,255,0.07);
     font-family: 'DM Sans', system-ui, sans-serif; font-size: 14px; color: #fff;
     transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none;
   }
-  .hwf-input::placeholder, .hwf-textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .hwf-input::placeholder, .hwf-textarea::placeholder { color: rgba(255,255,255,0.4); }
   .hwf-input:focus, .hwf-select:focus, .hwf-textarea:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 0 3px rgba(88,185,71,0.18); }
   .hwf-select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-opacity='0.5' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -904,12 +909,14 @@
   .hwf-select option { color: #0e0e10; }
   .hwf-textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
   .hwf-submit {
-    grid-column: 1 / -1; justify-self: start; margin-top: 4px; padding: 15px 38px;
-    border: none; border-radius: 999px; background: var(--lime); color: #0e0e10;
-    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 9px; transition: background 0.2s, transform 0.2s;
+    grid-column: 1 / -1; width: 100%; margin-top: 4px; padding: 16px 38px;
+    border: none; border-radius: 12px; background: var(--lime); color: #fff;
+    font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 16px;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    box-shadow: 0 10px 28px rgba(88,185,71,0.30);
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   }
-  .hwf-submit:hover { background: var(--lime-2, #4aA33d); transform: translateY(-2px); }
+  .hwf-submit:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 14px 34px rgba(27,35,224,0.35); }
   .hwf-note { grid-column: 1 / -1; font-size: 13px; font-weight: 600; min-height: 16px; color: var(--lime); }
   .hw-scroll-hint {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px);
@@ -2075,36 +2082,20 @@
     <div class="hw-form-wrap" id="hwFormWrap">
       <form class="hwf-form" id="hwContactForm" novalidate>
         <div class="hwf-field">
-          <label class="hwf-label" for="hwf-name">Name <span class="req">*</span></label>
-          <input class="hwf-input" type="text" id="hwf-name" name="name" placeholder="Your name" required />
+          <input class="hwf-input" type="text" id="hwf-name" name="name" placeholder="Name *" aria-label="Name" required />
         </div>
         <div class="hwf-field">
-          <label class="hwf-label" for="hwf-email">Business Email <span class="req">*</span></label>
-          <input class="hwf-input" type="email" id="hwf-email" name="email" placeholder="you@company.com" required />
+          <input class="hwf-input" type="email" id="hwf-email" name="email" placeholder="Business Email *" aria-label="Business Email" required />
         </div>
         <div class="hwf-field">
-          <label class="hwf-label" for="hwf-phone">Contact No. <span class="req">*</span></label>
-          <input class="hwf-input" type="tel" id="hwf-phone" name="phone" placeholder="+852 0000 0000" required />
+          <input class="hwf-input" type="tel" id="hwf-phone" name="phone" placeholder="Contact No. *" aria-label="Contact No." required />
         </div>
         <div class="hwf-field">
-          <label class="hwf-label" for="hwf-company">Company Name <span class="req">*</span></label>
-          <input class="hwf-input" type="text" id="hwf-company" name="company" placeholder="Your company" required />
+          <input class="hwf-input" type="text" id="hwf-company" name="company" placeholder="Company Name *" aria-label="Company Name" required />
         </div>
-        <div class="hwf-field">
-          <label class="hwf-label" for="hwf-enquiry">Enquiry Type</label>
-          <select class="hwf-select" id="hwf-enquiry" name="enquiry">
-            <option value="" selected>Please select</option>
-            <option>Business</option>
-            <option>Career</option>
-            <option>Investment</option>
-            <option>Media</option>
-            <option>General</option>
-          </select>
-        </div>
-        <div class="hwf-field">
-          <label class="hwf-label" for="hwf-service">Service You're Looking For</label>
-          <select class="hwf-select" id="hwf-service" name="service">
-            <option value="" selected>Please select</option>
+        <div class="hwf-field full">
+          <select class="hwf-select" id="hwf-service" name="service" aria-label="Service You're Looking For">
+            <option value="" selected>Service You're Looking For</option>
             <option>Content Marketing</option>
             <option>Creative and Production</option>
             <option>Digital Campaign</option>
@@ -2116,11 +2107,10 @@
           </select>
         </div>
         <div class="hwf-field full">
-          <label class="hwf-label" for="hwf-message">Tell Us More</label>
-          <textarea class="hwf-textarea" id="hwf-message" name="message" placeholder="Tell us about your project or enquiry…"></textarea>
+          <textarea class="hwf-textarea" id="hwf-message" name="message" aria-label="Tell Us More" placeholder="How can we help you?"></textarea>
         </div>
         <p class="hwf-note" id="hwfNote"></p>
-        <button class="hwf-submit" type="submit">Send <span>→</span></button>
+        <button class="hwf-submit" type="submit">Send Message <span>→</span></button>
       </form>
     </div>
   </div>
@@ -2435,7 +2425,6 @@ rafId = requestAnimationFrame(tick);
       'Business Email: ' + v('email') + '\n' +
       'Contact No.: ' + v('phone') + '\n' +
       'Company: ' + v('company') + '\n' +
-      'Enquiry Type: ' + v('enquiry') + '\n' +
       'Service: ' + v('service') + '\n' +
       'Project: ' + (titleEl.textContent || '—') + '\n\n' +
       'Message:\n' + v('message') + '\n';
