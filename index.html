@@ -484,7 +484,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    padding: 26px 4px;
+    padding: 17px 4px;
     text-align: left;
     font-family: 'Bricolage Grotesque', system-ui, sans-serif;
     transition: padding-left .3s var(--ease-out-expo);
@@ -1083,18 +1083,19 @@
   }
   /* Contact section (two-column) */
   .ftr-contact {
-    display: grid;
-    grid-template-columns: 1fr 1.05fr;
-    gap: 72px;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+    gap: 32px;
   }
   .ftr-cta-block {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    align-items: flex-start;
-    position: sticky;
-    top: 120px;
+    gap: 14px;
+    align-items: center;
   }
   .ftr-cta-label {
     font-size: 13px;
@@ -1106,10 +1107,10 @@
   .ftr-cta-heading {
     font-size: clamp(32px, 3.6vw, 56px);
     font-weight: 800;
-    line-height: 1.02;
+    line-height: 1.05;
     letter-spacing: -0.03em;
     color: var(--lime);
-    max-width: 520px;
+    max-width: 640px;
     text-transform: none;
   }
   .ftr-contact-info {
@@ -1130,6 +1131,8 @@
   /* Contact form */
   /* Form card — looks like a form */
   .cf-form {
+    width: 100%;
+    text-align: left;
     display: grid; grid-template-columns: 1fr 1fr; gap: 16px 16px;
     background: #fdfdfb;
     border: 1.5px solid rgba(14,14,16,0.16);
@@ -1139,6 +1142,10 @@
   }
   .cf-field { display: flex; flex-direction: column; gap: 8px; }
   .cf-field.full { grid-column: 1 / -1; }
+  /* Phone: country code + number */
+  .cf-phone-group { display: flex; gap: 8px; }
+  .cf-cc { flex: 0 0 116px; padding-right: 30px; cursor: pointer; }
+  .cf-phone-group .cf-phone { flex: 1; }
   .cf-input, .cf-select, .cf-textarea {
     width: 100%;
     padding: 15px 18px;
@@ -1316,7 +1323,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 34px;
+    height: 52px;
     padding: 0 56px;
     opacity: 0.45;
     transition: opacity 0.35s;
@@ -1343,7 +1350,7 @@
   .logo-item img {
     height: 100%;
     width: auto;
-    max-width: 140px;
+    max-width: 190px;
     display: block;
     object-fit: contain;
     filter: grayscale(1) contrast(0.8);
@@ -1517,7 +1524,7 @@
     .wrk-card-large { grid-column: span 1; }
     .wrk-card-img, .wrk-card-small .wrk-card-img, .background-video { aspect-ratio: 4/3; border-radius: 18px; }
     .wrk-card-title { font-size: 22px; }
-    .svc-acc-head { padding: 22px 4px; }
+    .svc-acc-head { padding: 15px 4px; }
     .svc-acc-name { font-size: clamp(22px, 6vw, 30px); }
     .inf-tag { font-size: 11px; margin-bottom: 22px; }
     .inf-heading { font-size: clamp(36px, 10vw, 60px); margin-bottom: 28px; }
@@ -1811,7 +1818,6 @@
   <div class="wrk-inner">
     <div class="wrk-header">
       <div class="wrk-header-left">
-        <div class="wrk-label">Our Work</div>
         <h2 class="wrk-title">Our Work</h2>
       </div>
       <div class="wrk-header-right">
@@ -1889,70 +1895,14 @@
   </div>
 </section>
 
-<div class="inf">
-  <div class="inf-inner">
-    <p class="inf-tag">● Influencer Marketing</p>
-    <p class="inf-desc">Influence is no longer just about exposure. It is about trust, relevance, conversation and measurable growth.</p>
-    <p class="inf-desc">Guru helps brands turn MI, KOL, celebrity and creator partnerships into a strategic growth channel — connecting the right voices with the right audiences across the right platforms.</p>
-    <p class="inf-why">Why Us?</p>
-    <div class="inf-grid">
-      <div class="inf-card">
-        <p class="inf-card-n">01</p>
-        <h3 class="inf-card-title">Right Influence, Better Brand Fit</h3>
-        <p class="inf-item">Connect with suitable MI, KOLs, celebrities and creators</p>
-        <p class="inf-item">Match influencers with brand positioning and campaign goals</p>
-        <p class="inf-item">Evaluate audience quality, engagement and content relevance</p>
-        <p class="inf-item">Go beyond follower count to identify real influence</p>
-        <p class="inf-item">Build partnerships that feel authentic and credible</p>
-      </div>
-      <div class="inf-card">
-        <p class="inf-card-n">02</p>
-        <h3 class="inf-card-title">Campaigns Built for Business Outcomes</h3>
-        <p class="inf-item">Drive brand awareness, education and conversion</p>
-        <p class="inf-item">Create content that speaks to the right audience</p>
-        <p class="inf-item">Support launches, promotions and always-on campaigns</p>
-        <p class="inf-item">Turn influencer content into a performance asset</p>
-        <p class="inf-item">Build influence that supports both brand and sales goals</p>
-      </div>
-      <div class="inf-card">
-        <p class="inf-card-n">03</p>
-        <h3 class="inf-card-title">Measurable Performance, Smarter Spending</h3>
-        <p class="inf-item">Track reach, engagement, video views and traffic</p>
-        <p class="inf-item">Use UTM links and unique tracking methods</p>
-        <p class="inf-item">Measure influencer effectiveness by campaign objective</p>
-        <p class="inf-item">Optimize creator selection and promotion budget</p>
-        <p class="inf-item">Turn data into smarter future decisions</p>
-      </div>
-      <div class="inf-card">
-        <p class="inf-card-n">04</p>
-        <h3 class="inf-card-title">Broad Network Across Key Platforms</h3>
-        <p class="inf-item">Cover MI, KOLs, celebrities, creators and niche voices</p>
-        <p class="inf-item">Activate across Facebook, Instagram, TikTok and YouTube</p>
-        <p class="inf-item">Extend reach through RedNote, WeChat, Weibo and LinkedIn</p>
-        <p class="inf-item">Connect brands with local, regional and global audiences</p>
-        <p class="inf-item">Match platform behavior with audience intent</p>
-      </div>
-      <div class="inf-card">
-        <p class="inf-card-n">05</p>
-        <h3 class="inf-card-title">From Relationship to Results</h3>
-        <p class="inf-item">Build tangible value: reach, traffic, leads and sales</p>
-        <p class="inf-item">Build intangible value: trust, credibility and brand love</p>
-        <p class="inf-item">Strengthen long-term advocacy and community influence</p>
-        <p class="inf-item">Enable brands to become part of audience conversations</p>
-        <p class="inf-item">Turn influence into lasting market advantage</p>
-      </div>
-    </div>
-  </div>
-</div>
-
 <section id="about" class="abt">
   <div class="abt-inner">
     <div>
       <h2 class="abt-title">Your Holistic Digital Partner</h2>
       <div class="abt-stats">
-        <div class="abt-stat"><span class="abt-stat-num" data-count="300" data-suffix="">300</span><span class="abt-stat-text">Digital Specialists</span></div>
-        <div class="abt-stat"><span class="abt-stat-num" data-count="600" data-suffix="+">600+</span><span class="abt-stat-text">International Clients</span></div>
-        <div class="abt-stat"><span class="abt-stat-num" data-count="5" data-suffix="">5</span><span class="abt-stat-text">Offices</span></div>
+        <div class="abt-stat"><span class="abt-stat-num" data-count="200" data-suffix="">200</span><span class="abt-stat-text">Digital Specialists</span></div>
+        <div class="abt-stat"><span class="abt-stat-num" data-count="500" data-suffix="+">500+</span><span class="abt-stat-text">International Clients</span></div>
+        <div class="abt-stat"><span class="abt-stat-num" data-count="6" data-suffix="">6</span><span class="abt-stat-text">Offices</span></div>
         <div class="abt-stat"><span class="abt-stat-num" data-count="100" data-suffix="+">100+</span><span class="abt-stat-text">Awards &amp; Recognitions</span></div>
       </div>
     </div>
@@ -1973,20 +1923,6 @@
         <div class="ftr-cta-block">
           <p class="ftr-cta-label">Ready to start?</p>
           <h2 class="ftr-cta-heading">Talk to Us and We Build Something Great Together.</h2>
-          <div class="ftr-contact-info">
-            <div class="ftr-ci-row">
-              <span class="ftr-ci-label">Hong Kong — Head Office</span>
-              <span class="ftr-ci-val">Unit 1201 &amp; 16, 12/F, Two Harbour Square,<br />180 Wai Yip Street, Kwun Tong, Kowloon</span>
-            </div>
-            <div class="ftr-ci-row">
-              <span class="ftr-ci-label">Phone</span>
-              <span class="ftr-ci-val"><a href="tel:+85239521100">+852 3952 1100</a></span>
-            </div>
-            <div class="ftr-ci-row">
-              <span class="ftr-ci-label">Email</span>
-              <span class="ftr-ci-val"><a href="mailto:hello@guruonline.com.hk">hello@guruonline.com.hk</a></span>
-            </div>
-          </div>
         </div>
 
         <form class="cf-form" id="contactForm" novalidate>
@@ -1994,13 +1930,28 @@
             <input class="cf-input" type="text" id="cf-name" name="name" placeholder="Name *" aria-label="Name" required />
           </div>
           <div class="cf-field">
-            <input class="cf-input" type="email" id="cf-email" name="email" placeholder="Business Email *" aria-label="Business Email" required />
-          </div>
-          <div class="cf-field">
-            <input class="cf-input" type="tel" id="cf-phone" name="phone" placeholder="Contact No. *" aria-label="Contact No." required />
-          </div>
-          <div class="cf-field">
             <input class="cf-input" type="text" id="cf-company" name="company" placeholder="Company Name *" aria-label="Company Name" required />
+          </div>
+          <div class="cf-field">
+            <div class="cf-phone-group">
+              <select class="cf-input cf-cc" name="cc" aria-label="Country code">
+                <option value="+852" data-len="8" selected>🇭🇰 +852</option>
+                <option value="+853" data-len="">🇲🇴 +853</option>
+                <option value="+86" data-len="">🇨🇳 +86</option>
+                <option value="+886" data-len="">🇹🇼 +886</option>
+                <option value="+65" data-len="">🇸🇬 +65</option>
+                <option value="+44" data-len="">🇬🇧 +44</option>
+                <option value="+1" data-len="">🇺🇸 +1</option>
+                <option value="+81" data-len="">🇯🇵 +81</option>
+                <option value="+82" data-len="">🇰🇷 +82</option>
+                <option value="+61" data-len="">🇦🇺 +61</option>
+                <option value="+other" data-len="">Other</option>
+              </select>
+              <input class="cf-input cf-phone" type="tel" id="cf-phone" name="phone" placeholder="Contact No. *" inputmode="numeric" aria-label="Contact No." required />
+            </div>
+          </div>
+          <div class="cf-field">
+            <input class="cf-input" type="email" id="cf-email" name="email" placeholder="Business Email *" aria-label="Business Email" required />
           </div>
           <div class="cf-field full">
             <select class="cf-select" id="cf-service" name="service" aria-label="Service You're Looking For">
@@ -2584,6 +2535,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   var form = document.getElementById('contactForm');
   var note = document.getElementById('cfNote');
   if (!form) return;
+  setupPhoneGroup(form);
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var required = ['name','email','phone','company'];
@@ -2596,12 +2548,14 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
         return;
       }
     }
+    var phoneErr = validatePhone(form);
+    if (phoneErr) { form.elements['phone'].focus(); note.style.color = '#c0392b'; note.textContent = phoneErr; return; }
     var v = function (n) { return (form.elements[n] && form.elements[n].value.trim()) || '—'; };
     var subject = 'Website Enquiry — ' + v('company');
     var body =
       'Name: ' + v('name') + '\n' +
       'Business Email: ' + v('email') + '\n' +
-      'Contact No.: ' + v('phone') + '\n' +
+      'Contact No.: ' + v('cc') + ' ' + v('phone') + '\n' +
       'Company: ' + v('company') + '\n' +
       'Service: ' + v('service') + '\n\n' +
       'Message:\n' + v('message') + '\n';
@@ -2611,8 +2565,34 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     note.style.color = 'var(--lime)';
     note.textContent = 'Thank you! Your email app should now open to send the enquiry.';
     form.reset();
+    setupPhoneGroup(form);
   });
 })();
+
+/* ── Phone country-code helpers (shared) ── */
+function setupPhoneGroup(form) {
+  var cc = form.querySelector('.cf-cc, .vmf-cc, .hwf-cc, .spf-cc');
+  var phone = form.querySelector('.cf-phone, .vmf-phone, .hwf-phone, .spf-phone');
+  if (!cc || !phone) return;
+  function apply() {
+    var len = cc.options[cc.selectedIndex].getAttribute('data-len');
+    if (len) { phone.setAttribute('maxlength', len); }
+    else { phone.removeAttribute('maxlength'); }
+  }
+  cc.addEventListener('change', apply);
+  phone.addEventListener('input', function () { phone.value = phone.value.replace(/[^0-9]/g, ''); });
+  apply();
+}
+function validatePhone(form) {
+  var cc = form.querySelector('.cf-cc, .vmf-cc, .hwf-cc, .spf-cc');
+  var phone = form.querySelector('.cf-phone, .vmf-phone, .hwf-phone, .spf-phone');
+  if (!cc || !phone) return '';
+  var len = cc.options[cc.selectedIndex].getAttribute('data-len');
+  if (len && phone.value.trim().length !== parseInt(len, 10)) {
+    return 'For ' + cc.value + ', the contact number must be ' + len + ' digits.';
+  }
+  return '';
+}
 </script>
 
 </body>
