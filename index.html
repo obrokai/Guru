@@ -1237,14 +1237,7 @@
     height: 28px;
     width: fit-content;
   }
-  .ftr-logo::before {
-    content: "GURU";
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
-    color: var(--ink);
-    font-family: 'DM Sans', system-ui, sans-serif;
-  }
+  .ftr-logo img { display: block; height: 88px; width: auto; }
   .ftr-tagline {
     font-size: 14px;
     color: var(--ink-3);
@@ -1541,7 +1534,7 @@
     .ftr-bottom { padding: 50px 20px 24px; }
     .ftr-bottom .ftr-inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
     .ftr-base { flex-direction: column; align-items: flex-start; margin-top: 40px; }
-    .ftr-logo::before { font-size: 24px; }
+    .ftr-logo img { height: 72px; }
     .scroll-curve path { stroke-width: 12; }
   }
   @media (max-width: 520px) {
@@ -1978,7 +1971,7 @@
   <div class="ftr-bottom">
     <div class="ftr-inner">
       <div class="ftr-logo-col">
-        <a href="#" class="ftr-logo" aria-label="Guru"></a>      </div>
+        <a href="#" class="ftr-logo" aria-label="Guru"><img src="guru-logo-footer.png" alt="Guru" /></a>      </div>
       <div>
         <p class="ftr-nav-heading">Navigation</p>
         <a href="#" class="ftr-link">Home</a>
