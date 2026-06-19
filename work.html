@@ -603,8 +603,8 @@
     grid-template-columns: 1fr 1fr;
     gap: 14px 14px;
     margin-top: 22px;
-    background: rgba(255,255,255,0.05);
-    border: 1.5px solid rgba(255,255,255,0.16);
+    background: #fdfdfb;
+    border: 1.5px solid rgba(14,14,16,0.16);
     border-radius: 20px;
     padding: 28px 26px;
   }
@@ -616,23 +616,23 @@
   .vmf-input, .vmf-select, .vmf-textarea {
     width: 100%;
     padding: 13px 16px;
-    border: 1.5px solid rgba(255,255,255,0.16);
+    border: 1.5px solid rgba(14,14,16,0.16);
     border-radius: 10px;
-    background: rgba(255,255,255,0.07);
+    background: #fff;
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 14px;
-    color: #fff;
+    color: var(--ink);
     transition: border-color 0.2s, box-shadow 0.2s;
     -webkit-appearance: none; appearance: none;
   }
-  .vmf-input::placeholder, .vmf-textarea::placeholder { color: rgba(255,255,255,0.4); }
+  .vmf-input::placeholder, .vmf-textarea::placeholder { color: var(--ink-3); }
   .vmf-input:focus, .vmf-select:focus, .vmf-textarea:focus {
     outline: none;
-    border-color: var(--lime);
-    box-shadow: 0 0 0 3px rgba(88,185,71,0.18);
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(27,35,224,0.10);
   }
   .vmf-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-opacity='0.5' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236d6d72' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 38px;
