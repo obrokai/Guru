@@ -610,6 +610,9 @@
   }
   .vmf-field { display: flex; flex-direction: column; gap: 7px; }
   .vmf-field.full { grid-column: 1 / -1; }
+  .vmf-phone-group { display: flex; gap: 8px; }
+  .vmf-cc { flex: 0 0 96px; padding-right: 26px; cursor: pointer; }
+  .vmf-phone-group .vmf-phone { flex: 1; }
   .vmf-input, .vmf-select, .vmf-textarea {
     width: 100%;
     padding: 13px 16px;
@@ -1067,13 +1070,28 @@
           <input class="vmf-input" type="text" id="vmf-name" name="name" placeholder="Name *" aria-label="Name" required />
         </div>
         <div class="vmf-field">
-          <input class="vmf-input" type="email" id="vmf-email" name="email" placeholder="Business Email *" aria-label="Business Email" required />
-        </div>
-        <div class="vmf-field">
-          <input class="vmf-input" type="tel" id="vmf-phone" name="phone" placeholder="Contact No. *" aria-label="Contact No." required />
-        </div>
-        <div class="vmf-field">
           <input class="vmf-input" type="text" id="vmf-company" name="company" placeholder="Company Name *" aria-label="Company Name" required />
+        </div>
+        <div class="vmf-field">
+          <div class="vmf-phone-group">
+            <select class="vmf-input vmf-cc" name="cc" aria-label="Country code">
+              <option value="+852" data-len="8" selected>+852</option>
+              <option value="+853" data-len="">+853</option>
+              <option value="+86" data-len="">+86</option>
+              <option value="+886" data-len="">+886</option>
+              <option value="+65" data-len="">+65</option>
+              <option value="+44" data-len="">+44</option>
+              <option value="+1" data-len="">+1</option>
+              <option value="+81" data-len="">+81</option>
+              <option value="+82" data-len="">+82</option>
+              <option value="+61" data-len="">+61</option>
+              <option value="+other" data-len="">Other</option>
+            </select>
+            <input class="vmf-input vmf-phone" type="tel" id="vmf-phone" name="phone" placeholder="Contact No. *" inputmode="numeric" aria-label="Contact No." required />
+          </div>
+        </div>
+        <div class="vmf-field">
+          <input class="vmf-input" type="email" id="vmf-email" name="email" placeholder="Business Email *" aria-label="Business Email" required />
         </div>
         <div class="vmf-field full">
           <select class="vmf-select" id="vmf-service" name="service" aria-label="Service You're Looking For">
@@ -1271,6 +1289,21 @@
     });
   }
 
+  // Phone country-code: digit-only + 8-digit limit for +852
+  if (modalForm) {
+    var ccSel = modalForm.querySelector('.vmf-cc');
+    var phoneInp = modalForm.querySelector('.vmf-phone');
+    if (ccSel && phoneInp) {
+      var applyCc = function () {
+        var len = ccSel.options[ccSel.selectedIndex].getAttribute('data-len');
+        if (len) { phoneInp.setAttribute('maxlength', len); } else { phoneInp.removeAttribute('maxlength'); }
+      };
+      ccSel.addEventListener('change', applyCc);
+      phoneInp.addEventListener('input', function () { phoneInp.value = phoneInp.value.replace(/[^0-9]/g, ''); });
+      applyCc();
+    }
+  }
+
   // Contact form submit (mailto delivery)
   if (modalForm) {
     modalForm.addEventListener('submit', function (e) {
@@ -1286,13 +1319,14 @@
         }
       }
       var v = function (n) { return (modalForm.elements[n] && modalForm.elements[n].value.trim()) || '—'; };
+      var cc = modalForm.elements['cc'] ? modalForm.elements['cc'].value.replace('+other','') : '';
       var subject = 'Website Enquiry — ' + v('company');
       var body =
         'Name: ' + v('name') + '\n' +
-        'Business Email: ' + v('email') + '\n' +
-        'Contact No.: ' + v('phone') + '\n' +
         'Company: ' + v('company') + '\n' +
-          'Service: ' + v('service') + '\n' +
+        'Contact No.: ' + cc + ' ' + v('phone') + '\n' +
+        'Business Email: ' + v('email') + '\n' +
+        'Service: ' + v('service') + '\n' +
         'Project: ' + (titleEl.textContent || '—') + '\n\n' +
         'Message:\n' + v('message') + '\n';
       window.location.href = 'mailto:hello@guruonline.com.hk'
