@@ -658,29 +658,71 @@
   }
   .logo-ticker { margin-bottom: 64px; }
 
-  /* ── Client list ── */
+  /* ── Client logo grid ── */
   .abt-clients {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 80px 40px 96px;
+    padding: 96px 40px 112px;
     text-align: center;
   }
   .abt-clients-label {
     font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
     text-transform: uppercase; color: var(--ink-3);
-    margin-bottom: 44px;
+    margin-bottom: 16px;
   }
-  .abt-clients-img {
-    width: 100%;
-    max-width: 1120px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-    mix-blend-mode: multiply;
+  .abt-clients-heading {
+    font-size: clamp(28px, 3.2vw, 44px);
+    font-weight: 800; letter-spacing: -0.025em;
+    line-height: 1.1; color: var(--ink);
+    max-width: 720px; margin: 0 auto 56px;
   }
-  @media (max-width: 980px) {
-    .abt-clients { padding: 56px 20px 64px; }
-    .abt-clients-label { margin-bottom: 28px; }
+  .abt-clients-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 14px;
+    background: rgba(14,14,16,0.08);
+    border: 1px solid rgba(14,14,16,0.08);
+    border-radius: 24px;
+    padding: 14px;
+    overflow: hidden;
+  }
+  .abt-client-cell {
+    aspect-ratio: 1 / 1;
+    background: #fff;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s;
+  }
+  .abt-client-cell:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(14,14,16,0.10);
+  }
+  .abt-client-cell img {
+    max-width: 100%;
+    max-height: 70%;
+    width: auto; height: auto;
+    object-fit: contain;
+    filter: grayscale(1) contrast(0.85) opacity(0.78);
+    transition: filter 0.35s;
+  }
+  .abt-client-cell:hover img {
+    filter: grayscale(0) contrast(1) opacity(1);
+  }
+  @media (max-width: 1100px) {
+    .abt-clients-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .abt-clients { padding: 64px 22px 80px; }
+    .abt-clients-grid { grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 10px; border-radius: 18px; }
+    .abt-client-cell { padding: 12px; border-radius: 11px; }
+    .abt-clients-heading { margin-bottom: 36px; }
+  }
+  @media (max-width: 600px) {
+    .abt-clients-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 8px; border-radius: 14px; }
+    .abt-client-cell { padding: 10px; border-radius: 10px; }
   }
 
   /* ══════════════════════════════════════════ FOOTER CTA */
@@ -918,7 +960,61 @@
 <!-- ══════════════════════════════════════════ CLIENT LIST -->
 <div class="abt-clients">
   <p class="abt-clients-label">Trusted by Leading Brands</p>
-  <img class="abt-clients-img" src="guru-clients.png" alt="Brands Guru has partnered with" />
+  <h2 class="abt-clients-heading">A Roster of Brands That Trust Guru.</h2>
+  <div class="abt-clients-grid">
+    <div class="abt-client-cell"><img src="client-logos/logo-01.png" alt="HKTDC" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-02.png" alt="Citi" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-03.png" alt="Hong Kong Disneyland" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-04.png" alt="HK Palace Museum" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-05.png" alt="Vita Green" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-06.png" alt="Audi" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-07.png" alt="Beijing Tourism" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-08.png" alt="Emperor Watch & Jewellery" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-09.png" alt="Caltex" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-10.png" alt="Chagee" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-11.png" alt="SOGO Hong Kong" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-12.png" alt="La Mer" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-13.png" alt="HKU" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-14.png" alt="XCMG" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-15.png" alt="Cathay Pacific" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-16.png" alt="Swire" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-17.png" alt="MTR" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-18.png" alt="Lenovo" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-19.png" alt="HKSTP" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-20.png" alt="HKPC" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-21.png" alt="SDLG" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-22.png" alt="Hong Kong Baptist University" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-23.png" alt="BYD" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-24.png" alt="China Construction Bank" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-25.png" alt="Hennessy" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-26.png" alt="UA Finance" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-27.png" alt="L'Oréal" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-28.png" alt="Tineco" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-29.png" alt="UNICEF" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-30.png" alt="水舞间" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-31.png" alt="China Mobile" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-32.png" alt="JD Mall" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-33.png" alt="Pandora" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-34.png" alt="Mitsubishi Electric" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-35.png" alt="GATSBY" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-36.png" alt="westK 西九文化區" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-37.png" alt="Dairy Farm" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-38.png" alt="PlayStation" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-39.png" alt="Chimelong" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-40.png" alt="領展 LINK" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-41.png" alt="Samsung" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-42.png" alt="Vivo" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-43.png" alt="領展 LINK" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-44.png" alt="IFC" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-45.png" alt="FURLA" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-46.png" alt="Mercedes-Benz" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-47.png" alt="Sony" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-48.png" alt="Wright Life" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-49.png" alt="HK Govt" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-50.png" alt="British Council" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-51.png" alt="Hong Kong International Airport" loading="lazy" /></div>
+    <div class="abt-client-cell"><img src="client-logos/logo-52.png" alt="New Era" loading="lazy" /></div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════ OFFICES -->
