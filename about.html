@@ -658,6 +658,31 @@
   }
   .logo-ticker { margin-bottom: 64px; }
 
+  /* ── Client list ── */
+  .abt-clients {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 40px 96px;
+    text-align: center;
+  }
+  .abt-clients-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3);
+    margin-bottom: 44px;
+  }
+  .abt-clients-img {
+    width: 100%;
+    max-width: 1120px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    mix-blend-mode: multiply;
+  }
+  @media (max-width: 980px) {
+    .abt-clients { padding: 56px 20px 64px; }
+    .abt-clients-label { margin-bottom: 28px; }
+  }
+
   /* ══════════════════════════════════════════ FOOTER CTA */
   .ftr { position: relative; }
   .ftr-top {
@@ -890,68 +915,10 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════ STATS -->
-<div class="abt-stats-section">
-  <div class="abt-stats-inner">
-    <p class="abt-stats-label">By the Numbers</p>
-    <div class="abt-stats-grid">
-      <div class="abt-stat-item">
-        <div class="abt-stat-num" data-count="200" data-suffix="+">200+</div>
-        <div class="abt-stat-label">Digital Specialists</div>
-      </div>
-      <div class="abt-stat-item">
-        <div class="abt-stat-num" data-count="500" data-suffix="+">500+</div>
-        <div class="abt-stat-label">International Clients</div>
-      </div>
-      <div class="abt-stat-item">
-        <div class="abt-stat-num" data-count="6" data-suffix="">6</div>
-        <div class="abt-stat-label">Global Offices</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════ CLIENT LOGO TICKER -->
-<p class="logo-ticker-label">Trusted by Leading Brands</p>
-<div class="logo-ticker" aria-label="Clients we've worked with">
-  <div class="logo-ticker-track">
-    <!-- Set A -->
-    <div class="logo-item" aria-label="Ricqles"><img src="logo-ricqles.webp" alt="Ricqles" /></div>
-    <div class="logo-item" aria-label="Lancôme"><img src="logo-lancome.png" alt="Lancôme" /></div>
-    <div class="logo-item" aria-label="Audi">
-      <svg viewBox="0 0 164 54" xmlns="http://www.w3.org/2000/svg" role="img">
-        <circle cx="27"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-        <circle cx="57"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-        <circle cx="87"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-        <circle cx="117" cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-      </svg>
-    </div>
-    <div class="logo-item" aria-label="Mercedes-Benz"><img src="logo-benz.png" alt="Mercedes-Benz" /></div>
-    <div class="logo-item" aria-label="Hennessy">
-      <svg viewBox="0 0 190 44" xmlns="http://www.w3.org/2000/svg" role="img">
-        <text x="4" y="34" font-family="Georgia,'Times New Roman',serif" font-weight="400" font-size="32" letter-spacing="2" fill="currentColor">Hennessy</text>
-      </svg>
-    </div>
-    <div class="logo-item" aria-label="Uniqlo"><img src="logo-uniqlo.png" alt="Uniqlo" /></div>
-    <!-- Set B (duplicate for seamless loop) -->
-    <div class="logo-item" aria-label="Ricqles"><img src="logo-ricqles.webp" alt="Ricqles" /></div>
-    <div class="logo-item" aria-label="Lancôme"><img src="logo-lancome.png" alt="Lancôme" /></div>
-    <div class="logo-item" aria-label="Audi">
-      <svg viewBox="0 0 164 54" xmlns="http://www.w3.org/2000/svg" role="img">
-        <circle cx="27"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-        <circle cx="57"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-        <circle cx="87"  cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-        <circle cx="117" cy="27" r="22" fill="none" stroke="currentColor" stroke-width="4.5"/>
-      </svg>
-    </div>
-    <div class="logo-item" aria-label="Mercedes-Benz"><img src="logo-benz.png" alt="Mercedes-Benz" /></div>
-    <div class="logo-item" aria-label="Hennessy">
-      <svg viewBox="0 0 190 44" xmlns="http://www.w3.org/2000/svg" role="img">
-        <text x="4" y="34" font-family="Georgia,'Times New Roman',serif" font-weight="400" font-size="32" letter-spacing="2" fill="currentColor">Hennessy</text>
-      </svg>
-    </div>
-    <div class="logo-item" aria-label="Uniqlo"><img src="logo-uniqlo.png" alt="Uniqlo" /></div>
-  </div>
+<!-- ══════════════════════════════════════════ CLIENT LIST -->
+<div class="abt-clients">
+  <p class="abt-clients-label">Trusted by Leading Brands</p>
+  <img class="abt-clients-img" src="guru-clients.png" alt="Brands Guru has partnered with" />
 </div>
 
 <!-- ══════════════════════════════════════════ OFFICES -->
