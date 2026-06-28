@@ -611,7 +611,7 @@
   .vmf-field { display: flex; flex-direction: column; gap: 7px; }
   .vmf-field.full { grid-column: 1 / -1; }
   .vmf-phone-group { display: flex; gap: 8px; }
-  .vmf-cc { flex: 0 0 96px; padding-right: 26px; cursor: pointer; }
+  .vmf-cc { flex: 0 0 96px; padding-right: 26px; cursor: pointer; color: var(--ink-3); }
   .vmf-phone-group .vmf-phone { flex: 1; }
   .vmf-input, .vmf-select, .vmf-textarea {
     width: 100%;
@@ -638,6 +638,7 @@
     padding-right: 38px;
     cursor: pointer;
   }
+  .vmf-select:has(option[value=""]:checked) { color: var(--ink-3); }
   .vmf-select option { color: #0e0e10; }
   .vmf-textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
   .vmf-submit {

@@ -776,7 +776,7 @@
   .cf-field { display: flex; flex-direction: column; gap: 8px; }
   .cf-field.full { grid-column: 1 / -1; }
   .cf-phone-group { display: flex; gap: 8px; }
-  .cf-cc { flex: 0 0 116px; padding-right: 30px; cursor: pointer; }
+  .cf-cc { flex: 0 0 116px; padding-right: 30px; cursor: pointer; color: var(--ink-3); }
   .cf-phone-group .cf-phone { flex: 1; }
   .cf-input, .cf-select, .cf-textarea {
     width: 100%; padding: 15px 18px; border: 1.5px solid rgba(14,14,16,0.16); border-radius: 12px;
@@ -789,6 +789,7 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236d6d72' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer;
   }
+  .cf-select:has(option[value=""]:checked) { color: var(--ink-3); }
   .cf-textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
   .cf-submit {
     grid-column: 1 / -1; width: 100%; margin-top: 6px; padding: 18px 44px;
