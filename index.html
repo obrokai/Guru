@@ -249,17 +249,14 @@
     justify-content: space-between;
     padding: 110px 40px 32px;
   }
-  #webgl {
+  #heroVideo {
     position: absolute;
-    top: 0; right: 0;
-    width: 78%;
+    inset: 0;
+    width: 100%;
     height: 100%;
+    object-fit: cover;
     z-index: 1;
     pointer-events: none;
-    will-change: transform;
-  }
-  @media (max-width: 1100px) {
-    #webgl { width: 68%; opacity: 0.90; }
   }
   .gh-content {
     position: relative;
@@ -358,12 +355,22 @@
     position: relative;
     z-index: 2;
     max-width: 1500px;
-    margin: 16px auto 0;
+    margin: auto auto 0;
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    justify-content: flex-start;
     gap: 24px;
     align-items: end;
+  }
+  /* soft scrim so the CTAs stay legible over the video */
+  .gh::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 42%;
+    background: linear-gradient(to top, rgba(14,14,16,0.42), transparent);
+    z-index: 1;
+    pointer-events: none;
   }
   .gh-sub {
     max-width: 380px;
@@ -400,9 +407,11 @@
     transform: translateY(-2px);
   }
   .gh-btn-ghost {
-    background: transparent;
-    border: 1.5px solid var(--ink);
-    color: var(--ink);
+    background: rgba(255,255,255,0.14);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.85);
+    color: #fff;
   }
   .gh-btn-ghost:hover {
     background: var(--ink);
@@ -1434,7 +1443,7 @@
   /* ================================================== RESPONSIVE */
   @media (max-width: 1100px) {
     .gh-line-b { font-size: clamp(56px, 11vw, 150px); }
-    #webgl { width: 55%; }
+    #heroVideo { width: 100%; }
   }
   @media (max-width: 980px) {
     .gn-nav { padding: 12px 14px; }
@@ -1456,14 +1465,7 @@
       align-items: stretch;
       gap: 0;
     }
-    #webgl {
-      width: 100%;
-      height: 100%;
-      top: 0;
-      opacity: 0.88;
-      -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 90%);
-      mask-image: linear-gradient(to bottom, black 60%, transparent 90%);
-    }
+    #heroVideo { width: 100%; height: 100%; inset: 0; }
     .gh-content {
       flex: 1;
       justify-content: flex-start;
@@ -1545,14 +1547,7 @@
     .gh-tag { font-size: 12px; padding: 10px 17px; gap: 8px; }
     .gh-btns { width: 100%; }
     .gh-btn-solid, .gh-btn-ghost { flex: 1; justify-content: center; padding: 16px 18px; }
-    #webgl {
-      width: 100%;
-      top: 0;
-      height: 100%;
-      -webkit-mask-image: linear-gradient(to bottom, black 52%, transparent 84%);
-      mask-image: linear-gradient(to bottom, black 52%, transparent 84%);
-      opacity: 0.90;
-    }
+    #heroVideo { width: 100%; height: 100%; inset: 0; }
     .ftr-bottom .ftr-inner { grid-template-columns: 1fr; }
     .abt-stats { grid-template-columns: 1fr 1fr; }
   }
@@ -1600,25 +1595,11 @@
 
 <div class="gh-wrap">
   <section class="gh">
-    <canvas id="webgl"></canvas>
-
-    <div class="gh-content">
-      <div class="gh-eyebrow">
-        <span class="gh-eyebrow-dot"></span>Our Solutions &mdash; Hong Kong
-      </div>
-      <h1 class="gh-h1">
-        <span class="gh-line-a">Not Another</span>
-        <span class="gh-line-b">Agency<span class="gh-period">.</span></span>
-        <span class="gh-line-c">
-          <span class="gh-tag">
-            <span class="gh-tag-dot"></span>A Digital Growth Enabler.
-          </span>
-        </span>
-      </h1>
-    </div>
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="">
+      <source src="hero-bg.mp4" type="video/mp4" />
+    </video>
 
     <div class="gh-bottom">
-      <p class="gh-sub">Strategy · Creativity · Media<br/>Data · Technology &amp; AI</p>
       <div class="gh-btns">
         <a href="#work" class="gh-btn-solid">Our Works <span style="opacity:.7">→</span></a>
         <a href="services.html" class="gh-btn-ghost">Our Services</a>
@@ -2084,186 +2065,6 @@
   window.addEventListener('resize', onScroll);
   update();
 })();
-</script>
-
-<!-- Three.js 3D shapes (Spline-style puffy) -->
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
-<script type="module">
-import * as THREE from 'three';
-import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-const canvas = document.getElementById('webgl');
-const wrap = () => ({ w: canvas.clientWidth, h: canvas.clientHeight });
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-camera.position.set(0, 0.2, 14);
-camera.lookAt(0, 0, 0);
-
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x000000, 0);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-function sizeRenderer() {
-  const { w, h } = wrap();
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-}
-
-function adjustMobile() {
-  const mobile = window.innerWidth < 980;
-  group.position.x = mobile ?  0.2 : 0;
-  group.position.y = mobile ? -0.5 : 0;
-  camera.fov = mobile ? 70 : 38;
-  camera.updateProjectionMatrix();
-}
-
-sizeRenderer();
-window.addEventListener('resize', function() { sizeRenderer(); adjustMobile(); });
-
-const pmrem = new THREE.PMREMGenerator(renderer);
-scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-scene.add(new THREE.HemisphereLight(0xfff8e6, 0xe8e0c8, 1.2));
-const key = new THREE.DirectionalLight(0xfff4e0, 3.2); key.position.set(4, 7, 6); scene.add(key);
-const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(-5, 2, 4); scene.add(fill);
-const rim = new THREE.DirectionalLight(0xc8d8ff, 0.9); rim.position.set(2, -3, -4); scene.add(rim);
-const top = new THREE.DirectionalLight(0xffffff, 0.8); top.position.set(0, 10, 2); scene.add(top);
-
-const group = new THREE.Group();
-scene.add(group);
-
-const shapeDefs = [
-  // orange cube — sits LEFT of centre, high up, drifts behind the headline
-  { type: 'squircle', size: 2.4,  color: 0xF37021, pos: [-1.0,  2.8,  0.0], rot: [0.15,  0.2,   0.05] },
-  // magenta sphere — upper right
-  { type: 'sphere',   size: 1.85, color: 0xE2056F, pos: [ 3.2,  1.0,  0.5], rot: [0,     0,     0   ] },
-  // teal cube — centre-right, low
-  { type: 'squircle', size: 2.0,  color: 0x00757A, pos: [ 1.8, -1.5, -0.2], rot: [-0.1, -0.15, 0.08 ] },
-  // yellow sphere — far right, low
-  { type: 'sphere',   size: 1.5,  color: 0xFFCC00, pos: [ 3.6, -2.8,  0.3], rot: [0,     0,     0   ] },
-  // peach soft sphere — left side, mid-height — creates balance & depth
-  { type: 'sphere',   size: 1.25, color: 0xFCC7A1, pos: [-2.4,  0.4, -2.5], rot: [0,     0,     0   ], soft: true },
-];
-
-// outlines removed — photorealistic mode
-
-const shapes = [];
-for (const def of shapeDefs) {
-  let geo;
-  if (def.type === 'squircle') {
-    geo = new RoundedBoxGeometry(def.size, def.size, def.size * 0.95, 8, def.size * 0.32);
-  } else {
-    geo = new THREE.SphereGeometry(def.size * 0.5, 48, 36);
-  }
-
-  const mat = new THREE.MeshPhysicalMaterial({
-    color: def.color,
-    roughness: def.soft ? 0.30 : 0.15,
-    metalness: def.soft ? 0.0 : 0.05,
-    clearcoat: def.soft ? 0.4 : 1.0,
-    clearcoatRoughness: def.soft ? 0.25 : 0.05,
-    sheen: def.soft ? 0.6 : 0.3,
-    sheenColor: 0xffffff,
-    sheenRoughness: 0.4,
-    envMapIntensity: def.soft ? 1.2 : 2.8,
-    transmission: def.soft ? 0.0 : 0.0,
-    ior: 1.45,
-  });
-  if (def.soft) {
-    mat.transparent = true;
-    mat.opacity = 0.75;
-  }
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(...def.pos);
-  mesh.rotation.set(...def.rot);
-
-  mesh.userData = {
-    home: new THREE.Vector3(...def.pos),
-    floatPh: Math.random() * Math.PI * 2,
-    floatAmp: 0.12 + Math.random() * 0.08,
-    spin: new THREE.Vector3(
-      (Math.random() - 0.5) * 0.18,
-      (Math.random() - 0.5) * 0.22,
-      (Math.random() - 0.5) * 0.08,
-    ),
-    isSphere: def.type === 'sphere',
-  };
-
-  group.add(mesh);
-  shapes.push(mesh);
-}
-
-adjustMobile();
-
-const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-window.addEventListener('mousemove', (e) => {
-  mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
-  mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-let scrollT = 0;
-window.addEventListener('scroll', () => {
-  const max = window.innerHeight * 0.9;
-  scrollT = Math.min(1, Math.max(0, window.scrollY / max));
-}, { passive: true });
-
-const clock = new THREE.Clock();
-let rafId = null;
-let canvasVisible = true;
-
-const visObserver = new IntersectionObserver((entries) => {
-  canvasVisible = entries[0].isIntersecting;
-  if (canvasVisible && !rafId) { clock.start(); rafId = requestAnimationFrame(tick); }
-}, { threshold: 0 });
-visObserver.observe(canvas);
-
-function tick() {
-  rafId = null;
-  if (!canvasVisible) return;
-
-  const dt = Math.min(0.05, clock.getDelta());
-  const t  = clock.elapsedTime;
-
-  mouse.x += (mouse.tx - mouse.x) * 0.06;
-  mouse.y += (mouse.ty - mouse.y) * 0.06;
-  group.rotation.y = mouse.x * 0.08;
-  group.rotation.x = -mouse.y * 0.04;
-
-  shapes.forEach((m) => {
-    const ud = m.userData;
-    if (!ud.isSphere) {
-      m.rotation.x += ud.spin.x * dt;
-      m.rotation.y += ud.spin.y * dt;
-      m.rotation.z += ud.spin.z * dt;
-    } else {
-      m.rotation.y += dt * 0.08;
-    }
-    const fy = Math.sin(t * 0.7 + ud.floatPh) * ud.floatAmp;
-    const fx = Math.cos(t * 0.55 + ud.floatPh * 1.3) * ud.floatAmp * 0.5;
-    const sx = (ud.home.x > 0 ? 1 : -1) * scrollT * 3.5;
-    const sy = -scrollT * 2.2;
-
-    m.position.x = ud.home.x + fx + sx;
-    m.position.y = ud.home.y + fy + sy;
-  });
-
-  renderer.render(scene, camera);
-  rafId = requestAnimationFrame(tick);
-}
-rafId = requestAnimationFrame(tick);
 </script>
 
 
