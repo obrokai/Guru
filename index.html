@@ -407,11 +407,10 @@
     transform: translateY(-2px);
   }
   .gh-btn-ghost {
-    background: rgba(255,255,255,0.14);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1.5px solid rgba(255,255,255,0.85);
-    color: #fff;
+    background: #fff;
+    border: 1.5px solid #fff;
+    color: var(--ink);
+    box-shadow: 0 4px 20px rgba(14,14,16,0.14);
   }
   .gh-btn-ghost:hover {
     background: var(--ink);
@@ -1595,7 +1594,8 @@
 
 <div class="gh-wrap">
   <section class="gh">
-    <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="">
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto">
+      <source src="hero-bg-mobile.mp4" media="(max-width: 900px)" type="video/mp4" />
       <source src="hero-bg.mp4" type="video/mp4" />
     </video>
 
