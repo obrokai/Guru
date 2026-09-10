@@ -44,7 +44,7 @@
 | 社群連結 | **外觀 → 自訂 → Guru site settings → Social links** |
 | 投資人頁（公司名稱、簡介、上市資料、文件清單、公司治理、聯絡處、免責聲明） | **外觀 → 自訂 → Guru site settings → Investor page** |
 | 網誌導言 | **外觀 → 自訂 → Guru site settings → Blog** |
-| 選單項目 | **外觀 → 選單** |
+| 選單項目 | **外觀 → 選單 → 「Guru Primary」**（匯入步驟 2 建立的那個；導覽列只認這個選單，其他選單不會顯示） |
 
 ## 四、安裝後要記得改的三件事
 

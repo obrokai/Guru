@@ -212,6 +212,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 | 側邊欄 sticky 失效 | `overflow-x: hidden` vs `clip`（§3） |
 | 匯入建立的頁面 slug 變成 `about-guru`、`investor-relations` | 匯入器現在明確設 `post_name`（about / solutions / investor / blog）；已存在且未被改過的自動 slug 會被修正 |
 | 行動版選單 / 頁尾連結 404 | 以前用寫死的 slug 陣列找頁面；現在 `guru_nav_items()` 依 slug → 模板 → fallback 三層解析 |
+| 啟用後導覽列顯示舊站選單（Home / About Us / Service / Contact Us…） | WordPress 切主題會把舊選單接到新位置。主題選單改名「Guru Primary」並以 `guru_menu_id` option 追蹤；`header.php` 只在位置指向該選單時才用 WP 選單，否則用內建五連結（`guru_use_wp_menu()`） |
 | Work 頁卡片沒樣式、篩選鈕沒反應、點卡片沒 modal | phase 2 的卡片 markup（`.prj-media`）沒有 CSS，且 main.js 缺篩選與 modal 綁定；phase 3 改回靜態站 markup 並補 JS |
 | Solutions 頁導言重複出現 | seed 的 content 與 excerpt 相同；現在 content 留空，模板只在有內文時輸出 |
 | 步驟 4 在 30 s 主機被砍 | 見 §4.5 |

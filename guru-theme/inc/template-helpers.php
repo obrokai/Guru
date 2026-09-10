@@ -45,6 +45,33 @@ function guru_page_url( $slugs, $fallback = '/', $template = '' ) {
 }
 
 /**
+ * ID of the navigation menu the importer created ("Guru Primary"), or 0.
+ *
+ * @return int
+ */
+function guru_menu_id() {
+	$id = (int) get_option( 'guru_menu_id' );
+	return ( $id && wp_get_nav_menu_object( $id ) ) ? $id : 0;
+}
+
+/**
+ * Whether the header should render the WordPress menu: only when the primary
+ * location points at the theme's own menu. A menu inherited from the previous
+ * theme (WordPress maps it across on switch) is ignored in favour of the
+ * built-in links, so the navigation is right from the moment of activation.
+ *
+ * @return bool
+ */
+function guru_use_wp_menu() {
+	$menu_id = guru_menu_id();
+	if ( ! $menu_id ) {
+		return false;
+	}
+	$locations = get_nav_menu_locations();
+	return ! empty( $locations['primary'] ) && (int) $locations['primary'] === $menu_id;
+}
+
+/**
  * The site's five navigation items with resolved URLs and active state.
  *
  * Used by the mobile menu and the footer, and by the header until a Primary

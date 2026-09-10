@@ -791,16 +791,21 @@ function guru_import_pages() {
  * @param array $ids Page IDs keyed by slug.
  */
 function guru_build_menu( $ids ) {
-	$name = __( 'Primary', 'guru' );
-	$menu = wp_get_nav_menu_object( $name );
+	$menu_id = guru_menu_id();
 
-	if ( ! $menu ) {
-		$menu_id = wp_create_nav_menu( $name );
-		if ( is_wp_error( $menu_id ) ) {
-			return;
+	if ( ! $menu_id ) {
+		// Tracked by ID (not name), so a menu the previous site happened to call
+		// the same thing is never mistaken for ours.
+		$menu = wp_get_nav_menu_object( 'Guru Primary' );
+		if ( $menu ) {
+			$menu_id = (int) $menu->term_id;
+		} else {
+			$menu_id = wp_create_nav_menu( 'Guru Primary' );
+			if ( is_wp_error( $menu_id ) ) {
+				return;
+			}
 		}
-	} else {
-		$menu_id = (int) $menu->term_id;
+		update_option( 'guru_menu_id', (int) $menu_id );
 	}
 
 	// Same order as the static site's navigation.

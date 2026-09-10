@@ -17,8 +17,9 @@ $guru_contact = is_front_page() ? '#contact' : home_url( '/#contact' );
 $guru_intro   = ! ( is_page_template( 'page-services.php' ) || is_page_template( 'page-investor.php' ) );
 
 /*
- * Nav items. The desktop links come from Appearance → Menus (Primary) once a
- * menu is assigned; this list is the fallback, and always drives the mobile menu.
+ * Nav items. The desktop links come from the "Guru Primary" menu (Appearance →
+ * Menus) once the importer has created it; until then — and for the mobile
+ * menu always — the built-in list below is used.
  */
 $guru_nav = guru_nav_items();
 ?>
@@ -44,7 +45,7 @@ $guru_nav = guru_nav_items();
 
 		<div class="gn-pill">
 			<div class="gn-nav-links">
-				<?php if ( has_nav_menu( 'primary' ) ) : ?>
+				<?php if ( guru_use_wp_menu() ) : ?>
 					<?php
 					wp_nav_menu(
 						array(
