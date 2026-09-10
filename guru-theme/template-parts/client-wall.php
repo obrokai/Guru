@@ -40,7 +40,7 @@ if ( $guru_q->have_posts() ) {
 if ( ! $guru_logos ) {
 	$guru_dir = get_stylesheet_directory() . '/assets/media/client-logos';
 	if ( is_dir( $guru_dir ) ) {
-		foreach ( glob( $guru_dir . '/*.{png,jpg,jpeg,webp,svg}', GLOB_BRACE ) as $guru_file ) {
+		foreach ( guru_image_files( $guru_dir ) as $guru_file ) {
 			$guru_slug    = pathinfo( $guru_file, PATHINFO_FILENAME );
 			$guru_logos[] = array(
 				'name' => ucwords( str_replace( '-', ' ', $guru_slug ) ),

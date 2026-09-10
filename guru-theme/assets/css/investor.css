@@ -59,8 +59,8 @@
     .gn-nav-inner { gap: 8px; }
     .gn-pill { padding: 4px; gap: 0; }
     .gn-nav-links { display: none; }
-    .gn-link-cta { display: none; }
-    .gn-link-whatsapp { display: none; }
+    .gn-pill .gn-link-cta { display: none; }
+    .gn-pill .gn-link-whatsapp { display: none; }
     .gn-logo img { height: 14px; }
     .gn-logo { height: 48px; padding: 0 14px; }
     .gn-hamburger { display: flex; }
@@ -281,3 +281,6 @@
     .inv-doc-date { min-width: auto; }
   }
   .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }
+
+  /* Subtitle under a document name (was an inline style on the static page). */
+  .inv-doc-sub { font-weight: 500; color: var(--ink-3); }

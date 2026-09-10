@@ -20,14 +20,16 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
-	$guru_lead = get_the_excerpt();
+	// The hand-written excerpt only — never an auto-trimmed copy of the story text.
+	$guru_lead = trim( (string) get_post_field( 'post_excerpt', get_the_ID() ) );
 	?>
 
 	<div class="abt-hero">
 		<h1 class="abt-hero-title"><?php echo wp_kses_post( str_replace( ' ', '<br>', get_the_title() ) ); ?></h1>
 		<div class="abt-hero-bottom">
 			<?php if ( $guru_lead ) : ?>
-				<p class="abt-hero-lead"><?php echo esc_html( $guru_lead ); ?></p>
+				<?php // <em> is the blue highlight the static page uses inside the lead. ?>
+				<p class="abt-hero-lead"><?php echo wp_kses( $guru_lead, array( 'em' => array(), 'strong' => array() ) ); ?></p>
 			<?php endif; ?>
 			<div class="abt-hero-meta">
 				<strong><?php echo esc_html( get_theme_mod( 'guru_founded', 'Est. 2007' ) ); ?></strong>
@@ -44,7 +46,10 @@ while ( have_posts() ) :
 			</h2>
 		</div>
 		<div class="abt-story-right guru-editor">
-			<?php the_content(); ?>
+			<?php
+			// Paragraphs carry the same class as the static page so its typography applies.
+			echo wp_kses_post( str_replace( '<p>', '<p class="abt-story-p">', apply_filters( 'the_content', get_the_content() ) ) );
+			?>
 		</div>
 	</div>
 

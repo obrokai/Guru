@@ -78,7 +78,7 @@ add_action( 'init', 'guru_register_work_taxonomy' );
  */
 function guru_seed_work_categories() {
 	$defaults = array(
-		'china-digital' => __( 'China Digital', 'guru' ),
+		'china'         => __( 'China Digital', 'guru' ),
 		'influencer'    => __( 'Influencer', 'guru' ),
 		'social'        => __( 'Social Media', 'guru' ),
 		'video'         => __( 'Video', 'guru' ),
@@ -116,6 +116,10 @@ function guru_work_archive_query( $query ) {
 		$query->set( 'posts_per_page', -1 );
 		$query->set( 'orderby', array( 'menu_order' => 'ASC', 'date' => 'DESC' ) );
 	}
+	// The blog listing filters cards in the browser, so keep them on one page.
+	if ( $query->is_home() ) {
+		$query->set( 'posts_per_page', 48 );
+	}
 }
 add_action( 'pre_get_posts', 'guru_work_archive_query' );
 
@@ -136,13 +140,16 @@ function guru_register_solution_post_type() {
 				'add_new_item'  => __( 'Add new solution', 'guru' ),
 				'edit_item'     => __( 'Edit solution', 'guru' ),
 			),
-			'public'        => true,
-			'has_archive'   => false,
-			'menu_icon'     => 'dashicons-screenoptions',
-			'menu_position' => 6,
-			'supports'      => array( 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes' ),
-			'rewrite'       => array( 'slug' => 'solutions' ),
-			'show_in_rest'  => true,
+			'public'              => true,
+			// Solutions are only ever shown on the Solutions page — no single URLs, not in the sitemap.
+			'publicly_queryable'  => false,
+			'exclude_from_search' => true,
+			'has_archive'         => false,
+			'menu_icon'           => 'dashicons-screenoptions',
+			'menu_position'       => 6,
+			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes' ),
+			'rewrite'             => false,
+			'show_in_rest'        => true,
 		)
 	);
 }

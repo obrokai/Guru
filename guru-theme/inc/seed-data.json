@@ -1,240 +1,461 @@
 {
- "solutions": [
-  {
-   "title": "China Digital Expansion",
-   "excerpt": "Your Gateway to China's Digital Growth. China growth requires more than market access — it needs local intelligence, platform fluency and a connected digital strategy. From Xiaohongshu (RedNote) to WeChat, Weibo, creative strategy, media, websites, influencers, PR and video, Guru connects every touchpoint into one growth journey. With branches in Guangzhou and Nanjing.",
-   "content": "<p>Your Gateway to China's Digital Growth. China growth requires more than market access — it needs local intelligence, platform fluency and a connected digital strategy. From Xiaohongshu (RedNote) to WeChat, Weibo, creative strategy, media, websites, influencers, PR and video, Guru connects every touchpoint into one growth journey. With branches in Guangzhou and Nanjing.</p>"
+  "solutions": [
+    {
+      "title": "China Digital Expansion",
+      "excerpt": "Your Gateway to China's Digital Growth. China growth requires more than market access — it needs local intelligence, platform fluency and a connected digital strategy. From Xiaohongshu (RedNote) to WeChat, Weibo, creative strategy, media, websites, influencers, PR and video, Guru connects every touchpoint into one growth journey. With branches in Guangzhou and Nanjing.",
+      "content": "",
+      "media_label": "WeChat Content · Case Study",
+      "media_type": "phones",
+      "media": [
+        {
+          "file": "china-digital-1.png",
+          "alt": "West Kowloon Cultural District Guide",
+          "caption": "文化區指南"
+        },
+        {
+          "file": "china-digital-2.png",
+          "alt": "Picnic at Victoria Harbour",
+          "caption": "維港野餐活動"
+        },
+        {
+          "file": "china-digital-3.png",
+          "alt": "West Kowloon Transport Guide",
+          "caption": "交通指南"
+        }
+      ],
+      "highlights": [],
+      "panel_tag": "China Digital"
+    },
+    {
+      "title": "Influencer Marketing",
+      "excerpt": "Beyond KOLs. Into Communities, Trust, And Cultural Relevance. Influence is no longer just about exposure — it is about trust, relevance and measurable growth. We connect brands with the right celebrities, KOLs, MIs and creators across Facebook, Instagram, Threads, TikTok, Xiaohongshu, WeChat, Weibo and global platforms.",
+      "content": "",
+      "media_label": "Hennessy × NBA · Campaign",
+      "media_type": "carousel",
+      "media": [
+        {
+          "file": "influencer-1.mp4",
+          "alt": "",
+          "caption": ""
+        },
+        {
+          "file": "influencer-2.mp4",
+          "alt": "",
+          "caption": ""
+        },
+        {
+          "file": "influencer-3.mp4",
+          "alt": "",
+          "caption": ""
+        },
+        {
+          "file": "influencer-4.mp4",
+          "alt": "",
+          "caption": ""
+        }
+      ],
+      "highlights": []
+    },
+    {
+      "title": "Video Production",
+      "excerpt": "Engineered for Growth. Designed for Brand. From concept and storytelling to studio shooting, editing and post-production, we deliver end-to-end video solutions — brand videos, product videos, social content and campaign stories that inspire audiences, improve product understanding and drive engagement across every digital touchpoint.",
+      "content": "",
+      "media_label": "Brand Film · Showreel",
+      "media_type": "video",
+      "media": [
+        {
+          "file": "video-production.mp4",
+          "alt": "",
+          "caption": ""
+        }
+      ],
+      "highlights": []
+    },
+    {
+      "title": "Go-Global",
+      "excerpt": "Bring the World's Attention to Your Business. Going global is not just market expansion — it is building relevance across cultures, platforms and customer journeys. From social media, websites and advertising to communications, exhibitions, events and installations, we create connected touchpoints that turn international visibility into trust and lasting business growth.",
+      "content": "",
+      "media_label": "",
+      "media_type": "",
+      "media": [],
+      "highlights": [
+        {
+          "icon": "🌏",
+          "title": "Cross-Cultural Strategy",
+          "desc": "Localised messaging that resonates across markets and cultural contexts."
+        },
+        {
+          "icon": "📣",
+          "title": "International PR",
+          "desc": "Media outreach and communications that build credibility globally."
+        },
+        {
+          "icon": "🖥️",
+          "title": "Digital Presence",
+          "desc": "Websites, landing pages and digital assets built for global audiences."
+        },
+        {
+          "icon": "🎪",
+          "title": "Exhibitions & Events",
+          "desc": "Brand activations and installations that create lasting impressions."
+        }
+      ]
+    },
+    {
+      "title": "Threads Management",
+      "excerpt": "Your Digital Marketing Enabler — From Insight to Impact. Threads is becoming a powerful space for real-time conversations, cultural moments and community discovery. We monitor hot topics, audience conversations and platform signals — turning them into timely content, replies and engagement opportunities that build faster brand relevance and deeper visibility.",
+      "content": "",
+      "media_label": "",
+      "media_type": "",
+      "media": [],
+      "highlights": [
+        {
+          "icon": "🔥",
+          "title": "Trend Monitoring",
+          "desc": "Real-time tracking of hot topics and cultural conversations on Threads."
+        },
+        {
+          "icon": "✍️",
+          "title": "Content Creation",
+          "desc": "Timely, brand-aligned posts that join the right conversations at the right moment."
+        },
+        {
+          "icon": "💬",
+          "title": "Community Engagement",
+          "desc": "Replies, threads and interactions that build genuine audience relationships."
+        },
+        {
+          "icon": "📊",
+          "title": "Performance Reporting",
+          "desc": "Clear visibility into reach, engagement and brand sentiment growth."
+        }
+      ]
+    },
+    {
+      "title": "Social Media Marketing",
+      "excerpt": "Curated Digital Solutions For A World That Changes Fast. Social media is no longer just about posting — it is about speed, relevance, creativity and measurable impact. Trusted by 500+ clients across industries, Guru delivers full-stack social management: strategy, content, creative, media, community engagement, social listening and performance optimization.",
+      "content": "",
+      "media_label": "",
+      "media_type": "",
+      "media": [],
+      "highlights": [
+        {
+          "icon": "🎯",
+          "title": "Strategy & Planning",
+          "desc": "Data-driven content calendars and platform strategies tailored to your goals."
+        },
+        {
+          "icon": "🎨",
+          "title": "Creative Production",
+          "desc": "Scroll-stopping visuals, videos and copy that drive genuine engagement."
+        },
+        {
+          "icon": "📈",
+          "title": "Paid Social Media",
+          "desc": "Precision-targeted ad campaigns across Meta, TikTok, LinkedIn and beyond."
+        },
+        {
+          "icon": "👂",
+          "title": "Social Listening",
+          "desc": "Brand monitoring and sentiment analysis to stay ahead of the conversation."
+        }
+      ]
+    },
+    {
+      "title": "GEO & Search Strategy",
+      "excerpt": "From Pixels to Performance. Search is evolving from keywords to answers — customers now discover brands through Google, traditional search and AI-powered generative experiences. We combine keyword research, intent analysis, on-page SEO, technical optimization and quality content to attract high-intent traffic across search engines and AI discovery, converting demand into leads and revenue.",
+      "content": "",
+      "media_label": "",
+      "media_type": "",
+      "media": [],
+      "highlights": [
+        {
+          "icon": "🔍",
+          "title": "SEO & Technical Audit",
+          "desc": "Full-site analysis and optimization for peak search engine performance."
+        },
+        {
+          "icon": "🤖",
+          "title": "GEO (AI Search)",
+          "desc": "Visibility in AI-powered search results like ChatGPT, Perplexity and Google AI."
+        },
+        {
+          "icon": "📝",
+          "title": "Content Strategy",
+          "desc": "High-intent content that ranks, converts and builds long-term authority."
+        },
+        {
+          "icon": "📍",
+          "title": "Local & Regional SEO",
+          "desc": "Targeted visibility for Hong Kong, China and key APAC markets."
+        }
+      ],
+      "panel_tag": "GEO & Search"
+    },
+    {
+      "title": "AI & Development",
+      "excerpt": "Writing What's Next, in AI. Guru enables brands to unlock growth through AI-enabled strategy, automation and development — connecting creativity, data, technology and platform expertise into smarter marketing systems. From content ideation and SEO to reporting automation, websites, landing pages, chatbots and customer interaction tools.",
+      "content": "",
+      "media_label": "",
+      "media_type": "",
+      "media": [],
+      "highlights": [
+        {
+          "icon": "⚡",
+          "title": "AI-Powered Automation",
+          "desc": "Marketing workflows, reporting and content pipelines powered by AI."
+        },
+        {
+          "icon": "🌐",
+          "title": "Web Development",
+          "desc": "Custom websites and landing pages built for conversion and performance."
+        },
+        {
+          "icon": "💬",
+          "title": "Chatbots & Tools",
+          "desc": "Intelligent customer interaction tools that scale engagement 24/7."
+        },
+        {
+          "icon": "📊",
+          "title": "Data & Analytics",
+          "desc": "Custom dashboards and reporting that turn data into actionable growth insights."
+        }
+      ]
+    },
+    {
+      "title": "Campaign / PR Events",
+      "excerpt": "Beyond Campaigns, Toward Growth. Campaigns and PR events are no longer one-off activations — they are brand moments built to travel across media, social platforms, influencers, communities and customer conversations. From product launches and media previews to pop-ups, exhibitions and social-first activations, Guru turns ideas into moments that attract attention and create long-term brand equity.",
+      "content": "",
+      "media_label": "",
+      "media_type": "",
+      "media": [],
+      "highlights": [
+        {
+          "icon": "🚀",
+          "title": "Product Launches",
+          "desc": "360° launch campaigns that create buzz, coverage and lasting brand memory."
+        },
+        {
+          "icon": "📰",
+          "title": "Media & PR",
+          "desc": "Earned media, press previews and journalist relationships that build credibility."
+        },
+        {
+          "icon": "🎭",
+          "title": "Pop-ups & Activations",
+          "desc": "Immersive brand experiences that drive social sharing and community connection."
+        },
+        {
+          "icon": "📱",
+          "title": "Social-First Campaigns",
+          "desc": "Campaigns designed to spread — creative that travels across platforms organically."
+        }
+      ],
+      "panel_tag": "Campaign & PR"
+    }
+  ],
+  "works": [
+    {
+      "title": "Hennessy × NBA Season 2 Recap",
+      "client": "Hennessy",
+      "video": "influencer-1.mp4",
+      "image": "",
+      "cats": [
+        "influencer",
+        "campaign"
+      ],
+      "tags": [
+        "Influencer Marketing",
+        "Campaign / PR"
+      ],
+      "home": 3
+    },
+    {
+      "title": "Hennessy KOL Campaign Film",
+      "client": "Hennessy",
+      "video": "influencer-3.mp4",
+      "image": "",
+      "cats": [
+        "influencer",
+        "video"
+      ],
+      "tags": [
+        "Influencer Marketing",
+        "Video Production"
+      ],
+      "home": 4
+    },
+    {
+      "title": "Guru Video Production Reel",
+      "client": "Guru",
+      "video": "video-production.mp4",
+      "image": "",
+      "cats": [
+        "video"
+      ],
+      "tags": [
+        "Video Production"
+      ]
+    },
+    {
+      "title": "Hennessy × NBA K11 Party",
+      "client": "Hennessy",
+      "video": "influencer-2.mp4",
+      "image": "",
+      "cats": [
+        "influencer",
+        "campaign"
+      ],
+      "tags": [
+        "Influencer Marketing",
+        "Event"
+      ]
+    },
+    {
+      "title": "Hennessy × NBA 3D OOH",
+      "client": "Hennessy",
+      "video": "influencer-4.mp4",
+      "image": "",
+      "cats": [
+        "campaign"
+      ],
+      "tags": [
+        "Campaign / PR",
+        "3D OOH"
+      ]
+    },
+    {
+      "title": "MGTO × CreatorWeek",
+      "client": "MGTO",
+      "video": "",
+      "image": "",
+      "cats": [
+        "influencer",
+        "campaign"
+      ],
+      "tags": [
+        "Influencer Marketing",
+        "Event"
+      ],
+      "home": 1
+    },
+    {
+      "title": "MGTO × Miyeon",
+      "client": "MGTO",
+      "video": "",
+      "image": "",
+      "cats": [
+        "influencer"
+      ],
+      "tags": [
+        "KOL Campaign"
+      ],
+      "home": 2
+    },
+    {
+      "title": "Pandora × Influencers",
+      "client": "Pandora",
+      "video": "",
+      "image": "",
+      "cats": [
+        "influencer",
+        "social"
+      ],
+      "tags": [
+        "Influencer",
+        "Social Media"
+      ]
+    },
+    {
+      "title": "香港故宮文化博物館",
+      "client": "Hong Kong Palace Museum",
+      "video": "",
+      "image": "",
+      "cats": [
+        "china"
+      ],
+      "tags": [
+        "China Digital",
+        "Xiaohongshu"
+      ]
+    },
+    {
+      "title": "西九 China Launch",
+      "client": "West Kowloon",
+      "video": "",
+      "image": "",
+      "cats": [
+        "china",
+        "social"
+      ],
+      "tags": [
+        "China Digital",
+        "WeChat"
+      ]
+    },
+    {
+      "title": "MEHK Tourism Campaign",
+      "client": "Mega Events Hong Kong",
+      "video": "",
+      "image": "",
+      "cats": [
+        "social",
+        "campaign"
+      ],
+      "tags": [
+        "Social Media",
+        "Campaign / PR"
+      ]
+    },
+    {
+      "title": "Prince Sports Social",
+      "client": "Prince",
+      "video": "",
+      "image": "",
+      "cats": [
+        "social"
+      ],
+      "tags": [
+        "Social Media"
+      ]
+    },
+    {
+      "title": "Ricqles × Go-Global",
+      "client": "Ricqles",
+      "video": "",
+      "image": "",
+      "cats": [
+        "campaign",
+        "go-global"
+      ],
+      "tags": [
+        "Campaign / PR",
+        "Go-Global"
+      ]
+    }
+  ],
+  "categories": {
+    "china": "China Digital",
+    "influencer": "Influencer",
+    "social": "Social Media",
+    "video": "Video",
+    "campaign": "Campaign & PR",
+    "go-global": "Go-Global"
   },
-  {
-   "title": "Influencer Marketing",
-   "excerpt": "Beyond KOLs. Into Communities, Trust, And Cultural Relevance. Influence is no longer just about exposure — it is about trust, relevance and measurable growth. We connect brands with the right celebrities, KOLs, MIs and creators across Facebook, Instagram, Threads, TikTok, Xiaohongshu, WeChat, Weibo and global platforms.",
-   "content": "<p>Beyond KOLs. Into Communities, Trust, And Cultural Relevance. Influence is no longer just about exposure — it is about trust, relevance and measurable growth. We connect brands with the right celebrities, KOLs, MIs and creators across Facebook, Instagram, Threads, TikTok, Xiaohongshu, WeChat, Weibo and global platforms.</p>"
+  "pages": {
+    "about": {
+      "title": "About Guru",
+      "excerpt": "A Hong Kong–headquartered <em>digital marketing enabler</em> connecting strategy, creativity, media, data, technology and AI for ambitious brands.",
+      "content": "<p>For nearly two decades, Guru has evolved from its founding in 2007 into a listed 4A's digital marketing agency and a true digital marketing powerhouse, driven by more than 200 experienced, creative and future-ready minds.</p>\n\n<p>Built for the next era of marketing, we go beyond service delivery. Guru is a digital marketing enabler for ambitious brands — connecting strategy, creativity, media, data, technology and AI to unlock growth, accelerate relevance and create measurable business impact.</p>\n\n<p>Powered by cross-disciplinary expertise, we deliver integrated digital marketing solutions for local and international brands across sectors. Agile, adaptive and insight-led, we help brands move faster with market change, turn emerging trends into real opportunities, and build stronger connections with today's digital-first audiences.</p>\n\n<p>Our vision is to pioneer new value creation and set new benchmarks for the industry. Because the breakthroughs we enable today become the legends brands are remembered for tomorrow.</p>"
+    }
   },
-  {
-   "title": "Video Production",
-   "excerpt": "Engineered for Growth. Designed for Brand. From concept and storytelling to studio shooting, editing and post-production, we deliver end-to-end video solutions — brand videos, product videos, social content and campaign stories that inspire audiences, improve product understanding and drive engagement across every digital touchpoint.",
-   "content": "<p>Engineered for Growth. Designed for Brand. From concept and storytelling to studio shooting, editing and post-production, we deliver end-to-end video solutions — brand videos, product videos, social content and campaign stories that inspire audiences, improve product understanding and drive engagement across every digital touchpoint.</p>"
-  },
-  {
-   "title": "Go-Global",
-   "excerpt": "Bring the World's Attention to Your Business. Going global is not just market expansion — it is building relevance across cultures, platforms and customer journeys. From social media, websites and advertising to communications, exhibitions, events and installations, we create connected touchpoints that turn international visibility into trust and lasting business growth.",
-   "content": "<p>Bring the World's Attention to Your Business. Going global is not just market expansion — it is building relevance across cultures, platforms and customer journeys. From social media, websites and advertising to communications, exhibitions, events and installations, we create connected touchpoints that turn international visibility into trust and lasting business growth.</p>\n\n<ul>\n<li><strong>Cross-Cultural Strategy</strong> — Localised messaging that resonates across markets and cultural contexts.</li>\n<li><strong>International PR</strong> — Media outreach and communications that build credibility globally.</li>\n<li><strong>Digital Presence</strong> — Websites, landing pages and digital assets built for global audiences.</li>\n<li><strong>Exhibitions & Events</strong> — Brand activations and installations that create lasting impressions.</li>\n</ul>"
-  },
-  {
-   "title": "Threads Management",
-   "excerpt": "Your Digital Marketing Enabler — From Insight to Impact. Threads is becoming a powerful space for real-time conversations, cultural moments and community discovery. We monitor hot topics, audience conversations and platform signals — turning them into timely content, replies and engagement opportunities that build faster brand relevance and deeper visibility.",
-   "content": "<p>Your Digital Marketing Enabler — From Insight to Impact. Threads is becoming a powerful space for real-time conversations, cultural moments and community discovery. We monitor hot topics, audience conversations and platform signals — turning them into timely content, replies and engagement opportunities that build faster brand relevance and deeper visibility.</p>\n\n<ul>\n<li><strong>Trend Monitoring</strong> — Real-time tracking of hot topics and cultural conversations on Threads.</li>\n<li><strong>Content Creation</strong> — Timely, brand-aligned posts that join the right conversations at the right moment.</li>\n<li><strong>Community Engagement</strong> — Replies, threads and interactions that build genuine audience relationships.</li>\n<li><strong>Performance Reporting</strong> — Clear visibility into reach, engagement and brand sentiment growth.</li>\n</ul>"
-  },
-  {
-   "title": "Social Media Marketing",
-   "excerpt": "Curated Digital Solutions For A World That Changes Fast. Social media is no longer just about posting — it is about speed, relevance, creativity and measurable impact. Trusted by 500+ clients across industries, Guru delivers full-stack social management: strategy, content, creative, media, community engagement, social listening and performance optimization.",
-   "content": "<p>Curated Digital Solutions For A World That Changes Fast. Social media is no longer just about posting — it is about speed, relevance, creativity and measurable impact. Trusted by 500+ clients across industries, Guru delivers full-stack social management: strategy, content, creative, media, community engagement, social listening and performance optimization.</p>\n\n<ul>\n<li><strong>Strategy & Planning</strong> — Data-driven content calendars and platform strategies tailored to your goals.</li>\n<li><strong>Creative Production</strong> — Scroll-stopping visuals, videos and copy that drive genuine engagement.</li>\n<li><strong>Paid Social Media</strong> — Precision-targeted ad campaigns across Meta, TikTok, LinkedIn and beyond.</li>\n<li><strong>Social Listening</strong> — Brand monitoring and sentiment analysis to stay ahead of the conversation.</li>\n</ul>"
-  },
-  {
-   "title": "GEO & Search Strategy",
-   "excerpt": "From Pixels to Performance. Search is evolving from keywords to answers — customers now discover brands through Google, traditional search and AI-powered generative experiences. We combine keyword research, intent analysis, on-page SEO, technical optimization and quality content to attract high-intent traffic across search engines and AI discovery, converting demand into leads and revenue.",
-   "content": "<p>From Pixels to Performance. Search is evolving from keywords to answers — customers now discover brands through Google, traditional search and AI-powered generative experiences. We combine keyword research, intent analysis, on-page SEO, technical optimization and quality content to attract high-intent traffic across search engines and AI discovery, converting demand into leads and revenue.</p>\n\n<ul>\n<li><strong>SEO & Technical Audit</strong> — Full-site analysis and optimization for peak search engine performance.</li>\n<li><strong>GEO (AI Search)</strong> — Visibility in AI-powered search results like ChatGPT, Perplexity and Google AI.</li>\n<li><strong>Content Strategy</strong> — High-intent content that ranks, converts and builds long-term authority.</li>\n<li><strong>Local & Regional SEO</strong> — Targeted visibility for Hong Kong, China and key APAC markets.</li>\n</ul>"
-  },
-  {
-   "title": "AI & Development",
-   "excerpt": "Writing What's Next, in AI. Guru enables brands to unlock growth through AI-enabled strategy, automation and development — connecting creativity, data, technology and platform expertise into smarter marketing systems. From content ideation and SEO to reporting automation, websites, landing pages, chatbots and customer interaction tools.",
-   "content": "<p>Writing What's Next, in AI. Guru enables brands to unlock growth through AI-enabled strategy, automation and development — connecting creativity, data, technology and platform expertise into smarter marketing systems. From content ideation and SEO to reporting automation, websites, landing pages, chatbots and customer interaction tools.</p>\n\n<ul>\n<li><strong>AI-Powered Automation</strong> — Marketing workflows, reporting and content pipelines powered by AI.</li>\n<li><strong>Web Development</strong> — Custom websites and landing pages built for conversion and performance.</li>\n<li><strong>Chatbots & Tools</strong> — Intelligent customer interaction tools that scale engagement 24/7.</li>\n<li><strong>Data & Analytics</strong> — Custom dashboards and reporting that turn data into actionable growth insights.</li>\n</ul>"
-  },
-  {
-   "title": "Campaign / PR Events",
-   "excerpt": "Beyond Campaigns, Toward Growth. Campaigns and PR events are no longer one-off activations — they are brand moments built to travel across media, social platforms, influencers, communities and customer conversations. From product launches and media previews to pop-ups, exhibitions and social-first activations, Guru turns ideas into moments that attract attention and create long-term brand equity.",
-   "content": "<p>Beyond Campaigns, Toward Growth. Campaigns and PR events are no longer one-off activations — they are brand moments built to travel across media, social platforms, influencers, communities and customer conversations. From product launches and media previews to pop-ups, exhibitions and social-first activations, Guru turns ideas into moments that attract attention and create long-term brand equity.</p>\n\n<ul>\n<li><strong>Product Launches</strong> — 360° launch campaigns that create buzz, coverage and lasting brand memory.</li>\n<li><strong>Media & PR</strong> — Earned media, press previews and journalist relationships that build credibility.</li>\n<li><strong>Pop-ups & Activations</strong> — Immersive brand experiences that drive social sharing and community connection.</li>\n<li><strong>Social-First Campaigns</strong> — Campaigns designed to spread — creative that travels across platforms organically.</li>\n</ul>"
+  "blog_categories": {
+    "influencer": "Influencer",
+    "china": "China Digital",
+    "social": "Social Media",
+    "video": "Video",
+    "tech": "Technology",
+    "campaign": "Campaign & PR",
+    "global": "Go-Global"
   }
- ],
- "works": [
-  {
-   "title": "Hennessy × NBA Season 2 Recap",
-   "client": "Hennessy",
-   "video": "influencer-1.mp4",
-   "image": "",
-   "cats": [
-    "influencer",
-    "campaign"
-   ],
-   "tags": [
-    "Influencer Marketing",
-    "Campaign / PR"
-   ]
-  },
-  {
-   "title": "Hennessy KOL Campaign Film",
-   "client": "Hennessy",
-   "video": "influencer-3.mp4",
-   "image": "",
-   "cats": [
-    "influencer",
-    "video"
-   ],
-   "tags": [
-    "Influencer Marketing",
-    "Video Production"
-   ]
-  },
-  {
-   "title": "Guru Video Production Reel",
-   "client": "Guru",
-   "video": "video-production.mp4",
-   "image": "",
-   "cats": [
-    "video"
-   ],
-   "tags": [
-    "Video Production"
-   ]
-  },
-  {
-   "title": "Hennessy × NBA K11 Party",
-   "client": "Hennessy",
-   "video": "influencer-2.mp4",
-   "image": "",
-   "cats": [
-    "influencer",
-    "campaign"
-   ],
-   "tags": [
-    "Influencer Marketing",
-    "Event"
-   ]
-  },
-  {
-   "title": "Hennessy × NBA 3D OOH",
-   "client": "Hennessy",
-   "video": "influencer-4.mp4",
-   "image": "",
-   "cats": [
-    "campaign"
-   ],
-   "tags": [
-    "Campaign / PR",
-    "3D OOH"
-   ]
-  },
-  {
-   "title": "MGTO × CreatorWeek",
-   "client": "MGTO",
-   "video": "",
-   "image": "",
-   "cats": [
-    "influencer",
-    "campaign"
-   ],
-   "tags": [
-    "Influencer Marketing",
-    "Event"
-   ]
-  },
-  {
-   "title": "MGTO × Miyeon",
-   "client": "MGTO",
-   "video": "",
-   "image": "",
-   "cats": [
-    "influencer"
-   ],
-   "tags": [
-    "KOL Campaign"
-   ]
-  },
-  {
-   "title": "Pandora × Influencers",
-   "client": "Pandora",
-   "video": "",
-   "image": "",
-   "cats": [
-    "influencer",
-    "social"
-   ],
-   "tags": [
-    "Influencer",
-    "Social Media"
-   ]
-  },
-  {
-   "title": "香港故宮文化博物館",
-   "client": "Hong Kong Palace Museum",
-   "video": "",
-   "image": "",
-   "cats": [
-    "china"
-   ],
-   "tags": [
-    "China Digital",
-    "Xiaohongshu"
-   ]
-  },
-  {
-   "title": "西九 China Launch",
-   "client": "West Kowloon",
-   "video": "",
-   "image": "",
-   "cats": [
-    "china",
-    "social"
-   ],
-   "tags": [
-    "China Digital",
-    "WeChat"
-   ]
-  },
-  {
-   "title": "MEHK Tourism Campaign",
-   "client": "Mega Events Hong Kong",
-   "video": "",
-   "image": "",
-   "cats": [
-    "social",
-    "campaign"
-   ],
-   "tags": [
-    "Social Media",
-    "Campaign / PR"
-   ]
-  },
-  {
-   "title": "Prince Sports Social",
-   "client": "Prince",
-   "video": "",
-   "image": "",
-   "cats": [
-    "social"
-   ],
-   "tags": [
-    "Social Media"
-   ]
-  },
-  {
-   "title": "Ricqles × Go-Global",
-   "client": "Ricqles",
-   "video": "",
-   "image": "",
-   "cats": [
-    "campaign",
-    "go-global"
-   ],
-   "tags": [
-    "Campaign / PR",
-    "Go-Global"
-   ]
-  }
- ],
- "categories": {
-  "china": "China Digital",
-  "influencer": "Influencer",
-  "social": "Social Media",
-  "video": "Video",
-  "campaign": "Campaign & PR",
-  "go-global": "Go-Global"
- },
- "pages": {
-  "about": {
-   "title": "About Guru",
-   "excerpt": "A Hong Kong–headquartered digital marketing enabler",
-   "content": "<p>For nearly two decades, Guru has evolved from its founding in 2007 into a listed 4A's digital marketing agency and a true digital marketing powerhouse, driven by more than 200 experienced, creative and future-ready minds.</p>\n\n<p>Built for the next era of marketing, we go beyond service delivery. Guru is a digital marketing enabler for ambitious brands — connecting strategy, creativity, media, data, technology and AI to unlock growth, accelerate relevance and create measurable business impact.</p>\n\n<p>Powered by cross-disciplinary expertise, we deliver integrated digital marketing solutions for local and international brands across sectors. Agile, adaptive and insight-led, we help brands move faster with market change, turn emerging trends into real opportunities, and build stronger connections with today's digital-first audiences.</p>\n\n<p>Our vision is to pioneer new value creation and set new benchmarks for the industry. Because the breakthroughs we enable today become the legends brands are remembered for tomorrow.</p>\n\n<p>Trusted by Leading Brands</p>"
-  }
- }
 }

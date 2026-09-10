@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GURU_VERSION', '1.0.0' );
+define( 'GURU_VERSION', '1.1.0' );
 
 /**
  * Theme supports and menus.
@@ -19,6 +19,9 @@ function guru_setup() {
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption', 'style', 'script' ) );
 	add_theme_support( 'responsive-embeds' );
+
+	// The About lead and the Investor intro are edited as the page's excerpt.
+	add_post_type_support( 'page', 'excerpt' );
 
 	register_nav_menus(
 		array(
@@ -54,7 +57,7 @@ function guru_assets() {
 		$page_css = 'about';
 	} elseif ( is_post_type_archive( 'work' ) || is_singular( 'work' ) || is_tax( 'work_category' ) || is_page( 'work' ) ) {
 		$page_css = 'work';
-	} elseif ( is_home() || is_singular( 'post' ) || is_archive() || is_page( 'blog' ) ) {
+	} elseif ( ( is_home() && ! is_front_page() ) || is_singular( 'post' ) || is_archive() || is_search() || is_404() || is_page( 'blog' ) ) {
 		$page_css = 'blog';
 	} elseif ( is_page_template( 'page-services.php' ) || is_page( 'services' ) || is_page( 'solutions' ) || is_singular( 'solution' ) ) {
 		$page_css = 'services';
@@ -100,9 +103,10 @@ function guru_resource_hints( $hints, $relation ) {
 }
 add_filter( 'wp_resource_hints', 'guru_resource_hints', 10, 2 );
 
-require_once get_stylesheet_directory() . '/inc/post-types.php';
-require_once get_stylesheet_directory() . '/inc/fields.php';
 require_once get_stylesheet_directory() . '/inc/template-helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
+require_once get_stylesheet_directory() . '/inc/post-types.php';
+require_once get_stylesheet_directory() . '/inc/fields.php';
+require_once get_stylesheet_directory() . '/inc/enquiries.php';
 require_once get_stylesheet_directory() . '/inc/contact-form.php';
 require_once get_stylesheet_directory() . '/inc/importer.php';

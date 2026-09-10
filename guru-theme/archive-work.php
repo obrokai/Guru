@@ -34,17 +34,17 @@ $guru_count = wp_count_posts( 'work' )->publish;
 <div class="wrk-page-grid" id="projectGrid">
 	<?php
 	if ( have_posts() ) :
+		$guru_i = 0;
 		while ( have_posts() ) :
 			the_post();
-			guru_work_card();
+			guru_work_card( null, $guru_i++ );
 		endwhile;
 	endif;
 	?>
+	<div class="wrk-empty" id="emptyState"><?php esc_html_e( 'No projects in this category yet.', 'guru' ); ?></div>
 </div>
 
-<div class="wrk-empty" id="emptyState"><?php esc_html_e( 'No projects in this category yet.', 'guru' ); ?></div>
-
 <?php
-get_template_part( 'template-parts/work-modal' );
+get_template_part( 'template-parts/work-modal-archive' );
 
 get_footer();

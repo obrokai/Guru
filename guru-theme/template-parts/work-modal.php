@@ -49,7 +49,7 @@ $guru_services = array(
 				action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" novalidate>
 				<input type="hidden" name="action" value="guru_contact" />
 				<?php wp_nonce_field( 'guru_contact', 'guru_contact_nonce' ); ?>
-				<input type="hidden" name="guru_redirect" value="<?php echo esc_url( home_url( add_query_arg( array() ) ) ); ?>" />
+				<input type="hidden" name="guru_redirect" value="<?php echo esc_url( home_url( '/' ) ); ?>" />
 				<input type="hidden" name="project" id="hwf-project" value="" />
 				<div class="cf-hp" aria-hidden="true">
 					<label>Website<input type="text" name="guru_website" tabindex="-1" autocomplete="off" /></label>

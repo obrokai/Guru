@@ -1,6 +1,7 @@
 <?php
 /**
- * Per-solution contact form.
+ * Per-solution contact form — same fields as the static page's form template,
+ * including the country-code selector next to the phone number.
  *
  * @package Guru
  *
@@ -12,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $guru_solution = isset( $args['solution'] ) ? $args['solution'] : '';
-$guru_uid      = 'spf-' . sanitize_title( $guru_solution ? $guru_solution : wp_rand() );
 
 $guru_services = array(
 	'China Digital Expansion',
@@ -40,6 +40,7 @@ $guru_services = array(
 		<input type="hidden" name="action" value="guru_contact" />
 		<?php wp_nonce_field( 'guru_contact', 'guru_contact_nonce' ); ?>
 		<input type="hidden" name="guru_redirect" value="<?php echo esc_url( get_permalink() ); ?>" />
+		<input type="hidden" name="project" value="<?php echo esc_attr( $guru_solution ); ?>" />
 		<div class="cf-hp" aria-hidden="true">
 			<label>Website<input type="text" name="guru_website" tabindex="-1" autocomplete="off" /></label>
 		</div>
@@ -53,8 +54,23 @@ $guru_services = array(
 				placeholder="<?php esc_attr_e( 'Company Name *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Company Name', 'guru' ); ?>" required />
 		</div>
 		<div class="spf-field">
-			<input class="spf-input" type="tel" name="phone"
-				placeholder="<?php esc_attr_e( 'Contact No. *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Contact No.', 'guru' ); ?>" required />
+			<div class="cf-phone-group">
+				<select class="spf-input cf-cc spf-cc" name="cc" aria-label="<?php esc_attr_e( 'Country code', 'guru' ); ?>">
+					<option value="+852" data-len="8" selected>+852</option>
+					<option value="+853" data-len="">+853</option>
+					<option value="+86" data-len="">+86</option>
+					<option value="+886" data-len="">+886</option>
+					<option value="+65" data-len="">+65</option>
+					<option value="+44" data-len="">+44</option>
+					<option value="+1" data-len="">+1</option>
+					<option value="+81" data-len="">+81</option>
+					<option value="+82" data-len="">+82</option>
+					<option value="+61" data-len="">+61</option>
+					<option value="+other" data-len=""><?php esc_html_e( 'Other', 'guru' ); ?></option>
+				</select>
+				<input class="spf-input cf-phone spf-phone" type="tel" name="phone" inputmode="numeric"
+					placeholder="<?php esc_attr_e( 'Contact No. *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Contact No.', 'guru' ); ?>" required />
+			</div>
 		</div>
 		<div class="spf-field">
 			<input class="spf-input" type="email" name="email"

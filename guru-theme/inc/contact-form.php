@@ -3,8 +3,8 @@
  * Contact form handling.
  *
  * Replaces the static site's mailto: link — enquiries are emailed to the
- * address set in the Customizer and stored as an "Enquiry" record so nothing
- * is lost if mail delivery fails.
+ * address set in the Customizer and stored in the enquiries table (see
+ * inc/enquiries.php) so nothing is lost if mail delivery fails.
  *
  * @package Guru
  */
@@ -14,41 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Private post type that archives every enquiry in the admin.
- */
-function guru_register_enquiry_post_type() {
-	register_post_type(
-		'guru_enquiry',
-		array(
-			'labels'          => array(
-				'name'          => __( 'Enquiries', 'guru' ),
-				'singular_name' => __( 'Enquiry', 'guru' ),
-				'menu_name'     => __( 'Enquiries', 'guru' ),
-			),
-			'public'          => false,
-			'show_ui'         => true,
-			'menu_icon'       => 'dashicons-email-alt',
-			'menu_position'   => 26,
-			'supports'        => array( 'title', 'editor' ),
-			'capabilities'    => array( 'create_posts' => 'do_not_allow' ),
-			'map_meta_cap'    => true,
-		)
-	);
-}
-add_action( 'init', 'guru_register_enquiry_post_type' );
-
-/**
- * Handle a submission from the footer / modal contact form.
+ * Handle a submission from the footer / modal / per-solution contact forms.
  */
 function guru_handle_contact() {
 	$redirect = isset( $_POST['guru_redirect'] )
 		? esc_url_raw( wp_unslash( $_POST['guru_redirect'] ) )
 		: home_url( '/' );
 
-	// Only redirect to this site.
-	if ( 0 !== strpos( $redirect, home_url() ) ) {
-		$redirect = home_url( '/' );
-	}
+	// Only redirect to this site — checked by host, so "https://this-host.evil.com/" is rejected too.
+	$redirect = wp_validate_redirect( $redirect, home_url( '/' ) );
 
 	$fail = add_query_arg( 'contact', 'error', $redirect ) . '#contact';
 	$ok   = add_query_arg( 'contact', 'sent', $redirect ) . '#contact';
@@ -105,23 +79,23 @@ function guru_handle_contact() {
 	$body .= "\n" . __( 'Message', 'guru' ) . ":\n" . ( $message ? $message : '—' ) . "\n";
 
 	// Archive it first, so a mail failure never loses the enquiry.
-	$post_id = wp_insert_post(
+	guru_enquiry_insert(
 		array(
-			'post_type'    => 'guru_enquiry',
-			'post_status'  => 'publish',
-			/* translators: %1$s: person's name, %2$s: company. */
-			'post_title'   => sprintf( __( '%1$s — %2$s', 'guru' ), $name, $company ),
-			'post_content' => $body,
+			'name'       => $name,
+			'company'    => $company,
+			'email'      => $email,
+			'phone'      => $tel,
+			'service'    => $service,
+			'project'    => $project,
+			'message'    => $message,
+			'source_url' => $redirect,
 		)
 	);
 
-	if ( $post_id && ! is_wp_error( $post_id ) ) {
-		foreach ( array( 'name' => $name, 'company' => $company, 'phone' => $tel, 'email' => $email, 'service' => $service ) as $k => $v ) {
-			update_post_meta( $post_id, '_guru_' . $k, $v );
-		}
+	$to = guru_mod( 'guru_email' );
+	if ( ! is_email( $to ) ) {
+		$to = get_option( 'admin_email' );
 	}
-
-	$to      = get_theme_mod( 'guru_email', get_option( 'admin_email' ) );
 	$subject = sprintf(
 		/* translators: %s: company name. */
 		__( 'Website Enquiry — %s', 'guru' ),

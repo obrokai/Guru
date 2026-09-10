@@ -4,7 +4,8 @@
  *
  * Sticky sidebar plus one panel per Solution. Everything on this page comes
  * from the Solutions post type, so editing a solution updates both this page
- * and the homepage accordion.
+ * and the homepage accordion. Each panel's media block and highlight cards are
+ * set in the "Solution media & highlights" box on the solution's edit screen.
  *
  * @package Guru
  */
@@ -21,11 +22,14 @@ $guru_items     = array();
 if ( $guru_solutions->have_posts() ) {
 	while ( $guru_solutions->have_posts() ) {
 		$guru_solutions->the_post();
+		$guru_tag     = (string) get_post_meta( get_the_ID(), '_guru_panel_tag', true );
 		$guru_items[] = array(
+			'id'      => get_the_ID(),
 			'slug'    => get_post_field( 'post_name' ),
 			'title'   => get_the_title(),
+			'tag'     => $guru_tag ? $guru_tag : get_the_title(),
 			'excerpt' => get_the_excerpt(),
-			'content' => apply_filters( 'the_content', get_the_content() ),
+			'content' => trim( apply_filters( 'the_content', get_the_content() ) ),
 		);
 	}
 	wp_reset_postdata();
@@ -62,7 +66,7 @@ $guru_work_url = get_post_type_archive_link( 'work' );
 		<?php foreach ( $guru_items as $guru_i => $guru_item ) : ?>
 			<div class="srv-panel<?php echo 0 === $guru_i ? ' active' : ''; ?>" id="panel-<?php echo esc_attr( $guru_item['slug'] ); ?>">
 				<div class="srv-panel-tag">
-					<span class="srv-panel-tag-dot"></span><?php echo esc_html( $guru_item['title'] ); ?>
+					<span class="srv-panel-tag-dot"></span><?php echo esc_html( $guru_item['tag'] ); ?>
 				</div>
 
 				<h1 class="srv-panel-title"><?php echo esc_html( $guru_item['title'] ); ?></h1>
@@ -71,9 +75,13 @@ $guru_work_url = get_post_type_archive_link( 'work' );
 					<p class="srv-panel-desc"><?php echo esc_html( $guru_item['excerpt'] ); ?></p>
 				<?php endif; ?>
 
-				<div class="srv-panel-body guru-editor">
-					<?php echo wp_kses_post( $guru_item['content'] ); ?>
-				</div>
+				<?php guru_solution_media( $guru_item['id'] ); ?>
+
+				<?php if ( $guru_item['content'] ) : ?>
+					<div class="srv-panel-body guru-editor">
+						<?php echo wp_kses_post( $guru_item['content'] ); ?>
+					</div>
+				<?php endif; ?>
 
 				<div class="srv-panel-footer">
 					<a href="<?php echo esc_url( $guru_work_url ); ?>" class="srv-panel-cta">
@@ -82,7 +90,7 @@ $guru_work_url = get_post_type_archive_link( 'work' );
 					<?php
 					$guru_next = isset( $guru_items[ $guru_i + 1 ] ) ? $guru_items[ $guru_i + 1 ] : $guru_items[0];
 					?>
-					<button class="srv-panel-next" data-next="<?php echo esc_attr( $guru_next['slug'] ); ?>">
+					<button class="srv-panel-next" type="button" data-next="<?php echo esc_attr( $guru_next['slug'] ); ?>">
 						<span class="next-label"><?php echo esc_html( isset( $guru_items[ $guru_i + 1 ] ) ? __( 'Next', 'guru' ) : __( 'Back to first', 'guru' ) ); ?></span>
 						&nbsp;<?php echo esc_html( $guru_next['title'] ); ?> &rarr;
 					</button>

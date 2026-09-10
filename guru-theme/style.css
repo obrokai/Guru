@@ -741,14 +741,14 @@ Text Domain: guru
     text-transform: uppercase;
     font-weight: 600;
   }
-  .wrk-img-ph::after { content: "MGTO × CreatorWeek"; }
+  .wrk-img-ph::after { content: attr(data-title); }
   .wrk-img-ph-2 {
     background:
       radial-gradient(ellipse at 30% 40%, rgba(255,179,71,0.55), transparent 60%),
       radial-gradient(ellipse at 70% 60%, rgba(255,138,184,0.5), transparent 60%),
       linear-gradient(135deg, #c8a890, #a07866);
   }
-  .wrk-img-ph-2::after { content: "MGTO × Miyeon"; }
+  .wrk-img-ph-2::after { content: attr(data-title); }
 
   /* ── Video card (real footage) ── */
   .wrk-video-card {
@@ -1554,3 +1554,6 @@ Text Domain: guru
     .abt-stats { grid-template-columns: 1fr 1fr; }
   }
 
+
+  /* Honeypot field for the contact forms: off-screen for people, present for bots. */
+  .cf-hp { position: absolute !important; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
