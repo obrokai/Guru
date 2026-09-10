@@ -493,3 +493,91 @@ function guru_solution_column_content( $column, $post_id ) {
 	echo $bits ? esc_html( implode( ' · ', $bits ) ) : '<span style="color:#787c82">' . esc_html__( 'Text only', 'guru' ) . '</span>';
 }
 add_action( 'manage_solution_posts_custom_column', 'guru_solution_column_content', 10, 2 );
+
+/* -------------------------------------------------------------------------
+ * Client logos — opt in to the homepage ticker
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The homepage marquee shows six brand wordmarks by default (as on the static
+ * site). Square client-wall logos look wrong at that height, so a logo only
+ * joins the ticker when the editor ticks this box.
+ */
+function guru_add_client_logo_meta_box() {
+	add_meta_box(
+		'guru_client_logo_ticker',
+		__( 'Homepage ticker', 'guru' ),
+		'guru_render_client_logo_meta_box',
+		'client_logo',
+		'side',
+		'default'
+	);
+}
+add_action( 'add_meta_boxes', 'guru_add_client_logo_meta_box' );
+
+/**
+ * @param WP_Post $post Current post.
+ */
+function guru_render_client_logo_meta_box( $post ) {
+	wp_nonce_field( 'guru_save_client_logo_meta', 'guru_client_logo_nonce' );
+	$on = (bool) get_post_meta( $post->ID, '_guru_in_ticker', true );
+	?>
+	<label>
+		<input type="checkbox" name="guru_in_ticker" value="1" <?php checked( $on ); ?> />
+		<?php esc_html_e( 'Show this logo in the homepage marquee', 'guru' ); ?>
+	</label>
+	<p class="description">
+		<?php esc_html_e( 'Wide wordmark logos work best (the strip is 34px tall). When no logo is ticked, the six brands from the original design are shown.', 'guru' ); ?>
+	</p>
+	<?php
+}
+
+/**
+ * @param int $post_id Post ID.
+ */
+function guru_save_client_logo_meta( $post_id ) {
+	if ( ! isset( $_POST['guru_client_logo_nonce'] )
+		|| ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['guru_client_logo_nonce'] ) ), 'guru_save_client_logo_meta' ) ) {
+		return;
+	}
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+
+	if ( ! empty( $_POST['guru_in_ticker'] ) ) {
+		update_post_meta( $post_id, '_guru_in_ticker', 1 );
+	} else {
+		delete_post_meta( $post_id, '_guru_in_ticker' );
+	}
+}
+add_action( 'save_post_client_logo', 'guru_save_client_logo_meta' );
+
+/**
+ * @param array $columns Existing columns.
+ * @return array
+ */
+function guru_client_logo_columns( $columns ) {
+	$new = array();
+	foreach ( $columns as $key => $label ) {
+		$new[ $key ] = $label;
+		if ( 'title' === $key ) {
+			$new['guru_ticker'] = __( 'Homepage ticker', 'guru' );
+		}
+	}
+	return $new;
+}
+add_filter( 'manage_client_logo_posts_columns', 'guru_client_logo_columns' );
+
+/**
+ * @param string $column  Column key.
+ * @param int    $post_id Post ID.
+ */
+function guru_client_logo_column_content( $column, $post_id ) {
+	if ( 'guru_ticker' === $column ) {
+		echo get_post_meta( $post_id, '_guru_in_ticker', true ) ? '<strong>' . esc_html__( 'Yes', 'guru' ) . '</strong>' : '&mdash;';
+	}
+}
+add_action( 'manage_client_logo_posts_custom_column', 'guru_client_logo_column_content', 10, 2 );

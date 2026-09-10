@@ -34,7 +34,8 @@
 |---|---|
 | 上架 / 修改作品 | **Showcase** → 新增項目。填標題、Client、選分類、設定 **Cover image**（封面圖）；若是影片作品，在 Video 欄位用媒體庫選檔。**Card labels** 是卡片上的小標籤（留空就顯示分類名稱）；**Homepage position** 填 1～4 可把作品放到首頁「Our Work」四格（1 是大卡） |
 | 服務內容 | **Solutions** → 編輯。標題、摘要（頁面上的導言）、內文（選用）；排序用「順序」欄位。下方 **Solution media & highlights** 可設定短標籤、手機截圖／影片輪播／單支影片，以及四張重點卡 |
-| 客戶 logo | **Client logos** → 每則設一張 **Logo image** 即可 |
+| 客戶 logo（About 頁客戶牆） | **Client logos** → 每則設一張 **Logo image** 即可 |
+| 首頁 logo 跑馬燈 | 預設顯示原設計的六個品牌字標。要換：在 **Client logos** 編輯畫面右側勾「**Show this logo in the homepage marquee**」（適合橫式字標，方形 logo 會太小） |
 | 表單來信 | **Enquiries** → 所有送出的表單都會存檔並可下載 CSV，同時寄到聯絡信箱 |
 | 網誌文章 | **文章** → 一般 WordPress 文章；文章的第一個分類決定卡片顏色 |
 | 首頁文字（Solutions 導言、About 區標題／數字／段落）、首頁影片 | **外觀 → 自訂 → Guru site settings → Homepage** |

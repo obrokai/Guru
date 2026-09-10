@@ -139,7 +139,7 @@ guru-theme/
 |---|---|---|
 | `work` | Showcase | `_guru_client`、`_guru_video_url`、`_guru_tags`（卡片標籤；空則顯示分類名）、`_guru_home_order`（首頁位置 1–4；空的位置由清單前幾筆補上） |
 | `solution` | Solutions | `_guru_panel_tag`（面板短標籤）、`_guru_media_type`（phones / carousel / video）、`_guru_media_label`、`_guru_media_items`（陣列 src/caption/alt）、`_guru_highlights`（陣列 icon/title/desc）。無單篇網址 |
-| `client_logo` | Client logos | 精選圖片 |
+| `client_logo` | Client logos | 精選圖片（Logo image）；`_guru_in_ticker`＝1 才進首頁跑馬燈，否則跑馬燈顯示靜態站的六個字標（方形客戶牆 logo 在 34px 高會看不見，staging 上實際發生過） |
 
 來信不再是 CPT，在 `{prefix}guru_enquiries` 資料表；舊 `guru_enquiry` 文章會在第一次進後台時自動搬進資料表。
 
