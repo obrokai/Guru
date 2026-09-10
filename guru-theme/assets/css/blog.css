@@ -435,3 +435,9 @@
   .blg-single-nav a { color: var(--ink); }
   .blg-single-nav a:hover { color: var(--blue); }
   @media (max-width: 980px) { .blg-single { padding: 130px 22px 72px; } }
+
+  /* Pages and single posts use the full contact-form footer, whose heading is sentence case. */
+  body.page .ftr-cta-heading, body.single .ftr-cta-heading { text-transform: none; }
+  body.page .ftr-cta-block, body.single .ftr-cta-block { align-items: center; }
+  body.page .ftr-cta-heading, body.single .ftr-cta-heading { font-size: clamp(32px, 3.6vw, 56px); line-height: 1.05; letter-spacing: -0.03em; max-width: 640px; }
+  @media (max-width: 980px) { body.page .ftr-cta-heading, body.single .ftr-cta-heading { font-size: clamp(30px, 8vw, 44px); } }

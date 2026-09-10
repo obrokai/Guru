@@ -113,3 +113,4 @@ require_once get_stylesheet_directory() . '/inc/fields.php';
 require_once get_stylesheet_directory() . '/inc/enquiries.php';
 require_once get_stylesheet_directory() . '/inc/contact-form.php';
 require_once get_stylesheet_directory() . '/inc/importer.php';
+require_once get_stylesheet_directory() . '/inc/redirects.php';

@@ -4,6 +4,10 @@
  * pages the client adds later). Uses the single-post layout so it matches the
  * rest of the site.
  *
+ * Pages inherited from the previous theme were built with page-builder
+ * shortcodes that no longer exist; their leftover tags are stripped so the
+ * plain text still reads.
+ *
  * @package Guru
  */
 
@@ -15,6 +19,9 @@ get_header();
 
 while ( have_posts() ) :
 	the_post();
+
+	$guru_content = apply_filters( 'the_content', get_the_content() );
+	$guru_content = preg_replace( '/\[\/?(vc_|eltd_|rev_slider|contact-form-7)[^\]]*\]/', '', $guru_content );
 	?>
 	<article class="blg-single">
 		<div class="blg-single-head">
@@ -26,7 +33,7 @@ while ( have_posts() ) :
 		<?php endif; ?>
 
 		<div class="blg-single-body guru-editor">
-			<?php the_content(); ?>
+			<?php echo wp_kses_post( $guru_content ); ?>
 		</div>
 	</article>
 	<?php

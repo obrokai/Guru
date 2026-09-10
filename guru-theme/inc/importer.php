@@ -102,6 +102,48 @@ function guru_find_seeded( $post_type, $key, $title ) {
 }
 
 /**
+ * The page the importer created for a seed entry.
+ *
+ * Like guru_find_seeded(), but the title fallback only adopts a page that is
+ * empty or already uses our template — never a content page inherited from the
+ * previous theme, whose title may happen to match.
+ *
+ * @param string $key      Seed key (page-about …).
+ * @param string $title    Seed title.
+ * @param string $template Our template file for this page, or ''.
+ * @return int Page ID, or 0.
+ */
+function guru_find_seeded_page( $key, $title, $template ) {
+	$found = get_posts(
+		array(
+			'post_type'   => 'page',
+			'post_status' => 'any',
+			'numberposts' => 1,
+			'fields'      => 'ids',
+			'meta_key'    => '_guru_seed_key', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'  => $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		)
+	);
+	if ( $found ) {
+		return (int) $found[0];
+	}
+
+	$id = guru_find_by_title( 'page', $title );
+	if ( ! $id ) {
+		return 0;
+	}
+
+	$ours = '' === trim( (string) get_post_field( 'post_content', $id ) )
+		|| ( $template && get_post_meta( $id, '_wp_page_template', true ) === $template );
+	if ( ! $ours ) {
+		return 0;
+	}
+
+	update_post_meta( $id, '_guru_seed_key', $key );
+	return $id;
+}
+
+/**
  * True the first time the importer handles $key for this post, false after.
  *
  * Lets a re-run fill in fields that a newer seed file introduced, without ever
@@ -663,13 +705,28 @@ function guru_import_pages() {
 	$added = 0;
 
 	foreach ( $pages as $key => $page ) {
-		$page_id = guru_find_seeded( 'page', 'page-' . $key, $page['title'] );
+		$page_id = guru_find_seeded_page( 'page-' . $key, $page['title'], $page['template'] );
+
+		// A page from the previous site may already own this address (the old
+		// "Investor" page at /investor/, for instance). Move it aside as a draft
+		// so the imported page — and its template — take over the URL.
+		$holder = get_page_by_path( $key );
+		if ( $holder && (int) $holder->ID !== (int) $page_id && 'page-' . $key !== get_post_meta( $holder->ID, '_guru_seed_key', true ) ) {
+			wp_update_post(
+				array(
+					'ID'          => $holder->ID,
+					'post_name'   => wp_unique_post_slug( $key . '-old', $holder->ID, 'draft', 'page', $holder->post_parent ),
+					'post_status' => 'draft',
+				)
+			);
+			update_post_meta( $holder->ID, '_guru_replaced_by', $key );
+		}
 
 		if ( $page_id ) {
-			// Give an untouched auto-generated slug the clean address (/about/,
-			// /investor/ …); a slug the editor changed is left alone.
+			// Give an auto-generated or collision slug the clean address (/about/,
+			// /investor/ …); a slug the editor deliberately changed is left alone.
 			$current = get_post_field( 'post_name', $page_id );
-			if ( $current !== $key && $current === sanitize_title( $page['title'] ) ) {
+			if ( $current !== $key && ( $current === sanitize_title( $page['title'] ) || preg_match( '/^' . preg_quote( $key, '/' ) . '-\d+$/', $current ) ) ) {
 				wp_update_post(
 					array(
 						'ID'        => $page_id,

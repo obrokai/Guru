@@ -58,7 +58,12 @@
 3. **固定網址**：**設定 → 固定網址** 選「文章名稱」，
    Showcase 的網址才會是 `/work/項目名稱/`。
 
-## 五、測試站與推送正式站（WPvivid）
+## 五、舊網址會自動轉址
+
+舊站的頁面與網址（About Us、Our Work、Contact Us、各 Service、Portfolio Item、Last Announcement、Financial Information 等）啟用主題後會自動 301 到新頁面，不需要另外設定。投資人文件（`/investor-document/…`）與隱私權頁面保持原網址。
+匯入步驟 2 會把佔住 `/about/`、`/investor/` 等網址的舊頁面改為草稿並加上 `-old` 後綴，內容不會刪除，可在 **頁面 → 草稿** 找到。
+
+## 六、測試站與推送正式站（WPvivid）
 
 建議用 **WPvivid Backup** 外掛建立測試站：
 
@@ -72,7 +77,7 @@
 兩條紀律：**所有內容修改都在測試站做，不直接改正式站**（推送會覆蓋）；
 **每次推送前先備份**。
 
-## 六、不需要安裝任何外掛
+## 七、不需要安裝任何外掛
 
 作品集、服務、客戶 logo、聯絡表單、後台欄位全部內建於主題，
 沒有用到 ACF、Elementor 或任何表單外掛。

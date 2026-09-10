@@ -121,6 +121,7 @@ guru-theme/
 │   ├── enquiries.php          ★ 來信資料表 {prefix}guru_enquiries、後台 Enquiries 列表 / 刪除 / CSV
 │   ├── contact-form.php       表單處理（寫入資料表 + wp_mail）
 │   ├── importer.php           ★ 一鍵匯入（含 solution 媒體、首頁四格、網誌分類；步驟 4 在 30 s 限制下可分次）
+│   ├── redirects.php          ★ 舊網址 301：about-us / our-work / contact-us / service/* / portfolio-item/* / last-announcement 等 → 新頁；investor_document 與法律頁不動
 │   └── seed-data.json         ★ 匯入資料（solutions 含 media/highlights；works 含 home 1–4；blog_categories）
 ├── template-parts/
 │   ├── client-wall.php / logo-ticker.php / offices.php（含世界地圖影片）
@@ -156,7 +157,7 @@ guru-theme/
 
 ### 4.5 一鍵匯入（Guru → Guru setup）
 
-四個按鈕同 README。**冪等且不破壞**：每筆匯入的文章都記 `_guru_seed_key`（用它而不是標題來找回，改名也不會重複建立）與 `_guru_seeded_keys`（哪些欄位已填過）。重跑只建立缺少的項目、只填「從未填過且目前為空」的欄位；不改既有文章的內文／狀態／排序，不刪選單項目（只補缺的五個連結），頁面 slug 只在仍是自動產生值時修正。**例外**：步驟 2 每次都會把首頁、網誌頁、主選單位置指向匯入的頁面／Primary 選單 —— 因為 WordPress 切主題時會自動把舊主題的選單接到新位置、舊的 VC 首頁也還掛著（在 staging 上實際發生過）。步驟 3 先 sideload 再建文章，失敗不留空殼。步驟 4：嘗試 `set_time_limit(300)`，依實際 `max_execution_time` 計算預算（30 s 主機 → 約 18 s；放寬後 30 s），下載逾時 ≤ 25 s（PHP 放寬後 ≤ 55 s，避開常見 60 s proxy timeout）；下載完成後同步改寫 solution 媒體中的同名影片 URL。匯入訊息用 transient 傳遞，不從 URL 反射文字。
+四個按鈕同 README。**冪等且不破壞**：每筆匯入的文章都記 `_guru_seed_key`（用它而不是標題來找回，改名也不會重複建立）與 `_guru_seeded_keys`（哪些欄位已填過）。重跑只建立缺少的項目、只填「從未填過且目前為空」的欄位；不改既有文章的內文／狀態／排序，不刪選單項目（只補缺的五個連結），頁面 slug 只在仍是自動產生值時修正。**例外**：步驟 2 每次都會把首頁、網誌頁、主選單位置指向匯入的頁面／Primary 選單 —— 因為 WordPress 切主題時會自動把舊主題的選單接到新位置、舊的 VC 首頁也還掛著（在 staging 上實際發生過）。**網址衝突**：舊站有 slug 為 `investor` 的頁面，匯入的 Investor 頁被擠成 `investor-2`，而舊頁又因 slug 與 `page-investor.php` 同名被套上我們的模板。步驟 2 現在會把佔住 `home/about/solutions/investor/blog` 的舊頁改成 `<slug>-old` 並轉為草稿（記 `_guru_replaced_by`），讓匯入的頁面接手網址；頁面的標題比對只認「內容為空或已用我們模板」的頁，不會誤認舊站同名頁。步驟 3 先 sideload 再建文章，失敗不留空殼。步驟 4：嘗試 `set_time_limit(300)`，依實際 `max_execution_time` 計算預算（30 s 主機 → 約 18 s；放寬後 30 s），下載逾時 ≤ 25 s（PHP 放寬後 ≤ 55 s，避開常見 60 s proxy timeout）；下載完成後同步改寫 solution 媒體中的同名影片 URL。匯入訊息用 transient 傳遞，不從 URL 反射文字。
 
 ### 4.6 資安措施（改動時請保留）
 
@@ -230,7 +231,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 ### 上線前必做
 
 - [ ] **投資人文件模板（第二批）**：正式站有 1,045 筆 `investor_document`。目前 `page-investor.php` 的文件清單來自 Customizer textarea（示範資料）。需要：以 `! post_type_exists()` 防禦式註冊 `investor_document` + `document_category`（slug 與舊站相同）；在 Investor 頁以真資料取代 textarea（分類 tab、分頁 20 筆、日期倒序、中英配對用同日 + 檔名 `_c`）；後台新增流程沿用 ACF 欄位或主題自建 meta box（讀 `date_of_publish` 的 `Ymd` 與 `document` 的附件 ID，不依賴 ACF）。**強烈建議先請使用者從正式站 工具 → 匯出 拿一份 XML 匯進本機，拿真資料測。** 同時要跟客戶談：這是原範圍外的追加開發。
-- [ ] **301 對照表**：舊站 1,088 個網址（sitemap.xml）→ 新網址。`/about-us/`→`/about/`、`/our-work/`→`/work/`、`/service/<x>/`→`/solutions/#<slug>`、`/portfolio-item/<x>/`→`/work/<slug>/`、`/investor-document/*` 保持（CPT slug 不變）、`/privacy-policy/` 等法律頁要保留。建議寫在主題內（`template_redirect`）而不是改 nginx。
+- [x] **301 對照表**（`inc/redirects.php`）：`/about-us/`→About、`/our-work/`與`/portfolio-item/*`→Work、`/contact-us/`→首頁表單、`/service/<x>/`→Solutions 對應面板（12 個舊 service 的對應表在 `guru_legacy_service_map()`）、`/last-announcement/`、`/financial-information/`、`/document-category/*`→Investor、`/blog/digital-marketing-solution/`→Blog、`/home-new/`、`/test-chatbot/`→首頁、`/d-bizsolution/`、`/global-marketing-cn/`→Solutions。`/investor-document/*` 與 `/privacy-policy/`、`/fanalytics-privacy/` 保留（法律頁改由 `page.php` 呈現，舊 page-builder 標籤會被清掉）。第二批做投資人分類頁時，把 last-announcement / financial-information 改指到對應分類。
 - [ ] **上正式站前務必執行匯入步驟 4**，否則作品與 Solutions 影片還指向 Vercel。
 - [ ] 請客戶提供：正式 WhatsApp 號碼；確認 Pods 是否註冊 investor_document；確認是否接受刪除停用外掛與 WP Staging 殘留。
 - [ ] 上線當天：WPvivid Backup → Push（排除 `wp_guru_enquiries`）→ 固定網址選「文章名稱」→ 逐頁檢查。
