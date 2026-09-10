@@ -169,6 +169,13 @@ function guru_hero_video_url( $which = 'desktop' ) {
 		}
 	}
 
+	// Fall back to the bundled clip, but only if it was actually shipped —
+	// the slim build of the theme leaves the videos out.
 	$file = 'mobile' === $which ? 'media/hero-bg-mobile.mp4' : 'media/hero-bg.mp4';
+
+	if ( ! file_exists( get_stylesheet_directory() . '/assets/' . $file ) ) {
+		return '';
+	}
+
 	return guru_asset( $file );
 }

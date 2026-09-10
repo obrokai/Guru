@@ -48,6 +48,32 @@ function guru_assets() {
 		null
 	);
 
+	// Page-specific styles, loaded only where they are needed.
+	$page_css = '';
+	if ( is_page_template( 'page-about.php' ) || is_page( 'about' ) ) {
+		$page_css = 'about';
+	} elseif ( is_post_type_archive( 'work' ) || is_singular( 'work' ) || is_tax( 'work_category' ) || is_page( 'work' ) ) {
+		$page_css = 'work';
+	} elseif ( is_home() || is_singular( 'post' ) || is_archive() || is_page( 'blog' ) ) {
+		$page_css = 'blog';
+	} elseif ( is_page_template( 'page-services.php' ) || is_page( 'services' ) || is_page( 'solutions' ) || is_singular( 'solution' ) ) {
+		$page_css = 'services';
+	} elseif ( is_page_template( 'page-investor.php' ) || is_page( 'investor' ) ) {
+		$page_css = 'investor';
+	}
+
+	if ( $page_css ) {
+		$path = get_stylesheet_directory() . '/assets/css/' . $page_css . '.css';
+		if ( file_exists( $path ) ) {
+			wp_enqueue_style(
+				'guru-' . $page_css,
+				get_stylesheet_directory_uri() . '/assets/css/' . $page_css . '.css',
+				array( 'guru' ),
+				filemtime( $path )
+			);
+		}
+	}
+
 	$js = get_stylesheet_directory() . '/assets/js/main.js';
 	wp_enqueue_script(
 		'guru',
@@ -79,3 +105,4 @@ require_once get_stylesheet_directory() . '/inc/fields.php';
 require_once get_stylesheet_directory() . '/inc/template-helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
 require_once get_stylesheet_directory() . '/inc/contact-form.php';
+require_once get_stylesheet_directory() . '/inc/importer.php';

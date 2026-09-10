@@ -18,10 +18,21 @@ $guru_work_url       = get_post_type_archive_link( 'work' );
 
 <div class="gh-wrap">
 	<section class="gh">
-		<video id="heroVideo" autoplay muted loop playsinline preload="auto">
-			<source src="<?php echo guru_hero_video_url( 'mobile' ); ?>" media="(max-width: 900px)" type="video/mp4" />
-			<source src="<?php echo guru_hero_video_url( 'desktop' ); ?>" type="video/mp4" />
-		</video>
+		<?php
+		$guru_hero_desktop = guru_hero_video_url( 'desktop' );
+		$guru_hero_mobile  = guru_hero_video_url( 'mobile' );
+
+		if ( $guru_hero_desktop || $guru_hero_mobile ) :
+			?>
+			<video id="heroVideo" autoplay muted loop playsinline preload="auto">
+				<?php if ( $guru_hero_mobile ) : ?>
+					<source src="<?php echo $guru_hero_mobile; ?>" media="(max-width: 900px)" type="video/mp4" />
+				<?php endif; ?>
+				<?php if ( $guru_hero_desktop ) : ?>
+					<source src="<?php echo $guru_hero_desktop; ?>" type="video/mp4" />
+				<?php endif; ?>
+			</video>
+		<?php endif; ?>
 
 		<div class="gh-bottom">
 			<div class="gh-btns">
