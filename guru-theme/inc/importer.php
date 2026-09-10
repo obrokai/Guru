@@ -706,12 +706,14 @@ function guru_import_pages() {
 		}
 	}
 
-	if ( ! empty( $ids['home'] ) && 'page' !== get_option( 'show_on_front' ) ) {
+	// This step's job is to point the site at the imported pages — an old theme's
+	// front page or blog page must not stay in place after a theme switch.
+	if ( ! empty( $ids['home'] ) ) {
 		update_option( 'show_on_front', 'page' );
 		update_option( 'page_on_front', $ids['home'] );
 	}
 
-	if ( ! empty( $ids['blog'] ) && ! (int) get_option( 'page_for_posts' ) ) {
+	if ( ! empty( $ids['blog'] ) ) {
 		update_option( 'page_for_posts', $ids['blog'] );
 	}
 
@@ -823,8 +825,11 @@ function guru_build_menu( $ids ) {
 		);
 	}
 
+	// WordPress maps the previous theme's menu into our location on switch;
+	// the primary navigation must be the menu built here.
 	$locations = (array) get_theme_mod( 'nav_menu_locations', array() );
-	if ( empty( $locations['primary'] ) ) {
+	$current   = isset( $locations['primary'] ) ? (int) $locations['primary'] : 0;
+	if ( $current !== (int) $menu_id ) {
 		$locations['primary'] = $menu_id;
 		set_theme_mod( 'nav_menu_locations', $locations );
 	}

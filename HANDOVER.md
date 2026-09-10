@@ -110,7 +110,9 @@ guru-theme/
 ├── page-services.php          Template Name: Solutions（側欄 + 9 面板，含媒體區與重點卡）
 ├── page-investor.php          Template Name: Investor（照靜態站結構；資料暫由 Customizer 供應，見 §8）
 ├── archive-work.php           作品集列表（篩選鈕 + 卡片 + 靜態站的 vmodal）
-├── single-work.php / single.php / index.php（網誌列表，含分類篩選鈕）
+├── taxonomy-work_category.php 作品分類頁（沿用 archive-work.php）
+├── page.php                   ★ 一般頁面（法律頁、客戶新建的頁面）—— 沒有它，這些頁會掉到 index.php 變成無樣式的列表
+├── single-work.php / single.php / index.php（網誌列表，含分類篩選鈕；也服務搜尋與 404）
 ├── inc/
 │   ├── post-types.php         work / solution / client_logo 與 work_category
 │   ├── fields.php             後台欄位：Showcase（Client、Video、Homepage position）、Solution（媒體區、重點卡）
@@ -154,7 +156,7 @@ guru-theme/
 
 ### 4.5 一鍵匯入（Guru → Guru setup）
 
-四個按鈕同 README。**冪等且不破壞**：每筆匯入的文章都記 `_guru_seed_key`（用它而不是標題來找回，改名也不會重複建立）與 `_guru_seeded_keys`（哪些欄位已填過）。重跑只建立缺少的項目、只填「從未填過且目前為空」的欄位；不改既有文章的內文／狀態／排序，不刪選單項目（只補缺的五個連結），頁面 slug 只在仍是自動產生值時修正。步驟 3 先 sideload 再建文章，失敗不留空殼。步驟 4：嘗試 `set_time_limit(300)`，依實際 `max_execution_time` 計算預算（30 s 主機 → 約 18 s；放寬後 30 s），下載逾時 ≤ 25 s（PHP 放寬後 ≤ 55 s，避開常見 60 s proxy timeout）；下載完成後同步改寫 solution 媒體中的同名影片 URL。匯入訊息用 transient 傳遞，不從 URL 反射文字。
+四個按鈕同 README。**冪等且不破壞**：每筆匯入的文章都記 `_guru_seed_key`（用它而不是標題來找回，改名也不會重複建立）與 `_guru_seeded_keys`（哪些欄位已填過）。重跑只建立缺少的項目、只填「從未填過且目前為空」的欄位；不改既有文章的內文／狀態／排序，不刪選單項目（只補缺的五個連結），頁面 slug 只在仍是自動產生值時修正。**例外**：步驟 2 每次都會把首頁、網誌頁、主選單位置指向匯入的頁面／Primary 選單 —— 因為 WordPress 切主題時會自動把舊主題的選單接到新位置、舊的 VC 首頁也還掛著（在 staging 上實際發生過）。步驟 3 先 sideload 再建文章，失敗不留空殼。步驟 4：嘗試 `set_time_limit(300)`，依實際 `max_execution_time` 計算預算（30 s 主機 → 約 18 s；放寬後 30 s），下載逾時 ≤ 25 s（PHP 放寬後 ≤ 55 s，避開常見 60 s proxy timeout）；下載完成後同步改寫 solution 媒體中的同名影片 URL。匯入訊息用 transient 傳遞，不從 URL 反射文字。
 
 ### 4.6 資安措施（改動時請保留）
 

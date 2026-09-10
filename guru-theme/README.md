@@ -20,7 +20,7 @@
 | 步驟 | 做什麼 | 需時 |
 |---|---|---|
 | 1. Import content | 建立 9 個 Solutions（含每個方案的媒體區與重點卡）、13 個 Showcase、6 個作品分類、7 個網誌分類 | 約 2 秒 |
-| 2. Create pages and menu | 建立 Home／About／Solutions／Investor／Blog 五個頁面（網址為 `/about/`、`/solutions/`、`/investor/`、`/blog/`）、設定首頁與網誌頁、建立主選單 | 約 2 秒 |
+| 2. Create pages and menu | 建立 Home／About／Solutions／Investor／Blog 五個頁面（網址為 `/about/`、`/solutions/`、`/investor/`、`/blog/`），並把**首頁、網誌頁、主選單**指向這些頁面（舊主題留下的選單與首頁設定會被換掉；舊頁面本身不會被刪） | 約 2 秒 |
 | 3. Import client logos | 把 67 個客戶 logo 匯入媒體庫 | 約 10 秒 |
 | 4. Import showcase videos | 從舊站下載 5 支作品影片到本站媒體庫，並同步更新 Solutions 頁的影片連結 | 較久，可分次執行 |
 

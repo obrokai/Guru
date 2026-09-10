@@ -63,6 +63,9 @@ function guru_assets() {
 		$page_css = 'services';
 	} elseif ( is_page_template( 'page-investor.php' ) || is_page( 'investor' ) ) {
 		$page_css = 'investor';
+	} elseif ( ! is_front_page() && is_singular() ) {
+		// Any other page or post type uses the single-post layout from blog.css.
+		$page_css = 'blog';
 	}
 
 	if ( $page_css ) {
