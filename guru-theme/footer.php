@@ -83,7 +83,7 @@ $guru_sent = isset( $_GET['contact'] ) ? sanitize_key( wp_unslash( $_GET['contac
 					<form class="cf-form" id="contactForm" method="post"
 						action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" novalidate>
 						<input type="hidden" name="action" value="guru_contact" />
-						<?php wp_nonce_field( 'guru_contact', 'guru_contact_nonce' ); ?>
+						<input type="hidden" name="guru_contact_nonce" value="<?php echo esc_attr( wp_create_nonce( 'guru_contact' ) ); ?>" />
 						<input type="hidden" name="guru_redirect" value="<?php echo esc_url( get_permalink() ? get_permalink() : home_url( '/' ) ); ?>" />
 						<?php // Honeypot — bots fill this, humans never see it. ?>
 						<div class="cf-hp" aria-hidden="true">

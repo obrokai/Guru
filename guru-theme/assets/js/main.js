@@ -147,11 +147,13 @@ function guruModal(ids) {
   var modal = workModal || homeModal;
   if (!modal) return;
 
-  // Every showcase card opens the lightbox — with the film when there is one.
+  // Showcase cards: play the film in the lightbox, or open the project's own page.
   document.querySelectorAll('.hw-video-card, .hw-info-card, .prj-card').forEach(function (card) {
+    var url = card.getAttribute('data-url');
     card.style.cursor = 'pointer';
     card.addEventListener('click', function (e) {
       e.preventDefault();
+      if (!card.getAttribute('data-video') && url) { window.location.href = url; return; }
       modal.open(card);
     });
   });
@@ -455,9 +457,12 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   if (!btns.length) return;
   var cards = document.querySelectorAll('.art-card');
 
+  var empty = document.getElementById('blgEmpty');
+
   btns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var active = btn.getAttribute('data-cat');
+      var visible = 0;
       btns.forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
       cards.forEach(function (card) {
@@ -465,7 +470,9 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
         var show = active === 'all' || cats.indexOf(active) !== -1;
         card.classList.toggle('hidden', !show);
         card.style.display = show ? '' : 'none';
+        if (show) visible++;
       });
+      if (empty) empty.classList.toggle('show', visible === 0);
     });
   });
 })();

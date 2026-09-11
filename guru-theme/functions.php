@@ -110,6 +110,21 @@ function guru_resource_hints( $hints, $relation ) {
 }
 add_filter( 'wp_resource_hints', 'guru_resource_hints', 10, 2 );
 
+/**
+ * Browser-tab title for the showcase archive: "Work", matching the heading and
+ * the navigation rather than the post type's admin label ("Showcase").
+ *
+ * @param array $parts Title parts.
+ * @return array
+ */
+function guru_document_title( $parts ) {
+	if ( is_post_type_archive( 'work' ) ) {
+		$parts['title'] = __( 'Work', 'guru' );
+	}
+	return $parts;
+}
+add_filter( 'document_title_parts', 'guru_document_title' );
+
 require_once get_stylesheet_directory() . '/inc/template-helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
 require_once get_stylesheet_directory() . '/inc/post-types.php';

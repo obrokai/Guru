@@ -48,7 +48,7 @@ $guru_services = array(
 			<form class="vmf-form" id="vmodalForm" method="post"
 				action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" novalidate>
 				<input type="hidden" name="action" value="guru_contact" />
-				<?php wp_nonce_field( 'guru_contact', 'guru_contact_nonce' ); ?>
+				<input type="hidden" name="guru_contact_nonce" value="<?php echo esc_attr( wp_create_nonce( 'guru_contact' ) ); ?>" />
 				<input type="hidden" name="guru_redirect" value="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>" />
 				<input type="hidden" name="project" id="vmf-project" value="" />
 				<div class="cf-hp" aria-hidden="true">

@@ -232,6 +232,9 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 		data-cats="<?php echo esc_attr( $data['cats'] ); ?>"
 		<?php if ( $data['video'] ) : ?>
 			data-video="<?php echo esc_url( $data['video'] ); ?>"
+		<?php else : ?>
+			<?php // No film to play — the "View Project" label opens the item's own page. ?>
+			data-url="<?php echo esc_url( get_permalink( $post_id ? $post_id : get_the_ID() ) ); ?>"
 		<?php endif; ?>
 		data-title="<?php echo esc_attr( $data['title'] ); ?>"
 		data-client="<?php echo esc_attr( $data['client'] ); ?>"

@@ -105,6 +105,11 @@ if ( is_home() ) {
 	<?php endif; ?>
 </div>
 
+<?php if ( $guru_filter_cats ) : ?>
+	<?php // Shown by the filter script when a category has no articles. ?>
+	<p class="blg-empty" id="blgEmpty"><?php esc_html_e( 'No articles in this category yet.', 'guru' ); ?></p>
+<?php endif; ?>
+
 <?php
 the_posts_pagination( array( 'mid_size' => 2 ) );
 
