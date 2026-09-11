@@ -39,7 +39,7 @@ if ( $guru_logos->have_posts() ) {
 		$guru_logos->the_post();
 		$guru_items[] = array(
 			'name' => get_the_title(),
-			'src'  => get_the_post_thumbnail_url( get_the_ID(), 'medium' ),
+			'src'  => get_the_post_thumbnail_url( get_the_ID(), 'full' ),
 		);
 	}
 	wp_reset_postdata();

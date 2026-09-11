@@ -924,6 +924,11 @@ function guru_import_logos() {
 	$added = 0;
 	$start = time();
 
+	// The logos are small WebP files used at their original size. Old ImageMagick
+	// builds (the client's host runs 6.8.9) corrupt the colours when re-encoding
+	// WebP, so no intermediate sizes are generated for them.
+	add_filter( 'intermediate_image_sizes_advanced', '__return_empty_array', 99 );
+
 	foreach ( (array) $files as $file ) {
 		// Resumable: stop before PHP's own limit and let the user click again.
 		if ( time() - $start > 20 ) {
@@ -980,6 +985,8 @@ function guru_import_logos() {
 		set_post_thumbnail( $post_id, $attachment_id );
 		++$added;
 	}
+
+	remove_filter( 'intermediate_image_sizes_advanced', '__return_empty_array', 99 );
 
 	$with_logo = get_posts(
 		array(

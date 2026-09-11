@@ -25,7 +25,7 @@ $guru_logos = array();
 if ( $guru_q->have_posts() ) {
 	while ( $guru_q->have_posts() ) {
 		$guru_q->the_post();
-		$guru_src = get_the_post_thumbnail_url( get_the_ID(), 'medium' );
+		$guru_src = get_the_post_thumbnail_url( get_the_ID(), 'full' );
 		if ( $guru_src ) {
 			$guru_logos[] = array(
 				'name' => get_the_title(),

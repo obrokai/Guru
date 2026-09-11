@@ -224,6 +224,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 | 來信資料表不存在時靜默丟失 | push 排除該表但帶了 `wp_options` 的版本號 → 用 `SHOW TABLES LIKE` 檢查存在，缺就重建；insert 失敗會重建再試一次；舊 CPT 遷移只在寫入成功後才刪原文 |
 | headless Chrome 對 localhost 卡住 | php -S 無 Range 支援 + Chrome 對本機 HTTP 的行為；截圖改用 file:// 快照（見 §5） |
 | Solutions 單篇網址 `/solutions/<slug>/` 出現在 sitemap 且無樣式 | `solution` CPT 改為 `publicly_queryable => false`、`rewrite => false` |
+| About 客戶牆 logo 顏色全錯（藍變綠、有光暈） | 主機 ImageMagick 6.8.9 重新編碼 WebP 會壞掉色彩通道，WP 自動產生的 `-300x300.webp` 縮圖全毀。客戶牆與跑馬燈改用 `full` 原檔（480px、~7 KB），匯入 logo 時停用縮圖產生。客戶自行上傳的圖建議 PNG/JPG |
 
 ---
 
