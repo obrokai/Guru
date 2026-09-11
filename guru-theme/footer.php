@@ -181,14 +181,17 @@ $guru_sent = isset( $_GET['contact'] ) ? sanitize_key( wp_unslash( $_GET['contac
 				<p class="ftr-link"><?php echo esc_html( $guru_city ); ?></p>
 			</div>
 
-			<div>
-				<p class="ftr-nav-heading"><?php esc_html_e( 'Follow Us', 'guru' ); ?></p>
-				<?php foreach ( $guru_socials as $guru_name => $guru_href ) : ?>
-					<?php if ( $guru_href ) : ?>
-						<a href="<?php echo esc_url( $guru_href ); ?>" class="ftr-link" target="_blank" rel="noopener"><?php echo esc_html( $guru_name ); ?></a>
-					<?php endif; ?>
-				<?php endforeach; ?>
-			</div>
+			<?php if ( array_filter( $guru_socials ) ) : ?>
+				<?php // Shown once at least one social URL is set in Customize → Social links; no dead placeholder links. ?>
+				<div>
+					<p class="ftr-nav-heading"><?php esc_html_e( 'Follow Us', 'guru' ); ?></p>
+					<?php foreach ( $guru_socials as $guru_name => $guru_href ) : ?>
+						<?php if ( $guru_href ) : ?>
+							<a href="<?php echo esc_url( $guru_href ); ?>" class="ftr-link" target="_blank" rel="noopener"><?php echo esc_html( $guru_name ); ?></a>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<div class="ftr-base">

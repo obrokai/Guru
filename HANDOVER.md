@@ -89,7 +89,9 @@ cd /Users/mike/Guru && git log --oneline -5 && ls guru-theme tools
 
 ## 4. WordPress 主題（主要成果）
 
-路徑：`guru-theme/`　安裝檔：`guru-theme.zip`（約 21 MB）/ `guru-theme-slim.zip`（約 3 MB，不含三支影片）
+路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.0 / 2026-09-11**。
+
+**版本規則**（2026-09-11 起）：版本號寫在 `guru-theme/style.css` 的 `Version:` 標頭，`functions.php` 的 `GURU_VERSION` 要跟著改；打包用 `tools/package.sh`，檔名自動帶版本與日期。**壓縮檔內的資料夾一律是 `guru-theme`** —— WordPress 以資料夾名認主題，改了就會變成第二套主題而不是更新。每次改動請更新 `CHANGELOG.md`。
 
 ### 4.1 設計原則
 
@@ -260,7 +262,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 重新打包：
 
 ```bash
-cd /Users/mike/Guru && find guru-theme -name '.DS_Store' -delete && rm -f guru-theme.zip guru-theme-slim.zip && zip -rq guru-theme.zip guru-theme && zip -rq guru-theme-slim.zip guru-theme -x 'guru-theme/assets/media/hero-bg.mp4' 'guru-theme/assets/media/hero-bg-mobile.mp4' 'guru-theme/assets/media/world-map.mp4'
+tools/package.sh            # 讀 style.css 的版本，輸出 guru-theme-v<版本>-<今天>.zip 與 -slim.zip
 ```
 
 全主題 PHP 語法檢查：

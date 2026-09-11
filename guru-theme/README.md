@@ -1,7 +1,14 @@
 # Guru WordPress 主題 — 安裝與使用說明
 
 主題資料夾：`guru-theme`
-安裝檔：`guru-theme.zip`（約 21 MB，含所有影片）／ `guru-theme-slim.zip`（約 3 MB，不含影片）
+安裝檔（檔名含版本與日期，請用最新的一份）：
+`guru-theme-v1.2.0-20260911.zip`（約 21 MB，含所有影片）／
+`guru-theme-v1.2.0-20260911-slim.zip`（約 3 MB，不含影片）
+
+> 之後每次更新都會是新的檔名，例如 `guru-theme-v1.3.0-20261001.zip`。
+> 壓縮檔內的資料夾都是 `guru-theme`，所以上傳新版時 WordPress 會問
+> 「已安裝相同佈景主題，要以上傳的版本取代嗎？」→ **選「取代」**，不會變成兩套主題。
+> 目前安裝的版本可在 **外觀 → 佈景主題** 卡片上看到。
 
 ---
 
@@ -41,7 +48,7 @@
 | 首頁文字（Solutions 導言、About 區標題／數字／段落）、首頁影片 | **外觀 → 自訂 → Guru site settings → Homepage** |
 | About 頁（成立年份、故事標題、客戶牆標題、辦公室、世界地圖影片） | **外觀 → 自訂 → Guru site settings → About page**（About 頁的標題、導言與故事內文則在 **頁面 → About** 直接編輯） |
 | 聯絡資訊、WhatsApp、頁尾標題 | **外觀 → 自訂 → Guru site settings → Contact details** |
-| 社群連結 | **外觀 → 自訂 → Guru site settings → Social links** |
+| 社群連結 | **外觀 → 自訂 → Guru site settings → Social links**。三個都留空時，頁尾的「Follow Us」欄整個不顯示（不會出現空連結） |
 | 投資人頁（公司名稱、簡介、上市資料、文件清單、公司治理、聯絡處、免責聲明） | **外觀 → 自訂 → Guru site settings → Investor page** |
 | 網誌導言 | **外觀 → 自訂 → Guru site settings → Blog** |
 | 選單項目 | **外觀 → 選單 → 「Guru Primary」**（匯入步驟 2 建立的那個；導覽列只認這個選單，其他選單不會顯示） |
