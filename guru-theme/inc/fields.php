@@ -67,6 +67,9 @@ function guru_render_work_meta_box( $post ) {
 
 	guru_meta_box_styles();
 	?>
+	<p class="description" style="margin:0 0 16px;padding:10px 12px;background:#f0f6fc;border-left:4px solid #72aee6">
+		<?php esc_html_e( 'Cover image: use the "Cover image" box in the right-hand column — that is what the card shows. The text editor below is optional and only appears on the project’s own page.', 'guru' ); ?>
+	</p>
 	<div class="guru-field">
 		<label for="guru_home_order"><?php esc_html_e( 'Homepage position', 'guru' ); ?></label>
 		<input type="number" id="guru_home_order" name="guru_home_order" min="1" max="4" step="1" style="width:90px"

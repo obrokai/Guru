@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Keep in step with the Version header in style.css — that is the number the
  * Appearance → Themes screen shows, and the one the package filename uses.
  */
-define( 'GURU_VERSION', '1.2.0' );
+define( 'GURU_VERSION', '1.2.1' );
 
 /**
  * Theme supports and menus.
@@ -47,6 +47,8 @@ function guru_assets() {
 		array(),
 		file_exists( $css ) ? filemtime( $css ) : GURU_VERSION
 	);
+	// Font-size scaling (Customize → Typography) — must follow the stylesheet it derives from.
+	guru_enqueue_typography_css( 'guru', 'style.css' );
 
 	wp_enqueue_style(
 		'guru-fonts',
@@ -81,6 +83,7 @@ function guru_assets() {
 				array( 'guru' ),
 				filemtime( $path )
 			);
+			guru_enqueue_typography_css( 'guru-' . $page_css, $page_css . '.css' );
 		}
 	}
 
@@ -127,8 +130,10 @@ add_filter( 'document_title_parts', 'guru_document_title' );
 
 require_once get_stylesheet_directory() . '/inc/template-helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
+require_once get_stylesheet_directory() . '/inc/typography.php';
 require_once get_stylesheet_directory() . '/inc/post-types.php';
 require_once get_stylesheet_directory() . '/inc/fields.php';
+require_once get_stylesheet_directory() . '/inc/media.php';
 require_once get_stylesheet_directory() . '/inc/enquiries.php';
 require_once get_stylesheet_directory() . '/inc/contact-form.php';
 require_once get_stylesheet_directory() . '/inc/importer.php';

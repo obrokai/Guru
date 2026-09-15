@@ -49,6 +49,27 @@ function guru_register_work_post_type() {
 add_action( 'init', 'guru_register_work_post_type' );
 
 /**
+ * Showcase items and Solutions use the classic edit screen, not the block editor.
+ *
+ * Their real fields live in meta boxes (client, video, homepage position, media
+ * block …) and the cover image is the featured image. In the block editor those
+ * end up below the fold and in a collapsible sidebar, and editors tried to paste
+ * the cover image into the body instead. The classic screen shows the meta box
+ * directly under the title and the cover image in the right-hand column.
+ *
+ * @param bool   $use_block_editor Whether the block editor would be used.
+ * @param string $post_type        Post type.
+ * @return bool
+ */
+function guru_use_classic_editor( $use_block_editor, $post_type ) {
+	if ( in_array( $post_type, array( 'work', 'solution', 'client_logo' ), true ) ) {
+		return false;
+	}
+	return $use_block_editor;
+}
+add_filter( 'use_block_editor_for_post_type', 'guru_use_classic_editor', 10, 2 );
+
+/**
  * Showcase categories — these drive the filter buttons on the work archive.
  */
 function guru_register_work_taxonomy() {

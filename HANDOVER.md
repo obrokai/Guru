@@ -4,7 +4,7 @@
 > 讀完這份文件就能掌握全部背景，不需要舊對話紀錄。
 >
 > 專案路徑：`/Users/mike/Guru/`
-> 最後更新：2026-09-10（phase 3）
+> 最後更新：2026-09-15（v1.2.1）
 
 ---
 
@@ -89,7 +89,7 @@ cd /Users/mike/Guru && git log --oneline -5 && ls guru-theme tools
 
 ## 4. WordPress 主題（主要成果）
 
-路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.0 / 2026-09-11**。
+路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.1 / 2026-09-15**。
 
 **版本規則**（2026-09-11 起）：版本號寫在 `guru-theme/style.css` 的 `Version:` 標頭，`functions.php` 的 `GURU_VERSION` 要跟著改；打包用 `tools/package.sh`，檔名自動帶版本與日期。**壓縮檔內的資料夾一律是 `guru-theme`** —— WordPress 以資料夾名認主題，改了就會變成第二套主題而不是更新。每次改動請更新 `CHANGELOG.md`。
 
@@ -122,6 +122,8 @@ guru-theme/
 │   ├── customizer.php         ★ 所有 theme_mod 都在這裡註冊；預設值集中於 guru_default()；guru_mod() / guru_pipe_rows() 輔助
 │   ├── enquiries.php          ★ 來信資料表 {prefix}guru_enquiries、後台 Enquiries 列表 / 刪除 / CSV
 │   ├── contact-form.php       表單處理（寫入資料表 + wp_mail）
+│   ├── typography.php         ★ Customizer「Typography」四個縮放百分比 → :root CSS 變數；搭配 assets/css/type/*.css（由 tools/build-typography.py 從主題 CSS 自動產生，改 CSS 後要重跑）
+│   ├── media.php              上傳保護：放寬 set_time_limit、停產 1536/2048 尺寸（主機 30 s 上限）
 │   ├── importer.php           ★ 一鍵匯入（含 solution 媒體、首頁四格、網誌分類；步驟 4 在 30 s 限制下可分次）
 │   ├── redirects.php          ★ 舊網址 301：about-us / our-work / contact-us / service/* / portfolio-item/* / last-announcement 等 → 新頁；investor_document 與法律頁不動
 │   └── seed-data.json         ★ 匯入資料（solutions 含 media/highlights；works 含 home 1–4；blog_categories）
@@ -155,6 +157,7 @@ guru-theme/
 | Homepage | Solutions 導言、About 區標題 / 統計（`數字 | 後綴 | 標籤`）/ 段落 / 按鈕、hero 影片（桌機、手機） |
 | About page | Founded、Credential、故事標題、客戶牆標題、辦公室標題、辦公室清單、世界地圖影片 |
 | Blog | 導言 |
+| Typography | 內文／區塊標題／頁面大標題／導覽列連結 四個百分比（70–150，預設 100）。分組規則在 `tools/build-typography.py` 的 EXCLUDE/NAV/HERO/HEADING/BODY 正規式；標籤、按鈕、表單欄位、膠囊一律不縮放 |
 | Investor page | 公司名稱、簡介、股票資料、文件清單、公告連結、公司治理文件、股價 / 舊 IR 連結、聯絡處、免責聲明 |
 
 ### 4.5 一鍵匯入（Guru → Guru setup）
@@ -221,6 +224,8 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 | 作品影片共 88 MB | 不要打包進主題，用步驟 4 下載 |
 | CSS 想做 selector 去重 | **不要做**。54 處同選擇器不同內容的覆寫，去重會靜默改變樣式 |
 | grep `add_setting(` 找不到設定 | customizer.php 用迴圈註冊（`$id` 變數），要看 `guru_default()` 的清單 |
+| 客戶上傳大圖失敗「無法從伺服器取得有效的回應」 | 主機 PHP 30 s 上限，產縮圖超時 → `inc/media.php`；nginx 已確認放行到 60 MB、REST 正常，問題在 PHP 處理階段 |
+| 客戶找不到 Showcase 欄位、把圖貼進內文 | 區塊編輯器把 meta box 擠到最底、Cover image 藏側欄 → `work`/`solution`/`client_logo` 改傳統編輯器（`use_block_editor_for_post_type`） |
 | 蜜罐欄位「Website」看得到 | phase 2 沒有 `.cf-hp` 的 CSS，真人填了會被當機器人丟掉；phase 3 在 style.css 加上 off-screen 規則 |
 | Customizer 影片選擇器存成 `http://123` | `WP_Customize_Media_Control` 存的是附件 ID，sanitizer 要用 `absint` 不是 `esc_url_raw` |
 | 來信資料表不存在時靜默丟失 | push 排除該表但帶了 `wp_options` 的版本號 → 用 `SHOW TABLES LIKE` 檢查存在，缺就重建；insert 失敗會重建再試一次；舊 CPT 遷移只在寫入成功後才刪原文 |
