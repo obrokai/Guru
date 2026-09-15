@@ -1,0 +1,260 @@
+<title>Guru 後台操作指南</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..800&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --bg: #f3f3f1;
+    --surface: #ffffff;
+    --ink: #0e0e10;
+    --ink-2: #3a3a3f;
+    --ink-3: #6d6d72;
+    --line: rgba(14, 14, 16, 0.12);
+    --green: #58b947;
+    --green-ink: #3f8f31;
+    --blue: #1b23e0;
+    --blue-soft: rgba(27, 35, 224, 0.08);
+    --warn-bg: #fff6e5;
+    --warn-line: #e6a23c;
+    --warn-ink: #7a4a00;
+    --chip-bg: #ffffff;
+    --shadow: 0 10px 30px rgba(14, 14, 16, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121214;
+      --surface: #1b1b1f;
+      --ink: #f3f3f1;
+      --ink-2: #d2d2d6;
+      --ink-3: #9a9aa2;
+      --line: rgba(243, 243, 241, 0.14);
+      --green: #6cc95b;
+      --green-ink: #8fdc80;
+      --blue: #8a90ff;
+      --blue-soft: rgba(138, 144, 255, 0.14);
+      --warn-bg: #2a2313;
+      --warn-line: #d9a04a;
+      --warn-ink: #f0cf8a;
+      --chip-bg: #232328;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121214;
+    --surface: #1b1b1f;
+    --ink: #f3f3f1;
+    --ink-2: #d2d2d6;
+    --ink-3: #9a9aa2;
+    --line: rgba(243, 243, 241, 0.14);
+    --green: #6cc95b;
+    --green-ink: #8fdc80;
+    --blue: #8a90ff;
+    --blue-soft: rgba(138, 144, 255, 0.14);
+    --warn-bg: #2a2313;
+    --warn-line: #d9a04a;
+    --warn-ink: #f0cf8a;
+    --chip-bg: #232328;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  .page { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+
+  /* ---- document header ---- */
+  .doc-head { border-bottom: 1px solid var(--line); padding-bottom: 28px; margin-bottom: 40px; }
+  .doc-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px; }
+  h1 { font-size: clamp(34px, 5vw, 48px); line-height: 1.1; letter-spacing: -0.03em; font-weight: 800; color: var(--green); margin: 0 0 18px; text-wrap: balance; }
+  .doc-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--ink-3); font-size: 14px; margin: 0; }
+  .doc-meta b { color: var(--ink-2); font-weight: 600; }
+  .doc-lead { font-size: 17px; color: var(--ink-2); margin: 18px 0 0; max-width: 60ch; }
+
+  /* ---- chapters ---- */
+  h2 { font-size: 26px; line-height: 1.2; letter-spacing: -0.02em; font-weight: 800; color: var(--green); margin: 56px 0 18px; text-wrap: balance; }
+  h3 { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin: 34px 0 12px; }
+  p { margin: 0 0 14px; }
+
+  /* menu path chips: 外觀 → 自訂 → … */
+  .path { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; vertical-align: baseline; }
+  .path span { background: var(--chip-bg); border: 1px solid var(--line); border-radius: 6px; padding: 1px 8px; font-size: 0.92em; font-weight: 600; color: var(--blue); white-space: nowrap; }
+  .path i { font-style: normal; color: var(--ink-3); font-size: 0.85em; }
+  .field { font-weight: 700; color: var(--ink); }
+  kbd { font: inherit; font-weight: 600; background: var(--blue-soft); color: var(--blue); border-radius: 6px; padding: 1px 8px; white-space: nowrap; }
+
+  /* steps: number | content */
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; gap: 14px; }
+  .steps > li { display: grid; grid-template-columns: 40px 1fr; gap: 16px; counter-increment: step; }
+  .steps > li::before {
+    content: counter(step);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--green); color: #fff;
+    font-weight: 800; font-size: 17px; line-height: 40px; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .steps > li > div { padding-top: 6px; }
+  .steps p { margin: 0 0 8px; }
+  .steps p:last-child { margin-bottom: 0; }
+
+  /* tables */
+  .tbl-wrap { overflow-x: auto; margin: 10px 0 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 14px; vertical-align: top; border-top: 1px solid var(--line); }
+  thead th { border-top: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); background: var(--bg); }
+  td:first-child { font-weight: 600; white-space: nowrap; width: 34%; }
+  @media (max-width: 560px) { td:first-child { white-space: normal; width: auto; } }
+
+  /* callouts */
+  .note { background: var(--warn-bg); border-left: 4px solid var(--warn-line); color: var(--warn-ink); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 16px 0; font-size: 15px; }
+  .note b { color: inherit; }
+  .tip { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin: 16px 0; font-size: 15px; color: var(--ink-2); }
+
+  /* ---- schematic of the edit screen ---- */
+  .screen { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 18px; margin: 22px 0 8px; }
+  .screen-cap { font-size: 13px; color: var(--ink-3); margin: 0 0 30px; }
+  .screen-grid { display: grid; grid-template-columns: 1fr 200px; gap: 14px; }
+  @media (max-width: 560px) { .screen-grid { grid-template-columns: 1fr; } }
+  .box { border: 1.5px dashed var(--line); border-radius: 8px; padding: 12px; color: var(--ink-3); font-size: 13px; position: relative; background: var(--bg); }
+  .box strong { display: block; color: var(--ink); font-size: 14px; margin-bottom: 2px; }
+  .box.hot { border-style: solid; border-color: var(--green); }
+  .box .tag {
+    position: absolute; top: -12px; left: 12px;
+    background: var(--green); color: #fff; font-weight: 800; font-size: 12px;
+    border-radius: 999px; padding: 1px 9px; letter-spacing: 0.04em;
+  }
+  .box .tag.blue { background: var(--blue); }
+  .col { display: grid; gap: 14px; align-content: start; }
+  .box.title-line { border-style: solid; padding: 14px 12px; font-size: 15px; color: var(--ink-2); }
+  .box.editor { min-height: 110px; }
+  .box.publish { text-align: center; }
+  .box.publish em { display: inline-block; font-style: normal; background: var(--blue); color: #fff; border-radius: 6px; padding: 4px 14px; font-weight: 700; font-size: 13px; }
+
+  .foot { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main class="page">
+  <header class="doc-head">
+    <p class="doc-kicker">Guru Online · WordPress 後台</p>
+    <h1>Guru 後台操作指南</h1>
+    <p class="doc-meta"><span><b>主題版本</b> v1.2.2</span><span><b>日期</b> 2026-09-15</span><span><b>登入</b> 與現在相同的 <code>/wp-admin/</code>，帳號密碼不變</span></p>
+    <p class="doc-lead">兩件事：<b>上架一個作品（Showcase）</b>，以及<b>調整網站字體大小</b>。最後附上其他常改項目的位置。有任何畫面跟這份說明不一樣，截圖給我們即可。</p>
+  </header>
+
+  <!-- ============================ 一、上架作品 -->
+  <h2>一、上架一個作品（Showcase）</h2>
+
+  <h3>事前準備</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>檔案</th><th>規格</th></tr></thead>
+    <tbody>
+      <tr><td>封面圖</td><td><b>JPG</b>，長邊 <b>2000px 以內</b>，檔案 <b>2 MB 以內</b>。設計原檔請先縮圖再上傳</td></tr>
+      <tr><td>影片（影片作品才需要）</td><td><b>MP4</b>，<b>30 MB 以內</b>，1080p 以下</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>為什麼要縮圖：</b>主機處理大檔案的速度有限。太大的圖片會上傳失敗 —— 畫面左下角出現黑色錯誤訊息，檔案沒有存進去。先縮圖是最有效的解法。</div>
+
+  <h3>編輯畫面長這樣</h3>
+  <div class="screen">
+    <p class="screen-cap">Showcase 的編輯畫面。綠色框是上架一定要填的；藍色框是選用。</p>
+    <div class="screen-grid">
+      <div class="col">
+        <div class="box title-line">標題：專案名稱，例如 Pandora × Influencers</div>
+        <div class="box hot"><span class="tag">A</span><strong>Showcase details</strong>Homepage position · Card labels · Client name · Video (optional)</div>
+        <div class="box editor"><span class="tag blue">C</span><strong>內文編輯器（選用）</strong>專案說明，只出現在作品自己的頁面。<b>不要把封面圖貼在這裡。</b></div>
+      </div>
+      <div class="col">
+        <div class="box publish"><em>發佈</em><br>狀態 · 頁面屬性 → 順序</div>
+        <div class="box hot"><span class="tag">B</span><strong>Cover image</strong>Set cover image → 選圖。卡片顯示的就是這張</div>
+        <div class="box hot"><span class="tag">B</span><strong>Showcase categories</strong>勾分類，Work 頁的篩選靠這個</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>步驟</h3>
+  <ol class="steps">
+    <li><div><p>左側選單 <span class="path"><span>Showcase</span><i>→</i><span>Add new</span></span>。</p></div></li>
+    <li><div><p>最上面輸入<span class="field">標題</span>（專案名稱）。</p></div></li>
+    <li><div>
+      <p>標題正下方的 <span class="field">Showcase details</span>（圖中 A），填四個欄位：</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>欄位</th><th>填什麼</th></tr></thead>
+        <tbody>
+          <tr><td>Homepage position</td><td>填 <b>1～4</b>，作品會出現在首頁「Our Work」四格（1 是大卡）。留空 = 只出現在 Work 頁</td></tr>
+          <tr><td>Card labels</td><td>卡片上的小標籤，逗號分隔，例如 <kbd>Influencer Marketing, Campaign / PR</kbd>。留空 = 顯示作品的分類名稱</td></tr>
+          <tr><td>Client name</td><td>客戶名稱，顯示在專案名稱下方</td></tr>
+          <tr><td>Video (optional)</td><td>影片作品才填：按 <kbd>Choose video</kbd> → 上傳或從媒體庫選 MP4。有影片的卡片會自動播放</td></tr>
+        </tbody>
+      </table></div>
+    </div></li>
+    <li><div>
+      <p>右欄 <span class="field">Cover image</span>（圖中 B）→ <kbd>Set cover image</kbd> → 上傳或從媒體庫選圖 → 按右下角的藍色按鈕確認。</p>
+      <p><b>封面圖一定要放在這裡</b>，不要貼進中間的內文編輯器 —— 卡片只認 Cover image。</p>
+    </div></li>
+    <li><div><p>右欄 <span class="field">Showcase categories</span> 勾選分類（China Digital／Influencer／Social Media／Video／Campaign &amp; PR／Go-Global）。</p></div></li>
+    <li><div><p>（選用）中間的內文編輯器（圖中 C）可以寫專案說明，只會出現在作品自己的頁面，卡片上不會顯示。</p></div></li>
+    <li><div><p>右上角 <kbd>發佈</kbd>。</p></div></li>
+  </ol>
+
+  <h3>發布後檢查</h3>
+  <p>前台 <b>Work</b> 頁出現新卡片 —— 點卡片，有影片的會彈出播放視窗，沒影片的會開作品頁。有填 Homepage position 的話，首頁「Our Work」也會一起更新。</p>
+
+  <h3>常見狀況</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>狀況</th><th>怎麼做</th></tr></thead>
+    <tbody>
+      <tr><td>上傳一直轉圈，或左下角出現黑色錯誤訊息</td><td>圖片太大。把長邊縮到 2000px、存成 JPG 再試。若還是失敗，把錯誤訊息<b>整句抄下來</b>給我們</td></tr>
+      <tr><td>修改已上架的作品</td><td><span class="path"><span>Showcase</span></span> → 點該作品 → 改完按 <kbd>更新</kbd></td></tr>
+      <tr><td>暫時下架</td><td>右欄「狀態」改成 <b>草稿</b> → 更新（隨時可再發佈）</td></tr>
+      <tr><td>調整 Work 頁的排列順序</td><td>右欄「頁面屬性 → 順序」，數字小的排前面</td></tr>
+      <tr><td>換首頁四格</td><td>把新作品的 Homepage position 填成想要的數字；原本佔那一格的作品改成留空</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ============================ 二、字體 -->
+  <h2>二、調整網站字體大小</h2>
+  <ol class="steps">
+    <li><div><p><span class="path"><span>外觀</span><i>→</i><span>自訂</span></span>，進入即時預覽畫面。</p></div></li>
+    <li><div><p>左側 <span class="path"><span>Guru site settings</span><i>→</i><span>Typography</span></span>。</p></div></li>
+    <li><div>
+      <p>四個欄位，輸入 <b>70～150</b> 的數字（預設 <b>100</b> = 原設計）：</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>欄位</th><th>影響範圍</th></tr></thead>
+        <tbody>
+          <tr><td>Body text</td><td>內文：段落、說明文字、卡片上的細節、頁尾連結</td></tr>
+          <tr><td>Section headings</td><td>區塊標題：「Our Solutions」「Our Work」、卡片標題、首頁大數字、頁尾大標題</td></tr>
+          <tr><td>Page titles</td><td>各頁最上方的大標題（About、Solutions、Work、Blog、Investor）</td></tr>
+          <tr><td>Navigation links</td><td>導覽列的文字連結（兩顆按鈕不變）</td></tr>
+        </tbody>
+      </table></div>
+    </div></li>
+    <li><div><p>改完數字，右側預覽會重新載入，直接看效果。</p></div></li>
+    <li><div><p>滿意後按最上方 <kbd>發佈</kbd>。想恢復原設計，把數字改回 100 再發佈即可。</p></div></li>
+  </ol>
+  <div class="tip">建議一次調 5～10%（例如 100 → 110），電腦與手機一起看。標籤、按鈕、表單欄位不會跟著縮放，所以不會把版面撐壞。</div>
+
+  <!-- ============================ 三、其他 -->
+  <h2>三、其他常改的地方</h2>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>要改什麼</th><th>在哪裡</th></tr></thead>
+    <tbody>
+      <tr><td>服務項目（Solutions）</td><td><span class="path"><span>Solutions</span></span> → 點項目；標題下方 <b>Solution media &amp; highlights</b> 設定媒體與四張重點卡</td></tr>
+      <tr><td>客戶 logo 牆</td><td><span class="path"><span>Client logos</span><i>→</i><span>Add new</span></span> → 右欄設 Logo image（PNG／JPG，正方形約 480px）</td></tr>
+      <tr><td>首頁跑馬燈 logo</td><td><span class="path"><span>Client logos</span></span> → 編輯某個 logo → 右欄勾 <b>Show this logo in the homepage marquee</b></td></tr>
+      <tr><td>表單來信</td><td><span class="path"><span>Enquiries</span></span>（每筆都會存檔並寄到聯絡信箱，可下載 CSV）</td></tr>
+      <tr><td>電話、WhatsApp、Email</td><td><span class="path"><span>外觀</span><i>→</i><span>自訂</span><i>→</i><span>Guru site settings</span><i>→</i><span>Contact details</span></span></td></tr>
+      <tr><td>社群連結</td><td><span class="path"><span>外觀</span><i>→</i><span>自訂</span><i>→</i><span>Guru site settings</span><i>→</i><span>Social links</span></span></td></tr>
+      <tr><td>首頁文字、About 頁文字、投資人頁資料</td><td><span class="path"><span>外觀</span><i>→</i><span>自訂</span><i>→</i><span>Guru site settings</span></span> 對應區塊</td></tr>
+      <tr><td>導覽列項目</td><td><span class="path"><span>外觀</span><i>→</i><span>選單</span><i>→</i><span>Guru Primary</span></span></td></tr>
+      <tr><td>網誌文章</td><td><span class="path"><span>文章</span><i>→</i><span>新增</span></span>（與一般 WordPress 相同）</td></tr>
+    </tbody>
+  </table></div>
+
+  <footer class="foot">Guru 主題 v1.2.2 · 2026-09-15 · 畫面若與說明不同，請截圖給我們。</footer>
+</main>

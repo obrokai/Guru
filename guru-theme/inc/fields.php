@@ -25,11 +25,28 @@ function guru_add_work_meta_box() {
 		__( 'Showcase details', 'guru' ),
 		'guru_render_work_meta_box',
 		'work',
-		'normal',
+		'guru_top',
 		'high'
 	);
 }
 add_action( 'add_meta_boxes', 'guru_add_work_meta_box' );
+
+/**
+ * Render the "guru_top" meta boxes directly under the title, above the content
+ * editor. WordPress puts ordinary meta boxes below the editor, where editors
+ * missed them and pasted cover images into the body instead.
+ *
+ * @param WP_Post $post Post being edited.
+ */
+function guru_meta_boxes_after_title( $post ) {
+	if ( ! in_array( $post->post_type, array( 'work', 'solution' ), true ) ) {
+		return;
+	}
+	echo '<div id="guru-top-boxes" style="margin-top:20px">';
+	do_meta_boxes( get_current_screen(), 'guru_top', $post );
+	echo '</div>';
+}
+add_action( 'edit_form_after_title', 'guru_meta_boxes_after_title' );
 
 /**
  * Shared admin styles for the meta boxes.
@@ -185,7 +202,7 @@ function guru_add_solution_meta_box() {
 		__( 'Solution media & highlights', 'guru' ),
 		'guru_render_solution_meta_box',
 		'solution',
-		'normal',
+		'guru_top',
 		'high'
 	);
 }
