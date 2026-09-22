@@ -366,7 +366,8 @@
   }
 
   /* ── VIDEO CARD ── */
-  .prj-video {
+  .prj-video,
+  .prj-img > img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -374,6 +375,10 @@
     object-fit: cover;
     display: block;
   }
+  /* A cover image must never set the column width — the grid tracks do. */
+  .prj-card { min-width: 0; }
+  .prj-img > img { transition: transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+  .prj-card:hover .prj-img > img { transform: scale(1.04); }
   .prj-play-btn {
     position: absolute;
     inset: 0;

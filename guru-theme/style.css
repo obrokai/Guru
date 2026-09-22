@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.2.3
+Version:     1.2.4
 Released:    2026-09-22
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -725,6 +725,9 @@ Text Domain: guru
     will-change: transform;
   }
   .wrk-card-small .wrk-card-img { aspect-ratio: 4/3; }
+  /* Cover image fills the frame like the placeholder and the film; it never sets the column width. */
+  .wrk-card-img > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .wrk-card { min-width: 0; }
   .wrk-card:hover .wrk-card-img { transform: translateY(-6px); }
   .wrk-img-ph {
     position: absolute;

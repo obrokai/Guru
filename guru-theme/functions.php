@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Keep in step with the Version header in style.css — that is the number the
  * Appearance → Themes screen shows, and the one the package filename uses.
  */
-define( 'GURU_VERSION', '1.2.3' );
+define( 'GURU_VERSION', '1.2.4' );
 
 /**
  * Theme supports and menus.
