@@ -5,9 +5,10 @@ For every rule in the theme's stylesheets that sets a font-size on a selector we
 classify as body / heading / hero / nav, emit the same rule (same @media wrapper,
 same order) with the value multiplied by a CSS variable:
 
-    .abt-p { font-size: 18px; }   →   .abt-p { font-size: calc(18px * var(--guru-fs-body)); }
+    .abt-p { font-size: 18px; }   →   .abt-p { font-size: calc(18px * var(--guru-fs-body, 1)); }
 
-At 100% every variable is 1, so the cascade is identical to the original. Each
+The fallback of 1 means an unset variable is a no-op (the Customizer only emits
+variables that differ from 100%), so the cascade is identical to the original. Each
 source stylesheet gets its own override file (assets/css/type/<name>.css), which
 functions.php enqueues right after the stylesheet it was derived from — that keeps
 the original override order between style.css and the per-page stylesheets intact.
@@ -138,7 +139,9 @@ def build(src_rel):
             if g:
                 groups.setdefault(g, []).append(sel.strip())
         for g, sels in groups.items():
-            rule = f"{', '.join(sels)} {{ font-size: calc({clean} * var(--guru-fs-{g})){' !important' if important else ''}; }}"
+            # The ", 1" fallback is essential: without it an unset variable makes the
+            # whole declaration invalid and font-size collapses to the inherited value.
+            rule = f"{', '.join(sels)} {{ font-size: calc({clean} * var(--guru-fs-{g}, 1)){' !important' if important else ''}; }}"
             indent = ""
             for w in wrappers:
                 lines.append(f"{indent}{w} {{")

@@ -4,7 +4,7 @@
 > 讀完這份文件就能掌握全部背景，不需要舊對話紀錄。
 >
 > 專案路徑：`/Users/mike/Guru/`
-> 最後更新：2026-09-15（v1.2.1）
+> 最後更新：2026-09-22（v1.2.3）
 
 ---
 
@@ -89,7 +89,7 @@ cd /Users/mike/Guru && git log --oneline -5 && ls guru-theme tools
 
 ## 4. WordPress 主題（主要成果）
 
-路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.1 / 2026-09-15**。
+路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.3 / 2026-09-22**。
 
 **版本規則**（2026-09-11 起）：版本號寫在 `guru-theme/style.css` 的 `Version:` 標頭，`functions.php` 的 `GURU_VERSION` 要跟著改；打包用 `tools/package.sh`，檔名自動帶版本與日期。**壓縮檔內的資料夾一律是 `guru-theme`** —— WordPress 以資料夾名認主題，改了就會變成第二套主題而不是更新。每次改動請更新 `CHANGELOG.md`。
 
@@ -224,6 +224,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 | 作品影片共 88 MB | 不要打包進主題，用步驟 4 下載 |
 | CSS 想做 selector 去重 | **不要做**。54 處同選擇器不同內容的覆寫，去重會靜默改變樣式 |
 | grep `add_setting(` 找不到設定 | customizer.php 用迴圈註冊（`$id` 變數），要看 `guru_default()` 的清單 |
+| **Typography 1.2.1/1.2.2 讓全站標題縮小** | `calc(… * var(--guru-fs-x))` 在變數未定義時整條失效，font-size 退回繼承值。class 比對抓不到這種錯，是拍 Customizer 預覽截圖才看見。修法：產生器一律輸出 `var(--guru-fs-x, 1)`；`tools/shoot-admin.mjs` 現在會在 100% 時斷言 `.abt-hero-title` 算出的字級 ≥ 50px。**改主題 CSS 後要重跑 `tools/build-typography.py`** |
 | 客戶上傳大圖失敗「無法從伺服器取得有效的回應」 | 主機 PHP 30 s 上限，產縮圖超時 → `inc/media.php`；nginx 已確認放行到 60 MB、REST 正常，問題在 PHP 處理階段 |
 | 客戶找不到 Showcase 欄位、把圖貼進內文 | 區塊編輯器把 meta box 擠到最底、Cover image 藏側欄 → `work`/`solution`/`client_logo` 改傳統編輯器（`use_block_editor_for_post_type`） |
 | 蜜罐欄位「Website」看得到 | phase 2 沒有 `.cf-hp` 的 CSS，真人填了會被當機器人丟掉；phase 3 在 style.css 加上 off-screen 規則 |
