@@ -425,7 +425,8 @@
   .blg-single-head .art-cat { position: static; display: inline-block; margin-bottom: 18px; }
   .blg-single-title { font-size: clamp(36px, 4.6vw, 64px); font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; color: var(--lime); margin-bottom: 18px; }
   .blg-single-cover { border-radius: 20px; overflow: hidden; margin-bottom: 44px; }
-  .blg-single-cover img { width: 100%; height: auto; display: block; }
+  /* Featured image sits in a 16:9 frame and is cropped from the centre, so every article opens the same way. */
+  .blg-single-cover img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; display: block; }
   .blg-single-body { font-size: 17px; line-height: 1.75; color: var(--ink-2); }
   .blg-single-body p, .blg-single-body ul, .blg-single-body ol, .blg-single-body blockquote { margin: 0 0 1.3em; }
   .blg-single-body h2, .blg-single-body h3 { color: var(--ink); letter-spacing: -0.02em; line-height: 1.15; margin: 1.8em 0 0.6em; }

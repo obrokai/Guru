@@ -365,7 +365,9 @@
     flex: 0 0 100%;
     height: 100%;
   }
-  .srv-carousel-slide video {
+  /* Slides fill the 16:9 frame and crop from the centre, whatever size the upload is (images too). */
+  .srv-carousel-slide video,
+  .srv-carousel-slide img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
   .srv-carousel-btn {

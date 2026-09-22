@@ -4,7 +4,7 @@
 > 讀完這份文件就能掌握全部背景，不需要舊對話紀錄。
 >
 > 專案路徑：`/Users/mike/Guru/`
-> 最後更新：2026-09-22（v1.2.4）
+> 最後更新：2026-09-22（v1.2.5）
 
 ---
 
@@ -89,7 +89,7 @@ cd /Users/mike/Guru && git log --oneline -5 && ls guru-theme tools
 
 ## 4. WordPress 主題（主要成果）
 
-路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.4 / 2026-09-22**。
+路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.5 / 2026-09-22**。
 
 **版本規則**（2026-09-11 起）：版本號寫在 `guru-theme/style.css` 的 `Version:` 標頭，`functions.php` 的 `GURU_VERSION` 要跟著改；打包用 `tools/package.sh`，檔名自動帶版本與日期。**壓縮檔內的資料夾一律是 `guru-theme`** —— WordPress 以資料夾名認主題，改了就會變成第二套主題而不是更新。每次改動請更新 `CHANGELOG.md`。
 
@@ -128,14 +128,14 @@ guru-theme/
 │   ├── redirects.php          ★ 舊網址 301：about-us / our-work / contact-us / service/* / portfolio-item/* / last-announcement 等 → 新頁；investor_document 與法律頁不動
 │   └── seed-data.json         ★ 匯入資料（solutions 含 media/highlights；works 含 home 1–4；blog_categories）
 ├── template-parts/
-│   ├── client-wall.php / logo-ticker.php / offices.php（含世界地圖影片）
+│   ├── client-wall.php / logo-ticker.php / offices.php（世界地圖影片已於 v1.2.5 依客戶要求移除）
 │   ├── solution-form.php      每個 solution 下方的表單
 │   ├── work-modal.php         首頁用 lightbox（hw-vmodal，style.css）
 │   └── work-modal-archive.php Work 頁用 lightbox（vmodal，work.css）—— 與靜態站兩種設計一致
 └── assets/
     ├── css/{about,work,blog,services,investor}.css   依頁面載入
     ├── js/main.js             所有前端行為（modal 控制器、Work 篩選、Solutions 面板/輪播/手機、Blog 篩選、計數動畫…）
-    └── media/  hero 影片、world-map.mp4、logo、client-logos/（67 webp）、solutions/（3 張手機截圖）
+    └── media/  hero 影片、logo、client-logos/（67 webp）、solutions/（3 張手機截圖）
 ```
 
 ### 4.3 自訂文章類型與欄位
@@ -155,7 +155,7 @@ guru-theme/
 | Contact details | Email、電話、WhatsApp、城市、表單頁尾標題、精簡頁尾標題與按鈕 |
 | Social links | IG / LinkedIn / FB |
 | Homepage | Solutions 導言、About 區標題 / 統計（`數字 | 後綴 | 標籤`）/ 段落 / 按鈕、hero 影片（桌機、手機） |
-| About page | Founded、Credential、故事標題、客戶牆標題、辦公室標題、辦公室清單、世界地圖影片 |
+| About page | Founded、Credential、故事標題、客戶牆標題、辦公室標題、辦公室清單 |
 | Blog | 導言 |
 | Typography | 內文／區塊標題／頁面大標題／導覽列連結 四個百分比（70–150，預設 100）。分組規則在 `tools/build-typography.py` 的 EXCLUDE/NAV/HERO/HEADING/BODY 正規式；標籤、按鈕、表單欄位、膠囊一律不縮放 |
 | Investor page | 公司名稱、簡介、股票資料、文件清單、公告連結、公司治理文件、股價 / 舊 IR 連結、聯絡處、免責聲明 |
@@ -193,7 +193,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 
 **注意**：
 - `switch_theme()` 與匯入必須在**不同的 PHP process** 執行（functions.php 不會重新載入）。
-- php -S 不支援 HTTP Range，headless Chrome 載入本機大影片會卡住；要截圖比對時把 hero / world-map 影片設定暫時指到 Vercel。
+- php -S 不支援 HTTP Range，headless Chrome 載入本機大影片會卡住；要截圖比對時把 hero 影片設定暫時指到 Vercel（或改用 `tools/shoot-url.mjs` 走 DevTools protocol，不會卡）。
 - 原本放在 `/tmp` 的測試站會被系統清掉，所以改放 `~/wptest`。
 
 ---
@@ -225,6 +225,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 | CSS 想做 selector 去重 | **不要做**。54 處同選擇器不同內容的覆寫，去重會靜默改變樣式 |
 | grep `add_setting(` 找不到設定 | customizer.php 用迴圈註冊（`$id` 變數），要看 `guru_default()` 的清單 |
 | **卡片封面圖撐壞 Work 頁 grid** | 客戶第一次上傳封面圖才暴露：`.prj-img > img` 沒有 absolute/cover 規則，1024px 原圖的 min-content 把 `1fr` 欄位撐開，整頁變「一大兩小」。靜態站卡片只有色塊與影片所以從未需要。修法：`.prj-img > img` 與 `.wrk-card-img > img` 套用與影片相同的填滿規則，卡片 `min-width:0`。**教訓：任何 grid/flex 內放 `<img>` 的地方，都要有 width/object-fit 規則，不能靠靜態站沒出現過就略過** |
+| **全站封面規則（v1.2.5，客戶指定）** | 上傳的封面圖／影片一律 `object-fit: cover`、取正中央：首頁與 Work 卡片（4:3）、Blog 卡片與文章頁精選圖（16:9）、作品單頁封面圖（16:9）、Solutions 輪播與單支影片（16:9）、首頁 hero。**刻意不裁**：燈箱與作品單頁的影片本身（contain／自然比例）、Solutions 手機截圖（可捲動長圖）、客戶 logo（contain）。新增任何顯示上傳媒體的位置時照這條走 |
 | **Typography 1.2.1/1.2.2 讓全站標題縮小** | `calc(… * var(--guru-fs-x))` 在變數未定義時整條失效，font-size 退回繼承值。class 比對抓不到這種錯，是拍 Customizer 預覽截圖才看見。修法：產生器一律輸出 `var(--guru-fs-x, 1)`；`tools/shoot-admin.mjs` 現在會在 100% 時斷言 `.abt-hero-title` 算出的字級 ≥ 50px。**改主題 CSS 後要重跑 `tools/build-typography.py`** |
 | 客戶上傳大圖失敗「無法從伺服器取得有效的回應」 | 主機 PHP 30 s 上限，產縮圖超時 → `inc/media.php`；nginx 已確認放行到 60 MB、REST 正常，問題在 PHP 處理階段 |
 | 客戶找不到 Showcase 欄位、把圖貼進內文 | 區塊編輯器把 meta box 擠到最底、Cover image 藏側欄 → `work`/`solution`/`client_logo` 改傳統編輯器（`use_block_editor_for_post_type`） |

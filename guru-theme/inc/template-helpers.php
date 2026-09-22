@@ -130,7 +130,7 @@ function guru_asset( $path ) {
  * URL of a file under assets/media/, or '' when it is not shipped
  * (the slim package omits the large videos).
  *
- * @param string $file File name, e.g. "world-map.mp4".
+ * @param string $file File name, e.g. "hero-bg.mp4".
  * @return string
  */
 function guru_theme_media_url( $file ) {
@@ -214,8 +214,9 @@ function guru_home_works() {
 
 /**
  * Render one showcase card for the work archive — same markup as the static
- * site: .prj-img holds the film / cover / coloured placeholder, the first card
- * is "large", and cards fade in one after another.
+ * site: .prj-img holds the film / cover / coloured placeholder, and cards fade
+ * in one after another. Every card is the same 4:3 size — the static page's
+ * 16:9 "large" variant was dropped at the client's request (2026-09-22).
  *
  * @param int|null $post_id Optional post ID.
  * @param int      $index   Position in the grid (0-based).
@@ -227,8 +228,7 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 		$sub .= ( $sub ? ' · ' : '' ) . implode( ' · ', $data['tags'] );
 	}
 	?>
-	<?php // Every fifth card is the wide 16:9 variant, as on the static page. ?>
-	<div class="prj-card<?php echo 0 === $index % 5 ? ' large' : ''; ?>"
+	<div class="prj-card"
 		data-cats="<?php echo esc_attr( $data['cats'] ); ?>"
 		<?php if ( $data['video'] ) : ?>
 			data-video="<?php echo esc_url( $data['video'] ); ?>"

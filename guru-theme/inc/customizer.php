@@ -249,7 +249,6 @@ function guru_customize_register( $wp_customize ) {
 			'guru_offices'         => array( __( 'Offices', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | Region or address | Badge (optional — a badge makes the card featured).', 'guru' ) ),
 		)
 	);
-	guru_customize_video( $wp_customize, 'guru_world_map_video', 'guru_about', __( 'World map video', 'guru' ), __( 'Shown above the offices. Leave empty to use the video bundled with the theme.', 'guru' ) );
 
 	/* ------------------------------------------------------------- Blog */
 	$wp_customize->add_section( 'guru_blog', array( 'title' => __( 'Blog', 'guru' ), 'panel' => 'guru_panel', 'priority' => 50 ) );

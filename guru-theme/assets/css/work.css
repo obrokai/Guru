@@ -283,7 +283,12 @@
     overflow: hidden;
     background: #d9d5c6;
   }
-  .prj-card.large .prj-img { aspect-ratio: 16/9; }
+  /*
+   * Every card shares the same 4:3 frame. The static page made every fifth card
+   * a shorter 16:9 "large" variant; the client asked (2026-09-22) for all covers
+   * to be the same size with the picture cropped from the centre, so that
+   * variant is gone. object-fit: cover below does the centre crop.
+   */
   .prj-img-ph {
     position: absolute;
     inset: 0;
@@ -748,7 +753,9 @@
   .wrk-single { max-width: 1280px; margin: 0 auto; padding: 0 40px 100px; }
   .wrk-single .wrk-page-header { padding-left: 0; padding-right: 0; }
   .wrk-single-media { border-radius: 20px; overflow: hidden; background: #0e0e10; margin-bottom: 28px; }
-  .wrk-single-media video, .wrk-single-media img { width: 100%; height: auto; display: block; }
+  /* The film plays whole; a cover image sits in a 16:9 frame, cropped from the centre. */
+  .wrk-single-media video { width: 100%; height: auto; display: block; }
+  .wrk-single-media img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; display: block; }
   .wrk-single .prj-tags { margin-bottom: 28px; }
   .wrk-single-body { max-width: 820px; font-size: 17px; line-height: 1.75; color: var(--ink-2); }
   .wrk-single-body p { margin: 0 0 1.3em; }

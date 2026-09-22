@@ -1,6 +1,7 @@
 <?php
 /**
- * Offices grid (About page), with the world-map video above it.
+ * Offices grid (About page). The static page had a world-map video above the
+ * grid; the client asked for it to be removed (2026-09-22).
  *
  * Edited in Customize → Guru site settings → About page, one office per line:
  *   City | Region or address | badge (optional — a badge makes the card featured)
@@ -13,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $guru_rows = guru_pipe_rows( guru_mod( 'guru_offices' ) );
-$guru_map  = guru_video_url( 'guru_world_map_video', 'world-map.mp4' );
 
 if ( ! $guru_rows ) {
 	return;
@@ -29,14 +29,6 @@ if ( ! $guru_rows ) {
 				</h2>
 			</div>
 		</div>
-
-		<?php if ( $guru_map ) : ?>
-			<div class="abt-world-map">
-				<video autoplay muted loop playsinline preload="metadata">
-					<source src="<?php echo esc_url( $guru_map ); ?>" type="video/mp4" />
-				</video>
-			</div>
-		<?php endif; ?>
 
 		<div class="abt-offices-grid">
 			<?php foreach ( $guru_rows as $guru_i => $guru_parts ) : ?>

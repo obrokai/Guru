@@ -17,8 +17,7 @@
 1. WordPress 後台 → **外觀 → 佈景主題 → 安裝佈景主題 → 上傳佈景主題**
 2. 選 `guru-theme.zip` → 安裝 → **啟用**
 3. 如果上傳時出現「檔案大小超過限制」，改用 `guru-theme-slim.zip`，之後在
-   **外觀 → 自訂 → Guru site settings → Homepage** 上傳首頁背景影片、
-   **→ About page** 上傳世界地圖影片即可。
+   **外觀 → 自訂 → Guru site settings → Homepage** 上傳首頁背景影片即可。
 
 ## 二、一鍵匯入內容
 
@@ -46,7 +45,7 @@
 | 表單來信 | **Enquiries** → 所有送出的表單都會存檔並可下載 CSV，同時寄到聯絡信箱 |
 | 網誌文章 | **文章** → 一般 WordPress 文章；文章的第一個分類決定卡片顏色 |
 | 首頁文字（Solutions 導言、About 區標題／數字／段落）、首頁影片 | **外觀 → 自訂 → Guru site settings → Homepage** |
-| About 頁（成立年份、故事標題、客戶牆標題、辦公室、世界地圖影片） | **外觀 → 自訂 → Guru site settings → About page**（About 頁的標題、導言與故事內文則在 **頁面 → About** 直接編輯） |
+| About 頁（成立年份、故事標題、客戶牆標題、辦公室） | **外觀 → 自訂 → Guru site settings → About page**（About 頁的標題、導言與故事內文則在 **頁面 → About** 直接編輯） |
 | 聯絡資訊、WhatsApp、頁尾標題 | **外觀 → 自訂 → Guru site settings → Contact details** |
 | 社群連結 | **外觀 → 自訂 → Guru site settings → Social links**。三個都留空時，頁尾的「Follow Us」欄整個不顯示（不會出現空連結） |
 | 投資人頁（公司名稱、簡介、上市資料、文件清單、公司治理、聯絡處、免責聲明） | **外觀 → 自訂 → Guru site settings → Investor page** |
@@ -61,6 +60,7 @@
 | 類型 | 建議 |
 |---|---|
 | 封面圖、文章圖 | **JPG**（或 PNG），長邊 **不超過 2000px**，檔案 **2 MB 以內**。設計原檔請先縮圖再上傳 |
+| 封面比例 | 任何比例都可以上傳：網站會自動**填滿框、取正中央裁切**（Work 卡片 4:3、Blog 文章頁與作品單頁 16:9）。不想被裁掉內容就直接做成該比例，主體盡量放畫面中間 |
 | 客戶 logo | PNG 或 JPG，正方形約 480px |
 | 作品影片 | MP4（H.264），**30 MB 以內**、1080p 以下 |
 

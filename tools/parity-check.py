@@ -23,9 +23,9 @@ IGNORE = re.compile(r"^(c\d+|active|open|hidden|show|is-hidden|nav-hidden|form-o
 # Structural expectations per page: (needle, minimum count). Needles ending in a space are matched as class="…".
 CHECKS = {
     "index": [("abt-stat-num", 4), ("hw-vmodal", 1), ("svc-acc-item", 9), ("wrk-card ", 4), ("logo-ticker", 1), ("hw-info-card", 2), ("hw-video-card", 2)],
-    "about": [("abt-world-map", 1), ("abt-office-card", 6), ("abt-client-cell", 67), ("abt-story-p", 4)],
+    "about": [("abt-office-card", 6), ("abt-client-cell", 67), ("abt-story-p", 4)],
     "services": [('id="panel-', 9), ("srv-phone-wrap", 3), ("srv-carousel-slide", 4), ("srv-video-wrap", 1), ('srv-highlight"', 24), ("srv-media-label", 3), ("spf-form", 9)],
-    "work": [("prj-card", 13), ("filter-btn", 7), ('id="vmodal"', 1), ('class="prj-card large"', 1), ("prj-img", 13), ("btn-primary-lg", 1)],
+    "work": [("prj-card", 13), ("filter-btn", 7), ('id="vmodal"', 1), ("prj-img", 13), ("btn-primary-lg", 1)],
     "blog": [("blg-filter-btn", 8), ("btn-primary-lg", 1)],
     "investor": [("inv-doc-item", 8), ("inv-sidebar-card", 3), ("inv-contact-row", 5), ("inv-footer", 1), ("inv-more-btn", 1)],
 }

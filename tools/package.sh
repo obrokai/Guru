@@ -33,12 +33,11 @@ rm -f "$FULL" "$SLIM"
 zip -rq "$FULL" guru-theme
 zip -rq "$SLIM" guru-theme \
   -x 'guru-theme/assets/media/hero-bg.mp4' \
-     'guru-theme/assets/media/hero-bg-mobile.mp4' \
-     'guru-theme/assets/media/world-map.mp4'
+     'guru-theme/assets/media/hero-bg-mobile.mp4'
 
 # Sanity checks: the folder name must be right and the slim package must have no videos.
 unzip -l "$FULL" | grep -q ' guru-theme/style.css$' || { echo "unexpected folder name inside $FULL" >&2; exit 1; }
-unzip -l "$SLIM" | grep -qE 'hero-bg|world-map' && { echo "slim package still contains videos" >&2; exit 1; }
+unzip -l "$SLIM" | grep -qE 'hero-bg|\.mp4$' && { echo "slim package still contains videos" >&2; exit 1; }
 
 ls -lh "$FULL" "$SLIM" | awk '{print $5, $9}'
 echo "theme version $VERSION ($(unzip -l "$FULL" | grep -c '\.php$') php files)"
