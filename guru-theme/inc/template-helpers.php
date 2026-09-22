@@ -192,8 +192,13 @@ function guru_home_works() {
 			'post_type'      => 'work',
 			'posts_per_page' => 4,
 			'meta_key'       => '_guru_home_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'orderby'        => 'meta_value_num',
-			'order'          => 'ASC',
+			// Two items with the same number should not happen (saving a slot
+			// releases it from any other item), but if it does, the one edited
+			// most recently wins rather than the older post.
+			'orderby'        => array(
+				'meta_value_num' => 'ASC',
+				'modified'       => 'DESC',
+			),
 		)
 	);
 
@@ -210,6 +215,43 @@ function guru_home_works() {
 	}
 
 	return $picked;
+}
+
+/**
+ * One item per homepage slot. When $post_id takes slot $slot, every other
+ * showcase item holding that number is moved off the homepage (its position
+ * is cleared; it stays in the Work list). Returns the demoted post IDs so the
+ * admin screen can say what happened.
+ *
+ * @param int $post_id The item claiming the slot.
+ * @param int $slot    1–4.
+ * @return int[]
+ */
+function guru_claim_home_slot( $post_id, $slot ) {
+	$others = get_posts(
+		array(
+			'post_type'      => 'work',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'post__not_in'   => array( (int) $post_id ),
+			'no_found_rows'  => true,
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'     => '_guru_home_order',
+					'value'   => (int) $slot,
+					'type'    => 'NUMERIC',
+					'compare' => '=',
+				),
+			),
+		)
+	);
+
+	foreach ( $others as $other_id ) {
+		delete_post_meta( $other_id, '_guru_home_order' );
+	}
+
+	return array_map( 'intval', $others );
 }
 
 /**

@@ -92,7 +92,7 @@ function guru_render_work_meta_box( $post ) {
 		<input type="number" id="guru_home_order" name="guru_home_order" min="1" max="4" step="1" style="width:90px"
 			value="<?php echo $home ? (int) $home : ''; ?>" />
 		<p class="description">
-			<?php esc_html_e( '1–4 to feature this item in the "Our Work" block on the homepage (1 is the large card). Leave empty to keep it off the homepage; empty slots are filled by the first items in the Showcase list.', 'guru' ); ?>
+			<?php esc_html_e( '1–4 to feature this item in the "Our Work" block on the homepage (1 is the large card). One item per number: if another item already has it, that item is moved off the homepage when you save. Leave empty to keep it off the homepage; empty slots are filled by the first items in the Showcase list.', 'guru' ); ?>
 		</p>
 	</div>
 
@@ -175,6 +175,18 @@ function guru_save_work_meta( $post_id ) {
 	$home = isset( $_POST['guru_home_order'] ) ? absint( wp_unslash( $_POST['guru_home_order'] ) ) : 0;
 	if ( $home >= 1 && $home <= 4 ) {
 		update_post_meta( $post_id, '_guru_home_order', $home );
+		// The slot belongs to this item now; tell the editor who lost it.
+		$demoted = guru_claim_home_slot( $post_id, $home );
+		if ( $demoted ) {
+			set_transient(
+				'guru_home_slot_notice_' . get_current_user_id(),
+				array(
+					'slot'  => $home,
+					'names' => array_map( 'get_the_title', $demoted ),
+				),
+				MINUTE_IN_SECONDS
+			);
+		}
 	} else {
 		delete_post_meta( $post_id, '_guru_home_order' );
 	}
@@ -601,3 +613,34 @@ function guru_client_logo_column_content( $column, $post_id ) {
 	}
 }
 add_action( 'manage_client_logo_posts_custom_column', 'guru_client_logo_column_content', 10, 2 );
+
+/**
+ * After a showcase item takes a homepage slot, say which item lost it — the
+ * editor otherwise has no way to know why another card disappeared.
+ */
+function guru_home_slot_notice() {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || 'work' !== $screen->post_type ) {
+		return;
+	}
+
+	$key    = 'guru_home_slot_notice_' . get_current_user_id();
+	$notice = get_transient( $key );
+	if ( ! $notice || empty( $notice['names'] ) ) {
+		return;
+	}
+	delete_transient( $key );
+
+	printf(
+		'<div class="notice notice-info is-dismissible"><p>%s</p></div>',
+		esc_html(
+			sprintf(
+				/* translators: 1: homepage slot number, 2: titles of the items that lost it. */
+				__( 'Homepage position %1$d now belongs to this item. Moved off the homepage: %2$s.', 'guru' ),
+				(int) $notice['slot'],
+				implode( ', ', array_map( 'strval', (array) $notice['names'] ) )
+			)
+		)
+	);
+}
+add_action( 'admin_notices', 'guru_home_slot_notice' );

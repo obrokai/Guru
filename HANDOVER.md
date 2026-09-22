@@ -4,7 +4,7 @@
 > 讀完這份文件就能掌握全部背景，不需要舊對話紀錄。
 >
 > 專案路徑：`/Users/mike/Guru/`
-> 最後更新：2026-09-22（v1.2.5）
+> 最後更新：2026-09-22（v1.2.6）
 
 ---
 
@@ -89,7 +89,7 @@ cd /Users/mike/Guru && git log --oneline -5 && ls guru-theme tools
 
 ## 4. WordPress 主題（主要成果）
 
-路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.5 / 2026-09-22**。
+路徑：`guru-theme/`　安裝檔：`guru-theme-v<版本>-<YYYYMMDD>.zip`（約 21 MB）/ `…-slim.zip`（約 3 MB，不含三支影片），目前為 **v1.2.6 / 2026-09-22**。
 
 **版本規則**（2026-09-11 起）：版本號寫在 `guru-theme/style.css` 的 `Version:` 標頭，`functions.php` 的 `GURU_VERSION` 要跟著改；打包用 `tools/package.sh`，檔名自動帶版本與日期。**壓縮檔內的資料夾一律是 `guru-theme`** —— WordPress 以資料夾名認主題，改了就會變成第二套主題而不是更新。每次改動請更新 `CHANGELOG.md`。
 
@@ -226,6 +226,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 | grep `add_setting(` 找不到設定 | customizer.php 用迴圈註冊（`$id` 變數），要看 `guru_default()` 的清單 |
 | **卡片封面圖撐壞 Work 頁 grid** | 客戶第一次上傳封面圖才暴露：`.prj-img > img` 沒有 absolute/cover 規則，1024px 原圖的 min-content 把 `1fr` 欄位撐開，整頁變「一大兩小」。靜態站卡片只有色塊與影片所以從未需要。修法：`.prj-img > img` 與 `.wrk-card-img > img` 套用與影片相同的填滿規則，卡片 `min-width:0`。**教訓：任何 grid/flex 內放 `<img>` 的地方，都要有 width/object-fit 規則，不能靠靜態站沒出現過就略過** |
 | **全站封面規則（v1.2.5，客戶指定）** | 上傳的封面圖／影片一律 `object-fit: cover`、取正中央：首頁與 Work 卡片（4:3）、Blog 卡片與文章頁精選圖（16:9）、作品單頁封面圖（16:9）、Solutions 輪播與單支影片（16:9）、首頁 hero。**刻意不裁**：燈箱與作品單頁的影片本身（contain／自然比例）、Solutions 手機截圖（可捲動長圖）、客戶 logo（contain）。新增任何顯示上傳媒體的位置時照這條走 |
+| **首頁四格位置重號（v1.2.6）** | 匯入的四個作品預設佔 `_guru_home_order` 1～4；客戶把新作品填 1 就跟 CreatorWeek 同分，`meta_value_num ASC` 同分時舊的排前面，新作品掉到第 2 格。修法：儲存時 `guru_claim_home_slot()` 清掉其他同號作品的位置 + transient 提示；查詢加 `modified DESC` 當第二排序。**教訓：任何「填數字排位置」的欄位都要處理重號，不能假設客戶會先去清舊的** |
 | **Typography 1.2.1/1.2.2 讓全站標題縮小** | `calc(… * var(--guru-fs-x))` 在變數未定義時整條失效，font-size 退回繼承值。class 比對抓不到這種錯，是拍 Customizer 預覽截圖才看見。修法：產生器一律輸出 `var(--guru-fs-x, 1)`；`tools/shoot-admin.mjs` 現在會在 100% 時斷言 `.abt-hero-title` 算出的字級 ≥ 50px。**改主題 CSS 後要重跑 `tools/build-typography.py`** |
 | 客戶上傳大圖失敗「無法從伺服器取得有效的回應」 | 主機 PHP 30 s 上限，產縮圖超時 → `inc/media.php`；nginx 已確認放行到 60 MB、REST 正常，問題在 PHP 處理階段 |
 | 客戶找不到 Showcase 欄位、把圖貼進內文 | 區塊編輯器把 meta box 擠到最底、Cover image 藏側欄 → `work`/`solution`/`client_logo` 改傳統編輯器（`use_block_editor_for_post_type`） |
