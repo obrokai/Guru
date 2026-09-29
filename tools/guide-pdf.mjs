@@ -34,21 +34,21 @@ const printCss = `
   body { background: #fff; font-size: 12.5px; line-height: 1.6; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .page { max-width: none; padding: 0; }
   h1 { font-size: 30px; }
-  h2 { font-size: 20px; margin: 30px 0 12px; break-after: avoid; }
-  h3 { break-after: avoid; }
-  .step { margin: 22px 0 10px; break-after: avoid; break-inside: avoid; }
+  h2 { font-size: 20px; margin: 24px 0 10px; break-after: avoid; }
+  h3 { break-after: avoid; margin: 24px 0 10px; }
+  .step { margin: 18px 0 8px; break-after: avoid; break-inside: avoid; }
   .step .n { width: 32px; height: 32px; line-height: 32px; font-size: 15px; }
   .step h4 { font-size: 16px; padding-top: 5px; }
   .body { margin-left: 44px; }
-  figure { break-inside: avoid; margin: 10px 0 6px; }
-  figure img { border-radius: 6px; box-shadow: none; border: 1px solid var(--line); }
+  figure { break-inside: avoid; margin: 8px 0 4px; }
+  figure img { width: 90%; border-radius: 6px; box-shadow: none; border: 1px solid var(--line); }
   figure.narrow { max-width: 300px; }
   .two { grid-template-columns: 1fr 260px; break-inside: avoid; }
   .tbl-wrap { overflow: visible; break-inside: avoid; }
   table { font-size: 11.5px; break-inside: avoid; }
   th, td { padding: 6px 9px; }
-  .note, .tip { break-inside: avoid; font-size: 12px; }
-  .doc-head { margin-bottom: 22px; padding-bottom: 16px; }
+  .note, .tip { break-inside: avoid; font-size: 12px; margin: 12px 0; }
+  .doc-head { margin-bottom: 18px; padding-bottom: 14px; }
   .doc-lead { font-size: 13px; }
   .foot { margin-top: 30px; }
   a { color: inherit; text-decoration: none; }
