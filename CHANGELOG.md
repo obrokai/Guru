@@ -11,6 +11,7 @@
 ## 1.2.6 — 2026-09-22
 
 - **首頁「Our Work」位置重號**：客戶把「Test」的 Homepage position 填 1，首頁卻排在第 2 格。原因是匯入的四個作品本來就佔 1～4（MGTO × CreatorWeek = 1），兩個「1」同分時舊的排前面。修正：儲存作品時**一個數字只有一個作品**——其他佔同一數字的作品會自動清掉位置（`guru_claim_home_slot()`），並在編輯畫面上方提示「第 N 格原本是 XXX，已移出首頁」；首頁查詢加上「同分時最近更新的優先」當保險。欄位說明、README、客戶教學同步改寫（不再要客戶手動把舊作品留空）。
+- 客戶教學新增 **PDF 版**（`docs/客戶教學-上架作品與調整字體.pdf`，A4 直式 9 頁，截圖內嵌），由 `tools/guide-pdf.mjs` 透過 headless Chrome 的 DevTools protocol 從 HTML 版列印；HTML 改了就重跑。`tools/guide-template.{html,md}` 同步到 v1.2.6。
 
 ## 1.2.5 — 2026-09-22
 
