@@ -307,16 +307,41 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   }, { passive: true });
 })();
 
-/* ── Homepage: Solutions accordion ── */
+/* ── Homepage: Solutions accordion ──
+   Mouse: hovering a row opens its intro, one click on the name goes to that
+   solution (client request, v1.2.7). Touch: tap opens, "Explore" goes. */
 (function () {
   var acc = document.getElementById('svcAccordion');
   if (!acc) return;
   var items = acc.querySelectorAll('.svc-acc-item');
+  var mouse = window.matchMedia('(hover: hover) and (pointer: fine)');
+  var timer = null;
+
+  function open(item) {
+    items.forEach(function (i) { if (i !== item) i.classList.remove('open'); });   // single-open
+    item.classList.add('open');
+  }
+
   items.forEach(function (item) {
     var head = item.querySelector('.svc-acc-head');
+    var link = item.querySelector('.svc-acc-link');
+
+    // Short delay so sweeping the mouse across the list doesn't open every row.
+    item.addEventListener('mouseenter', function () {
+      if (!mouse.matches) return;
+      clearTimeout(timer);
+      timer = setTimeout(function () { open(item); }, 90);
+    });
+    item.addEventListener('mouseleave', function () { clearTimeout(timer); });
+    head.addEventListener('focus', function () { if (mouse.matches) open(item); });
+
     head.addEventListener('click', function () {
+      if (mouse.matches && link) {
+        window.location.href = link.href;
+        return;
+      }
       var isOpen = item.classList.contains('open');
-      items.forEach(function (i) { i.classList.remove('open'); });   // single-open
+      items.forEach(function (i) { i.classList.remove('open'); });
       if (!isOpen) item.classList.add('open');
     });
   });

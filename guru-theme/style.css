@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.2.6
+Version:     1.2.7
 Released:    2026-09-22
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -523,13 +523,18 @@ Text Domain: guru
   .svc-acc-head:hover .svc-acc-chevron,
   .svc-acc-item.open .svc-acc-chevron { color: var(--blue); }
   .svc-acc-item.open .svc-acc-chevron { transform: rotate(180deg); }
+  /* Mouse: the name is a link (opens on hover), so the open chevron points right */
+  @media (hover: hover) and (pointer: fine) {
+    .svc-acc-item.open .svc-acc-chevron { transform: rotate(-90deg); }
+  }
   .svc-acc-body {
     max-height: 0;
     overflow: hidden;
     transition: max-height .4s var(--ease-out-expo), opacity .3s;
     opacity: 0;
   }
-  .svc-acc-item.open .svc-acc-body { max-height: 240px; opacity: 1; }
+  /* Room for the longest intro on a phone (~330px) so "Explore" is never cut off */
+  .svc-acc-item.open .svc-acc-body { max-height: 480px; opacity: 1; }
   .svc-acc-inner { padding: 0 4px 30px; max-width: 520px; }
   .svc-acc-desc { font-size: 16px; line-height: 1.6; color: var(--ink-2); margin-bottom: 16px; }
   .svc-acc-link {
