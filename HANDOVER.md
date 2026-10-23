@@ -189,6 +189,9 @@ tools/local-wp.sh deploy     # 改完程式後重新複製主題
 | `parity-check.py --static-dir <抓下來的 vercel html> --local http://localhost:8899` | 六頁逐一比對：靜態頁用到的每個 class 是否在主題 CSS、是否出現在渲染 HTML；加上每頁的結構斷言（幾張卡、幾個面板…）。**目標 TOTAL GAPS: 0** |
 | `test-form.py` | 表單五種情境（正常 / 蜜罐 / 無效 email / 錯 nonce / 站外導向）→ 檢查資料表 |
 | `router.php` | php -S 用的 pretty permalink 路由 |
+| `staging-check.mjs [網址] [截圖資料夾]` | **上版後的前台檢查**（只讀、不登入）：主題版本、導覽列每頁 HTTP／PHP 錯誤／noindex、首頁區塊順序與 About 尺寸、hero 影片是否只播一次、作品卡與 Solutions 數量、破圖、頁尾文字、手機選單顏色、每頁 console 錯誤；每頁存桌機與手機截圖。先跑 `tools/chrome-cdp.sh` |
+| `staging-admin-check.py [網址]` | **上版後的後台檢查**（只讀，網址必須以 `/staging` 結尾）：啟用中主題與版本、Showcase 首頁四格／缺 Client／缺媒體／草稿、作品與 Solutions 編輯畫面欄位框、Customizer 區塊、阻擋搜尋引擎、帳號角色、Enquiries 頁。帳密只用環境變數 `WP_USER` `WP_PASS` |
+| `~/.claude/agents/guru-qa.md` | 「Guru 驗收員」agent：上版後跑上面兩支並對照 `UPDATE-v<版本>.md` 的確認清單回報 |
 
 phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯誤、parity TOTAL GAPS 0（唯一「缺」的 `vmodal-tag` 是 JS 產生的）、表單五情境全過、後台八個畫面零 PHP 錯誤、匯入重跑兩次 0 新增且不改動既有內容。另外跑了一輪六個面向（安全、PHP/WP 正確性、靜態站對齊、JS、匯入器、設定/文件）的對抗式程式審查，約 45 個發現中確認並修正了 30 多項（蜜罐未隱藏、Customizer 影片 sanitizer、來信表存在性、匯入重跑覆蓋內容、Work 頁 tags、Solutions 表單國碼、精簡頁尾回饋訊息、404/搜尋頁樣式、單篇文章／作品 CSS 等）。
 
