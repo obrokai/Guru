@@ -3,8 +3,8 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.2.7
-Released:    2026-09-22
+Version:     1.2.8
+Released:    2026-10-23
 Requires at least: 6.0
 Requires PHP: 7.4
 License:     Proprietary
@@ -545,32 +545,35 @@ Text Domain: guru
   .svc-acc-link:hover { gap: 12px; }
 
   /* ================================================== ABOUT */
+  /* Compact band between the logo ticker and Our Solutions (client request,
+     v1.2.8): one screen shows the company intro and the start of Our Solutions. */
   .abt {
     background: var(--ink);
     color: var(--cream);
-    padding: 120px 40px;
+    padding: 72px 40px;
   }
   .abt-inner {
     max-width: 1500px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1.1fr 1fr;
-    gap: 80px;
+    gap: 64px;
+    align-items: center;
   }
   .abt-title {
-    font-size: clamp(40px, 5.4vw, 90px);
+    font-size: clamp(32px, 3.4vw, 56px);
     font-weight: 800;
     line-height: 0.94;
     letter-spacing: -0.035em;
     color: var(--lime);
-    margin-bottom: 60px;
+    margin-bottom: 32px;
     max-width: 700px;
     text-transform: uppercase;
   }
   .abt-stats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px 32px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
   }
   .abt-stat {
     display: flex;
@@ -580,7 +583,7 @@ Text Domain: guru
     padding-top: 18px;
   }
   .abt-stat-num {
-    font-size: clamp(48px, 5vw, 88px);
+    font-size: clamp(32px, 3vw, 52px);
     font-weight: 800;
     line-height: 1;
     color: var(--cream);
@@ -1522,10 +1525,13 @@ Text Domain: guru
     .svc-intro { position: static; top: auto; }
     .svc-lead { font-size: 17px; max-width: none; }
     .svc-all-link, .wrk-all { padding: 14px 22px; font-size: 14px; }
-    .abt-inner { grid-template-columns: 1fr; gap: 50px; }
-    .abt-title { font-size: clamp(36px, 10vw, 64px); margin-bottom: 40px; }
-    .abt-stats { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
-    .abt-stat-num { font-size: clamp(40px, 12vw, 64px); }
+    .abt { padding: 56px 20px; }
+    .abt-inner { grid-template-columns: 1fr; gap: 28px; }
+    .abt-title { font-size: clamp(28px, 8vw, 44px); margin-bottom: 24px; }
+    .abt-stats { grid-template-columns: repeat(2, 1fr); gap: 20px 16px; }
+    .abt-stat-num { font-size: clamp(30px, 9vw, 44px); }
+    .abt-copy { gap: 14px; }
+    .abt-p { font-size: 15px; }
     .abt-image-wrap { aspect-ratio: 4/3; }
     .wrk-grid { grid-template-columns: 1fr; gap: 28px; }
     .wrk-card-large { grid-column: span 1; }

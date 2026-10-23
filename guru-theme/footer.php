@@ -201,7 +201,6 @@ $guru_sent = isset( $_GET['contact'] ) ? sanitize_key( wp_unslash( $_GET['contac
 				printf( esc_html__( '© %1$s %2$s. All rights reserved.', 'guru' ), esc_html( gmdate( 'Y' ) ), esc_html( get_bloginfo( 'name' ) ) );
 				?>
 			</p>
-			<p class="ftr-copy"><?php esc_html_e( 'Designed with ♥ in Hong Kong', 'guru' ); ?></p>
 		</div>
 	</div>
 </footer>

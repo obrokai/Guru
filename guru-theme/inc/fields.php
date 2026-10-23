@@ -48,6 +48,33 @@ function guru_meta_boxes_after_title( $post ) {
 }
 add_action( 'edit_form_after_title', 'guru_meta_boxes_after_title' );
 
+const GURU_TOP_BOXES = array( 'guru_work_details', 'guru_solution_media' );
+
+/**
+ * Keep the Guru panels open. A collapsed panel shrinks to its title bar and
+ * WordPress remembers that per user, so editors thought the video field had
+ * disappeared. Collapsed or hidden states saved before 1.2.8 are ignored.
+ *
+ * @param string[] $classes Postbox classes.
+ * @return string[]
+ */
+function guru_keep_meta_box_open( $classes ) {
+	return array_values( array_diff( $classes, array( 'closed' ) ) );
+}
+add_filter( 'postbox_classes_work_guru_work_details', 'guru_keep_meta_box_open' );
+add_filter( 'postbox_classes_solution_guru_solution_media', 'guru_keep_meta_box_open' );
+
+/**
+ * Never hide the Guru panels through Screen Options.
+ *
+ * @param string[] $hidden Hidden meta box IDs.
+ * @return string[]
+ */
+function guru_never_hide_top_boxes( $hidden ) {
+	return array_values( array_diff( (array) $hidden, GURU_TOP_BOXES ) );
+}
+add_filter( 'hidden_meta_boxes', 'guru_never_hide_top_boxes' );
+
 /**
  * Shared admin styles for the meta boxes.
  */
@@ -64,6 +91,12 @@ function guru_meta_box_styles() {
 		.guru-field .description { margin-top: 6px; }
 		.guru-media-row { display: flex; gap: 8px; }
 		.guru-media-row input { flex: 1; }
+		/* No collapse or reorder controls on the Guru panels: they always stay open. */
+		#guru-top-boxes .postbox .handle-actions { display: none; }
+		#guru-top-boxes .postbox .hndle { pointer-events: none; cursor: default; }
+		#guru-top-boxes .postbox.closed .inside { display: block; }
+		.metabox-prefs label[for="guru_work_details-hide"],
+		.metabox-prefs label[for="guru_solution_media-hide"] { display: none; }
 	</style>
 	<?php
 }

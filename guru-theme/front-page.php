@@ -23,7 +23,7 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 		$guru_hero_mobile  = guru_hero_video_url( 'mobile' );
 		if ( $guru_hero_desktop || $guru_hero_mobile ) :
 			?>
-			<video id="heroVideo" autoplay muted loop playsinline preload="auto">
+			<video id="heroVideo" autoplay muted playsinline preload="auto">
 				<?php if ( $guru_hero_mobile ) : ?>
 					<source src="<?php echo esc_url( $guru_hero_mobile ); ?>" media="(max-width: 900px)" type="video/mp4" />
 				<?php endif; ?>
@@ -48,6 +48,55 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 </div>
 
 <?php get_template_part( 'template-parts/logo-ticker' ); ?>
+
+<?php
+/*
+ * About block — heading, animated statistics and two paragraphs.
+ * Edited in Customize → Guru site settings → Homepage.
+ */
+$guru_stats = guru_pipe_rows( guru_mod( 'guru_home_about_stats' ) );
+$guru_paras = array_filter( array_map( 'trim', preg_split( '/\r?\n\s*\r?\n/', guru_mod( 'guru_home_about_copy' ) ) ) );
+$guru_cta   = guru_mod( 'guru_home_about_cta' );
+?>
+<section id="about" class="abt">
+	<div class="abt-inner">
+		<div>
+			<h2 class="abt-title"><?php echo esc_html( guru_mod( 'guru_home_about_title' ) ); ?></h2>
+			<?php if ( $guru_stats ) : ?>
+				<div class="abt-stats">
+					<?php foreach ( $guru_stats as $guru_stat ) : ?>
+						<?php
+						$guru_num    = isset( $guru_stat[0] ) ? $guru_stat[0] : '';
+						$guru_suffix = isset( $guru_stat[1] ) ? $guru_stat[1] : '';
+						$guru_label  = isset( $guru_stat[2] ) ? $guru_stat[2] : '';
+						if ( '' === $guru_num ) {
+							continue;
+						}
+						?>
+						<div class="abt-stat">
+							<span class="abt-stat-num"
+								<?php // Whole numbers animate; anything else (2.5, 10k) is shown as typed. ?>
+								<?php if ( ctype_digit( $guru_num ) ) : ?>
+									data-count="<?php echo esc_attr( $guru_num ); ?>" data-suffix="<?php echo esc_attr( $guru_suffix ); ?>"
+								<?php endif; ?>><?php echo esc_html( $guru_num . $guru_suffix ); ?></span>
+							<span class="abt-stat-text"><?php echo esc_html( $guru_label ); ?></span>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+		</div>
+		<div class="abt-right">
+			<div class="abt-copy">
+				<?php foreach ( $guru_paras as $guru_para ) : ?>
+					<p class="abt-p"><?php echo esc_html( $guru_para ); ?></p>
+				<?php endforeach; ?>
+				<?php if ( $guru_cta ) : ?>
+					<a href="<?php echo esc_url( $guru_about_url ); ?>" class="btn-outline-dark"><?php echo esc_html( $guru_cta ); ?> <span>&rarr;</span></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+</section>
 
 <section id="services" class="svc">
 	<div class="svc-inner">
@@ -172,55 +221,6 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 				?>
 				<p><?php esc_html_e( 'No showcase items yet. Add them under Showcase in the admin.', 'guru' ); ?></p>
 			<?php endif; ?>
-		</div>
-	</div>
-</section>
-
-<?php
-/*
- * About block — heading, animated statistics and two paragraphs.
- * Edited in Customize → Guru site settings → Homepage.
- */
-$guru_stats = guru_pipe_rows( guru_mod( 'guru_home_about_stats' ) );
-$guru_paras = array_filter( array_map( 'trim', preg_split( '/\r?\n\s*\r?\n/', guru_mod( 'guru_home_about_copy' ) ) ) );
-$guru_cta   = guru_mod( 'guru_home_about_cta' );
-?>
-<section id="about" class="abt">
-	<div class="abt-inner">
-		<div>
-			<h2 class="abt-title"><?php echo esc_html( guru_mod( 'guru_home_about_title' ) ); ?></h2>
-			<?php if ( $guru_stats ) : ?>
-				<div class="abt-stats">
-					<?php foreach ( $guru_stats as $guru_stat ) : ?>
-						<?php
-						$guru_num    = isset( $guru_stat[0] ) ? $guru_stat[0] : '';
-						$guru_suffix = isset( $guru_stat[1] ) ? $guru_stat[1] : '';
-						$guru_label  = isset( $guru_stat[2] ) ? $guru_stat[2] : '';
-						if ( '' === $guru_num ) {
-							continue;
-						}
-						?>
-						<div class="abt-stat">
-							<span class="abt-stat-num"
-								<?php // Whole numbers animate; anything else (2.5, 10k) is shown as typed. ?>
-								<?php if ( ctype_digit( $guru_num ) ) : ?>
-									data-count="<?php echo esc_attr( $guru_num ); ?>" data-suffix="<?php echo esc_attr( $guru_suffix ); ?>"
-								<?php endif; ?>><?php echo esc_html( $guru_num . $guru_suffix ); ?></span>
-							<span class="abt-stat-text"><?php echo esc_html( $guru_label ); ?></span>
-						</div>
-					<?php endforeach; ?>
-				</div>
-			<?php endif; ?>
-		</div>
-		<div class="abt-right">
-			<div class="abt-copy">
-				<?php foreach ( $guru_paras as $guru_para ) : ?>
-					<p class="abt-p"><?php echo esc_html( $guru_para ); ?></p>
-				<?php endforeach; ?>
-				<?php if ( $guru_cta ) : ?>
-					<a href="<?php echo esc_url( $guru_about_url ); ?>" class="btn-outline-dark"><?php echo esc_html( $guru_cta ); ?> <span>&rarr;</span></a>
-				<?php endif; ?>
-			</div>
 		</div>
 	</div>
 </section>
