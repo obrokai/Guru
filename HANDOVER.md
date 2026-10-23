@@ -4,7 +4,7 @@
 > 讀完這份文件就能掌握全部背景，不需要舊對話紀錄。
 >
 > 專案路徑：`/Users/mike/Guru/`
-> 最後更新：2026-09-22（v1.2.6）
+> 最後更新：2026-10-23（v1.2.8；各版細節見 `CHANGELOG.md`，客戶現況與測試站操作紀錄見主資料夾 `HANDOFF-20261015.md`）
 
 ---
 
@@ -154,6 +154,7 @@ guru-theme/
 |---|---|
 | Contact details | Email、電話、WhatsApp、城市、表單頁尾標題、精簡頁尾標題與按鈕 |
 | Social links | IG / LinkedIn / FB |
+| Menu colours（v1.2.8） | 選單底色、文字、Contact Us、WhatsApp 四色；只輸出與預設不同的顏色（`inc/menu-colors.php`）。同檔讓「編輯者」可進外觀 → 自訂 |
 | Homepage | Solutions 導言、About 區標題 / 統計（`數字 | 後綴 | 標籤`）/ 段落 / 按鈕、hero 影片（桌機、手機） |
 | About page | Founded、Credential、故事標題、客戶牆標題、辦公室標題、辦公室清單 |
 | Blog | 導言 |
@@ -234,6 +235,9 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 | Customizer 影片選擇器存成 `http://123` | `WP_Customize_Media_Control` 存的是附件 ID，sanitizer 要用 `absint` 不是 `esc_url_raw` |
 | 來信資料表不存在時靜默丟失 | push 排除該表但帶了 `wp_options` 的版本號 → 用 `SHOW TABLES LIKE` 檢查存在，缺就重建；insert 失敗會重建再試一次；舊 CPT 遷移只在寫入成功後才刪原文 |
 | headless Chrome 對 localhost 卡住 | php -S 無 Range 支援 + Chrome 對本機 HTTP 的行為；截圖改用 file:// 快照（見 §5） |
+| 客戶說「側邊欄沒有外觀」（v1.2.8） | 客戶日常帳號是「編輯者」，WordPress 不給編輯者 `edit_theme_options`。主題以 `user_has_cap` 執行時補上（不寫進角色，換主題即失效）；匯入仍要 `manage_options` |
+| 客戶說「上傳影片的欄位不見了」（v1.2.8） | 「Showcase details」框被點到標題收合，只剩一條標題列，WordPress 依帳號記住。主題現在用 `postbox_classes_*` 與 `hidden_meta_boxes` 篩選讓 Guru 的框永遠展開、不能隱藏，並隱藏收合按鈕 |
+| 這台 Mac 沒有 `timeout`；`chrome --screenshot` 會卡 | 截圖一律走 `tools/chrome-cdp.sh` + DevTools protocol（照 `shoot-admin.mjs` 的寫法），首頁先存成 `~/wptest/_snap_home.html` 再用 file:// 開 |
 | Solutions 單篇網址 `/solutions/<slug>/` 出現在 sitemap 且無樣式 | `solution` CPT 改為 `publicly_queryable => false`、`rewrite => false` |
 | About 客戶牆 logo 顏色全錯（藍變綠、有光暈） | 主機 ImageMagick 6.8.9 重新編碼 WebP 會壞掉色彩通道，WP 自動產生的 `-300x300.webp` 縮圖全毀。客戶牆與跑馬燈改用 `full` 原檔（480px、~7 KB），匯入 logo 時停用縮圖產生。客戶自行上傳的圖建議 PNG/JPG |
 
@@ -266,7 +270,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 
 ## 9. Git 狀態
 
-分支 `worktree-theme-parity` 含兩個 commit：phase 2（前一個 session 未提交的工作）與 phase 3（本次）。**尚未 push、尚未合併到 main** —— 請使用者自己 push（規則 2）。`.gitignore` 已排除兩個 zip 與 `.DS_Store`。
+所有主題工作都在分支 `worktree-theme-parity`（工作資料夾 `.claude/worktrees/theme-parity`，已鎖定）。**2026-10-14 起已 push 到 `origin/worktree-theme-parity`，尚未合併到 main**；最新是 v1.2.8。查看這個資料夾請用 `git -C` 或絕對路徑，**不要在 shell 裡 `cd` 進去**（10-14 曾因此被系統自動刪除，後來從 git 救回）。`.gitignore` 已排除兩個 zip 與 `.DS_Store`。
 
 重新打包：
 
