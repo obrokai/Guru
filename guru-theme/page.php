@@ -20,8 +20,7 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
-	$guru_content = apply_filters( 'the_content', get_the_content() );
-	$guru_content = preg_replace( '/\[\/?(vc_|eltd_|rev_slider|contact-form-7)[^\]]*\]/', '', $guru_content );
+	$guru_content = guru_clean_page_content();
 	?>
 	<article class="blg-single">
 		<div class="blg-single-head">

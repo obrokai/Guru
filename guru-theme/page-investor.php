@@ -83,8 +83,12 @@ while ( have_posts() ) :
 
 	<div class="inv-body">
 		<div class="inv-main">
-			<?php if ( trim( get_the_content() ) ) : ?>
-				<div class="guru-editor"><?php the_content(); ?></div>
+			<?php
+			// Old-site page-builder tags are stripped; nothing is shown if only they were there.
+			$guru_content = guru_clean_page_content();
+			?>
+			<?php if ( trim( wp_strip_all_tags( $guru_content ) ) ) : ?>
+				<div class="guru-editor"><?php echo $guru_content; // phpcs:ignore WordPress.Security.EscapeOutput -- the_content output, as before. ?></div>
 			<?php endif; ?>
 
 			<div class="inv-docs">

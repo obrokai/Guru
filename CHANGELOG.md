@@ -8,6 +8,11 @@
 
 ---
 
+## 1.2.9 — 2026-11-06
+
+- **修正：Investor 頁出現一大段「亂碼」**（客戶回報）。那其實是舊網站用 Visual Composer／Elated 排版留下的版面代碼（`[vc_row …]`、`[eltd_elements_holder …]`），本主題不會轉成版面，於是原樣印成文字。一般頁面（`page.php`）本來就會先清掉這類代碼，Investor 模板（`page-investor.php`）沒有；現在兩者共用 `guru_clean_page_content()`（`inc/template-helpers.php`）。
+- 測試站同時做了**資料調整（不在主題內）**：導覽列的 Investor 連到的是舊站頁面（ID 14094，網址 `investor`），我們匯入的「Investor Relations」（ID 24394）被擠成 `investor-2`。已把舊頁改為草稿、網址改成 `investor-old`，新頁接手 `investor`。這原本是匯入工具步驟 2 該做的事；沒有重跑步驟 2，因為它也會重設首頁、網誌頁與選單。
+
 ## 1.2.8 — 2026-10-23
 
 客戶群組 10/15～10/20 提出的問題（`~/Downloads/IMG_9932.JPG`）。

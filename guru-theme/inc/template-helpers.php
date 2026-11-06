@@ -10,6 +10,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * The current page's content, rendered, with the old site's page-builder tags removed.
+ *
+ * Pages carried over from the old site were built with Visual Composer / Elated,
+ * whose shortcodes ([vc_row …], [eltd_…]) are not rendered by this theme and would
+ * otherwise show up as raw text.
+ *
+ * @return string HTML.
+ */
+function guru_clean_page_content() {
+	$content = apply_filters( 'the_content', get_the_content() );
+	return preg_replace( '/\[\/?(vc_|eltd_|rev_slider|contact-form-7)[^\]]*\]/', '', $content );
+}
+
+/**
  * Permalink of the first page found for the given slugs, else a fallback path.
  *
  * The Solutions page is created with the slug "solutions", but older installs
