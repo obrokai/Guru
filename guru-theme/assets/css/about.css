@@ -594,7 +594,7 @@
     font-size: 14px;
     color: rgba(246,244,230,0.8);
     text-decoration: none;
-    word-break: break-all;
+    overflow-wrap: anywhere;
     transition: color 0.2s;
   }
   .abt-office-email:hover { color: var(--lime); }
@@ -866,5 +866,8 @@
   @media (max-width: 520px) {
     .abt-values-grid { grid-template-columns: 1fr; }
     .ftr-bottom .ftr-inner { grid-template-columns: 1fr; }
+    /* Offices one per row on phones, so addresses and e-mails fit (v1.2.11). */
+    .abt-offices-grid { grid-template-columns: 1fr; }
+    .abt-office-card.featured { grid-column: auto; }
   }
   .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }

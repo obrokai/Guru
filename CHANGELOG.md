@@ -15,6 +15,7 @@
   - About 卡片格式改為「城市 | E-mail | 地址 | 標籤（選填，有標籤＝大卡）」，地址與 E-mail 一起排在卡片底部（`.abt-office-contact`、`.abt-office-email`）。
   - Investor 格式改為「城市 | E-mail | 地址」。
   - 兩處都相容舊格式（第二欄沒有 @ 就照舊當地區／電話顯示）。
+  - 手機（≤520px）上辦公室卡片改為一欄：兩欄時卡片太窄，E-mail 會被斷在字中間。E-mail 只在真的放不下時才換行（`overflow-wrap: anywhere`）。
 - Customizer 欄位說明同步；新安裝的預設值也換成新資料（`GURU_OFFICES_DEFAULT`、`GURU_INVESTOR_CONTACTS_DEFAULT`）。
 - `tools/build-typography.py` 的內文類別加入 `-email`，客戶調內文字級時 E-mail 跟著縮放；`tools/parity-check.py` 的 Investor 聯絡資料預期 5 → 6。
 
