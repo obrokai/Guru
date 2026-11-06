@@ -15,6 +15,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Office details supplied by the client on 2026-11-06 (same six offices on the About and Investor pages).
+const GURU_OFFICES_DEFAULT = "Hong Kong | info@guruonline.com.hk | Unit 1201 & 16, 12/F, Two Harbour Square, No. 180 Wai Yip Street, Kwun Tong, Kowloon | Head Office\n"
+	. "Macao | info@guruonline.com.mo | 3/F, Nan Yue Commercial Centre, No. 19, Calçada de Santo Agostinho, Macau\n"
+	. "Guangzhou | info@guruonline.com.cn | Unit 2405, 24/F, Building A, Fengxing Plaza\n"
+	. "Nanjing | info@guruonline.com.cn | Unit 1010, Building C, Shimao 52+\n"
+	. "Taipei | info@guruonline.com.tw | Rm. 1201, 11F.-1, No. 142, Sec. 3, Minquan E. Rd.\n"
+	. 'Singapore | info@guruonline.com.hk | #10-03, Chinatown Point, 133 New Bridge Road, Singapore 059413';
+
+const GURU_INVESTOR_CONTACTS_DEFAULT = "Hong Kong (Head Office) | info@guruonline.com.hk | Unit 1201 & 16, 12/F, Two Harbour Square, No. 180 Wai Yip Street, Kwun Tong, Kowloon\n"
+	. "Macao | info@guruonline.com.mo | 3/F, Nan Yue Commercial Centre, No. 19, Calçada de Santo Agostinho, Macau\n"
+	. "Guangzhou | info@guruonline.com.cn | Unit 2405, 24/F, Building A, Fengxing Plaza\n"
+	. "Nanjing | info@guruonline.com.cn | Unit 1010, Building C, Shimao 52+\n"
+	. "Taipei | info@guruonline.com.tw | Rm. 1201, 11F.-1, No. 142, Sec. 3, Minquan E. Rd.\n"
+	. 'Singapore | info@guruonline.com.hk | #10-03, Chinatown Point, 133 New Bridge Road, Singapore 059413';
+
 /**
  * Default value of a setting, shared by the Customizer and the templates.
  *
@@ -46,7 +61,7 @@ function guru_default( $id ) {
 			'guru_story_heading'     => "Today's\nBreakthrough Is\nTomorrow's Legend",
 			'guru_clients_heading'   => 'A Roster of Brands That Trust Guru.',
 			'guru_offices_heading'   => "Our Offices,\nOne Vision.",
-			'guru_offices'           => "Hong Kong | Unit 1201 & 1216, Two Harbour Square, 180 Wai Yip Street, Kwun Tong, Kowloon | Head Office\nGuangzhou | Mainland China\nNanjing | Mainland China\nTaipei | Taiwan\nSingapore | Southeast Asia\nMacao | Macao SAR",
+			'guru_offices'           => GURU_OFFICES_DEFAULT,
 			// Blog.
 			'guru_blog_intro'        => 'Perspectives on digital marketing, brand strategy, influencer culture and the future of creativity.',
 			// Investor.
@@ -61,7 +76,7 @@ function guru_default( $id ) {
 			'guru_investor_quote_url' => 'https://www.hkex.com.hk/Market-Data/Securities-Prices/Equities?sym=8121&sc_lang=en',
 			'guru_investor_prev_url' => 'https://www.guruonline.com.hk/investor/',
 			'guru_investor_governance' => "Corporate | Articles of Association | https://www.hkexnews.hk | EN\nCorporate | Board Committees & Charters | https://www.hkexnews.hk | View",
-			'guru_investor_contacts' => "Hong Kong (Head Office) | +852 3952 1100 | Unit 1201 & 16, 12/F, Two Harbour Square, No. 180 Wai Yip Street, Kwun Tong, Kowloon\nGuangzhou | +852 3952 1100 | Unit 2405, 24/F, Building A, Fengxing Plaza\nNanjing | +852 3952 1100 | Unit 1010, Building C, Shimao 52+\nTaipei | +886 2-2370-8433 | Rm. 1201, 11F.-1, No. 142, Sec. 3, Minquan E. Rd.\nBeijing | | Jing'an Center, No. 8 East Section of the North 3rd Ring",
+			'guru_investor_contacts' => GURU_INVESTOR_CONTACTS_DEFAULT,
 			'guru_investor_disclaimer' => 'The information on this page is for reference only and does not constitute investment advice.',
 		);
 	}
@@ -246,7 +261,7 @@ function guru_customize_register( $wp_customize ) {
 			'guru_story_heading'   => array( __( '"Our Story" heading', 'guru' ), 'textarea', __( 'Line breaks are kept.', 'guru' ) ),
 			'guru_clients_heading' => array( __( 'Client wall heading', 'guru' ), 'text' ),
 			'guru_offices_heading' => array( __( 'Offices heading', 'guru' ), 'textarea', __( 'Line breaks are kept.', 'guru' ) ),
-			'guru_offices'         => array( __( 'Offices', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | Region or address | Badge (optional — a badge makes the card featured).', 'guru' ) ),
+			'guru_offices'         => array( __( 'Offices', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | E-mail | Address | Badge (optional — a badge makes the card featured).', 'guru' ) ),
 		)
 	);
 
@@ -270,7 +285,7 @@ function guru_customize_register( $wp_customize ) {
 			'guru_investor_docs'       => array( __( 'Financial results & reports', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: YYYY.MM.DD | Title | Subtitle (optional) | English PDF URL | Chinese PDF URL', 'guru' ) ),
 			'guru_investor_more_url'   => array( __( '"View all announcements" link', 'guru' ), 'url' ),
 			'guru_investor_governance' => array( __( 'Corporate governance documents', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: Label | Title | URL | Link text', 'guru' ) ),
-			'guru_investor_contacts'   => array( __( 'IR & office contacts', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | Telephone (optional) | Address', 'guru' ) ),
+			'guru_investor_contacts'   => array( __( 'IR & office contacts', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | E-mail | Address', 'guru' ) ),
 			'guru_investor_disclaimer' => array( __( 'Disclaimer', 'guru' ), 'textarea' ),
 		)
 	);

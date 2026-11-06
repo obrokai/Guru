@@ -16,6 +16,7 @@
 .abt-office-region { font-size: calc(14px * var(--guru-fs-body, 1)); }
 .abt-office-city { font-size: calc(clamp(24px, 2vw, 34px) * var(--guru-fs-heading, 1)); }
 .abt-office-tel { font-size: calc(14px * var(--guru-fs-body, 1)); }
+.abt-office-email { font-size: calc(14px * var(--guru-fs-body, 1)); }
 .abt-clients-heading { font-size: calc(clamp(28px, 3.2vw, 44px) * var(--guru-fs-heading, 1)); }
 .ftr-cta-heading { font-size: calc(clamp(32px, 3.6vw, 56px) * var(--guru-fs-heading, 1)); }
 .ftr-ci-val { font-size: calc(15px * var(--guru-fs-body, 1)); }

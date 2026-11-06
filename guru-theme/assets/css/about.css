@@ -580,6 +580,24 @@
     line-height: 1.6;
     margin-top: auto;
   }
+  /* Address + e-mail sit together at the bottom of the card (v1.2.11). */
+  .abt-office-contact {
+    margin-top: auto;
+    padding-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .abt-office-contact .abt-office-region,
+  .abt-office-contact .abt-office-tel { margin-top: 0; line-height: 1.55; }
+  .abt-office-email {
+    font-size: 14px;
+    color: rgba(246,244,230,0.8);
+    text-decoration: none;
+    word-break: break-all;
+    transition: color 0.2s;
+  }
+  .abt-office-email:hover { color: var(--lime); }
 
   /* ══════════════════════════════════════════ CLIENT LOGO TICKER */
   .logo-ticker {

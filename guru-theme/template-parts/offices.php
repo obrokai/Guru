@@ -4,7 +4,8 @@
  * grid; the client asked for it to be removed (2026-09-22).
  *
  * Edited in Customize → Guru site settings → About page, one office per line:
- *   City | Region or address | badge (optional — a badge makes the card featured)
+ *   City | E-mail | Address | Badge (optional — a badge makes the card featured)
+ * The older "City | Region or address | Badge" lines (no e-mail) still work.
  *
  * @package Guru
  */
@@ -33,22 +34,32 @@ if ( ! $guru_rows ) {
 		<div class="abt-offices-grid">
 			<?php foreach ( $guru_rows as $guru_i => $guru_parts ) : ?>
 				<?php
-				$guru_city   = isset( $guru_parts[0] ) ? $guru_parts[0] : '';
-				$guru_detail = isset( $guru_parts[1] ) ? $guru_parts[1] : '';
-				$guru_badge  = isset( $guru_parts[2] ) ? $guru_parts[2] : '';
-
+				$guru_city = isset( $guru_parts[0] ) ? $guru_parts[0] : '';
 				if ( ! $guru_city ) {
 					continue;
 				}
+
+				// "City | E-mail | Address | Badge" — or the older "City | Region | Badge".
+				$guru_has_email = isset( $guru_parts[1] ) && false !== strpos( $guru_parts[1], '@' );
+				$guru_email     = $guru_has_email ? $guru_parts[1] : '';
+				$guru_detail    = $guru_has_email ? ( isset( $guru_parts[2] ) ? $guru_parts[2] : '' ) : ( isset( $guru_parts[1] ) ? $guru_parts[1] : '' );
+				$guru_badge     = $guru_has_email ? ( isset( $guru_parts[3] ) ? $guru_parts[3] : '' ) : ( isset( $guru_parts[2] ) ? $guru_parts[2] : '' );
 				?>
 				<div class="abt-office-card<?php echo $guru_badge ? ' featured' : ''; ?>">
 					<div class="abt-office-num"><?php echo esc_html( sprintf( '%02d', $guru_i + 1 ) ); ?></div>
 					<div class="abt-office-city"><?php echo esc_html( $guru_city ); ?></div>
 					<?php if ( $guru_badge ) : ?>
 						<span class="abt-office-badge"><?php echo esc_html( $guru_badge ); ?></span>
-						<div class="abt-office-tel"><?php echo esc_html( $guru_detail ); ?></div>
-					<?php elseif ( $guru_detail ) : ?>
-						<div class="abt-office-region"><?php echo esc_html( $guru_detail ); ?></div>
+					<?php endif; ?>
+					<?php if ( $guru_email || $guru_detail ) : ?>
+						<div class="abt-office-contact">
+							<?php if ( $guru_detail ) : ?>
+								<div class="<?php echo $guru_badge ? 'abt-office-tel' : 'abt-office-region'; ?>"><?php echo esc_html( $guru_detail ); ?></div>
+							<?php endif; ?>
+							<?php if ( $guru_email ) : ?>
+								<a class="abt-office-email" href="mailto:<?php echo esc_attr( $guru_email ); ?>"><?php echo esc_html( $guru_email ); ?></a>
+							<?php endif; ?>
+						</div>
 					<?php endif; ?>
 				</div>
 			<?php endforeach; ?>

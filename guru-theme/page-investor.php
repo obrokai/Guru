@@ -132,7 +132,12 @@ while ( have_posts() ) :
 						<div class="inv-contact-row">
 							<div class="inv-contact-city"><?php echo esc_html( $guru_c[0] ); ?></div>
 							<?php if ( ! empty( $guru_c[1] ) ) : ?>
-								<div class="inv-contact-tel"><?php echo esc_html( $guru_c[1] ); ?></div>
+								<?php // "City | E-mail | Address"; older lines held a telephone number here. ?>
+								<?php if ( false !== strpos( $guru_c[1], '@' ) ) : ?>
+									<a class="inv-contact-tel" href="mailto:<?php echo esc_attr( $guru_c[1] ); ?>"><?php echo esc_html( $guru_c[1] ); ?></a>
+								<?php else : ?>
+									<div class="inv-contact-tel"><?php echo esc_html( $guru_c[1] ); ?></div>
+								<?php endif; ?>
 							<?php endif; ?>
 							<?php if ( ! empty( $guru_c[2] ) ) : ?>
 								<div class="inv-contact-addr"><?php echo esc_html( $guru_c[2] ); ?></div>

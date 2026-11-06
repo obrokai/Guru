@@ -8,6 +8,16 @@
 
 ---
 
+## 1.2.11 — 2026-11-06
+
+- **辦公室資料更新為客戶 11/06 提供的版本**（About「Our Offices」與 Investor「IR & Office Contacts」）：香港（總部）、澳門、廣州、南京、台北、新加坡，每間都有 E-mail 與地址。Investor 拿掉北京、原本的電話改成 E-mail。
+- **兩處都支援 E-mail**，顯示成可點的 mailto 連結：
+  - About 卡片格式改為「城市 | E-mail | 地址 | 標籤（選填，有標籤＝大卡）」，地址與 E-mail 一起排在卡片底部（`.abt-office-contact`、`.abt-office-email`）。
+  - Investor 格式改為「城市 | E-mail | 地址」。
+  - 兩處都相容舊格式（第二欄沒有 @ 就照舊當地區／電話顯示）。
+- Customizer 欄位說明同步；新安裝的預設值也換成新資料（`GURU_OFFICES_DEFAULT`、`GURU_INVESTOR_CONTACTS_DEFAULT`）。
+- `tools/build-typography.py` 的內文類別加入 `-email`，客戶調內文字級時 E-mail 跟著縮放；`tools/parity-check.py` 的 Investor 聯絡資料預期 5 → 6。
+
 ## 1.2.10 — 2026-11-06
 
 客戶回覆要刪除的三處（都是刻意偏離 Vercel 靜態版）：

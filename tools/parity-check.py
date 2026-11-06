@@ -27,7 +27,7 @@ CHECKS = {
     "services": [('id="panel-', 9), ("srv-phone-wrap", 3), ("srv-carousel-slide", 4), ("srv-video-wrap", 1), ('srv-highlight"', 24), ("srv-media-label", 3), ("spf-form", 9)],
     "work": [("prj-card", 13), ("filter-btn", 7), ('id="vmodal"', 1), ("prj-img", 13), ("btn-primary-lg", 1)],
     "blog": [("blg-filter-btn", 8), ("btn-primary-lg", 1)],
-    "investor": [("inv-doc-item", 8), ("inv-sidebar-card", 1), ("inv-contact-row", 5), ("inv-footer", 1), ("inv-more-btn", 1)],
+    "investor": [("inv-doc-item", 8), ("inv-sidebar-card", 1), ("inv-contact-row", 6), ("inv-footer", 1), ("inv-more-btn", 1)],
 }
 
 

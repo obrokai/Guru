@@ -42,7 +42,7 @@ HERO = re.compile(r"\.(abt-hero-title|inv-hero-title|blg-hero-title|wrk-page-tit
                   r"srv-panel-title|gh-h1|gh-title)\b")
 HEADING = re.compile(r"-(title|heading)\b|\.abt-stat-num\b|\.svc-acc-name\b|\.abt-office-city\b|\.svc-name\b|"
                      r"\.inf-heading\b|\.hw-vmodal-title\b|\.vmodal-title\b|(^|[\s>+~,])h[1-3]\b")
-BODY = re.compile(r"-(p|desc|lead|excerpt|body|text|region|tel|addr|cap|link|sub|note|date|name|key|val|"
+BODY = re.compile(r"-(p|desc|lead|excerpt|body|text|region|tel|email|addr|cap|link|sub|note|date|name|key|val|"
                   r"city|empty|intro)\b|\.guru-editor|\.inv-contact-|\.prj-client\b|\.art-meta\b|"
                   r"\.inv-info-|\.blg-empty\b|\.wrk-empty\b|(^|[\s>+~,])(p|li|blockquote|td|th)\b")
 
