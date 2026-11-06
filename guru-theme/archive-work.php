@@ -10,23 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 get_header();
-
-$guru_count = wp_count_posts( 'work' )->publish;
 ?>
 
+<?php // The project count beside the heading was removed at the client's request (v1.2.10). ?>
 <div class="wrk-page-header">
 	<h1 class="wrk-page-title"><?php esc_html_e( 'Work', 'guru' ); ?></h1>
-	<div class="wrk-page-meta">
-		<span class="wrk-page-count" id="projectCount">
-			<?php
-			printf(
-				/* translators: %d: number of projects. */
-				esc_html( _n( '%d Project', '%d Projects', $guru_count, 'guru' ) ),
-				(int) $guru_count
-			);
-			?>
-		</span>
-	</div>
 </div>
 
 <?php guru_work_filters(); ?>

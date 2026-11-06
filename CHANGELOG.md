@@ -8,6 +8,14 @@
 
 ---
 
+## 1.2.10 — 2026-11-06
+
+客戶回覆要刪除的三處（都是刻意偏離 Vercel 靜態版）：
+
+- **Investor 頁右側拿掉「Listing Information」與「Useful Links」兩張卡片**，側欄只留「IR & Office Contacts」。Customizer → Investor page 一併拿掉只給這兩張卡用的 5 個設定（Exchange、Board lot、Fiscal year end、Stock quote link、Previous IR website link）；Stock code 保留（頁尾免責聲明那行會用），「View all announcements」連結保留（文件清單用）。`tools/parity-check.py` 的側欄卡片預期 3 → 1。
+- **Blog 頁「Insights」旁邊的介紹文字拿掉**；Customizer 的「Blog」區塊（只有這段文字）一併拿掉。404 頁仍保留「找不到頁面」的說明。
+- **Work 頁「Work」旁邊的作品數量（例如「17 Projects」）拿掉**。篩選分類時更新數量的 JS 本來就會先檢查元素是否存在，不需修改。
+
 ## 1.2.9 — 2026-11-06
 
 - **修正：Investor 頁出現一大段「亂碼」**（客戶回報）。那其實是舊網站用 Visual Composer／Elated 排版留下的版面代碼（`[vc_row …]`、`[eltd_elements_holder …]`），本主題不會轉成版面，於是原樣印成文字。一般頁面（`page.php`）本來就會先清掉這類代碼，Investor 模板（`page-investor.php`）沒有；現在兩者共用 `guru_clean_page_content()`（`inc/template-helpers.php`）。

@@ -3,9 +3,10 @@
  * Template Name: Investor
  *
  * Same structure as the static investor page: hero, two document lists with a
- * sidebar (listing information, useful links, IR contacts) and a disclaimer
- * strip instead of the site footer. Everything is edited in
- * Customize → Guru site settings → Investor page.
+ * sidebar (IR contacts) and a disclaimer strip instead of the site footer.
+ * Everything is edited in Customize → Guru site settings → Investor page.
+ * The static page's "Listing Information" and "Useful Links" sidebar cards were
+ * removed at the client's request (v1.2.10).
  *
  * @package Guru
  */
@@ -20,19 +21,6 @@ $guru_docs       = guru_pipe_rows( guru_mod( 'guru_investor_docs' ) );
 $guru_governance = guru_pipe_rows( guru_mod( 'guru_investor_governance' ) );
 $guru_contacts   = guru_pipe_rows( guru_mod( 'guru_investor_contacts' ) );
 $guru_code       = guru_mod( 'guru_stock_code' );
-
-$guru_info = array(
-	__( 'Stock Code', 'guru' )      => $guru_code,
-	__( 'Exchange', 'guru' )        => guru_mod( 'guru_exchange' ),
-	__( 'Board Lot', 'guru' )       => guru_mod( 'guru_board_lot' ),
-	__( 'Fiscal Year End', 'guru' ) => guru_mod( 'guru_fiscal_year' ),
-);
-
-$guru_links = array(
-	array( __( 'HKEXnews Announcements', 'guru' ), guru_mod( 'guru_investor_more_url' ) ),
-	array( __( 'HKEX Stock Quote', 'guru' ), guru_mod( 'guru_investor_quote_url' ) ),
-	array( __( 'Previous IR Website', 'guru' ), guru_mod( 'guru_investor_prev_url' ) ),
-);
 
 /**
  * One row in a document list.
@@ -132,29 +120,6 @@ while ( have_posts() ) :
 		</div>
 
 		<aside class="inv-sidebar">
-			<div class="inv-sidebar-card">
-				<div class="inv-sidebar-card-title"><?php esc_html_e( 'Listing Information', 'guru' ); ?></div>
-				<?php foreach ( $guru_info as $guru_k => $guru_v ) : ?>
-					<?php if ( $guru_v ) : ?>
-						<div class="inv-info-row">
-							<span class="inv-info-key"><?php echo esc_html( $guru_k ); ?></span>
-							<span class="inv-info-val"<?php echo $guru_v === $guru_code ? ' style="color:var(--blue)"' : ''; ?>><?php echo esc_html( $guru_v ); ?></span>
-						</div>
-					<?php endif; ?>
-				<?php endforeach; ?>
-			</div>
-
-			<div class="inv-sidebar-card">
-				<div class="inv-sidebar-card-title"><?php esc_html_e( 'Useful Links', 'guru' ); ?></div>
-				<?php foreach ( $guru_links as $guru_link ) : ?>
-					<?php if ( $guru_link[1] ) : ?>
-						<a class="inv-hkex-link" href="<?php echo esc_url( $guru_link[1] ); ?>" target="_blank" rel="noopener">
-							<?php echo esc_html( $guru_link[0] ); ?> <span>&#8599;</span>
-						</a>
-					<?php endif; ?>
-				<?php endforeach; ?>
-			</div>
-
 			<?php if ( $guru_contacts ) : ?>
 				<div class="inv-sidebar-card">
 					<div class="inv-sidebar-card-title"><?php esc_html_e( 'IR & Office Contacts', 'guru' ); ?></div>

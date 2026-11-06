@@ -250,16 +250,6 @@ function guru_customize_register( $wp_customize ) {
 		)
 	);
 
-	/* ------------------------------------------------------------- Blog */
-	$wp_customize->add_section( 'guru_blog', array( 'title' => __( 'Blog', 'guru' ), 'panel' => 'guru_panel', 'priority' => 50 ) );
-	guru_customize_fields(
-		$wp_customize,
-		'guru_blog',
-		array(
-			'guru_blog_intro' => array( __( 'Blog intro', 'guru' ), 'textarea' ),
-		)
-	);
-
 	/* --------------------------------------------------------- Investor */
 	$wp_customize->add_section(
 		'guru_investor',
@@ -267,7 +257,7 @@ function guru_customize_register( $wp_customize ) {
 			'title'       => __( 'Investor page', 'guru' ),
 			'panel'       => 'guru_panel',
 			'priority'    => 60,
-			'description' => __( 'Listing information shown in the sidebar, and the document list.', 'guru' ),
+			'description' => __( 'Heading, intro, document lists and IR contacts.', 'guru' ),
 		)
 	);
 	guru_customize_fields(
@@ -276,15 +266,10 @@ function guru_customize_register( $wp_customize ) {
 		array(
 			'guru_investor_entity'     => array( __( 'Listed company name (heading)', 'guru' ), 'textarea', __( 'Line breaks are kept.', 'guru' ) ),
 			'guru_investor_intro'      => array( __( 'Intro paragraph', 'guru' ), 'textarea', __( 'Used when the Investor page has no excerpt of its own.', 'guru' ) ),
-			'guru_stock_code'          => array( __( 'Stock code', 'guru' ), 'text' ),
-			'guru_exchange'            => array( __( 'Exchange', 'guru' ), 'text' ),
-			'guru_board_lot'           => array( __( 'Board lot', 'guru' ), 'text' ),
-			'guru_fiscal_year'         => array( __( 'Fiscal year end', 'guru' ), 'text' ),
+			'guru_stock_code'          => array( __( 'Stock code', 'guru' ), 'text', __( 'Shown in the disclaimer strip at the bottom of the page.', 'guru' ) ),
 			'guru_investor_docs'       => array( __( 'Financial results & reports', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: YYYY.MM.DD | Title | Subtitle (optional) | English PDF URL | Chinese PDF URL', 'guru' ) ),
 			'guru_investor_more_url'   => array( __( '"View all announcements" link', 'guru' ), 'url' ),
 			'guru_investor_governance' => array( __( 'Corporate governance documents', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: Label | Title | URL | Link text', 'guru' ) ),
-			'guru_investor_quote_url'  => array( __( 'Stock quote link', 'guru' ), 'url' ),
-			'guru_investor_prev_url'   => array( __( 'Previous IR website link', 'guru' ), 'url', __( 'Leave empty to hide.', 'guru' ) ),
 			'guru_investor_contacts'   => array( __( 'IR & office contacts', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | Telephone (optional) | Address', 'guru' ) ),
 			'guru_investor_disclaimer' => array( __( 'Disclaimer', 'guru' ), 'textarea' ),
 		)

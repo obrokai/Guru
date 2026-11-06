@@ -41,17 +41,14 @@ if ( is_home() ) {
 	<div class="blg-hero-left">
 		<h1 class="blg-hero-title"><?php echo esc_html( $guru_heading ); ?></h1>
 	</div>
-	<div class="blg-hero-right">
-		<p class="blg-hero-desc">
-			<?php
-			if ( is_404() ) {
-				esc_html_e( 'The page you were looking for does not exist or has moved. Use the navigation above, or start from the homepage.', 'guru' );
-			} else {
-				echo esc_html( guru_mod( 'guru_blog_intro' ) );
-			}
-			?>
-		</p>
-	</div>
+	<?php // The blog intro beside the heading was removed at the client's request (v1.2.10); only the 404 page keeps its explanation. ?>
+	<?php if ( is_404() ) : ?>
+		<div class="blg-hero-right">
+			<p class="blg-hero-desc">
+				<?php esc_html_e( 'The page you were looking for does not exist or has moved. Use the navigation above, or start from the homepage.', 'guru' ); ?>
+			</p>
+		</div>
+	<?php endif; ?>
 </div>
 
 <?php if ( $guru_filter_cats ) : ?>
