@@ -8,6 +8,11 @@
 
 ---
 
+## 1.2.12 — 2026-11-08
+
+- **首頁載入卡頓**（客戶回報）：作品卡影片不再一打開頁面就全部下載、播放；改為捲到畫面附近（上下 200px）才載入並播放，離開畫面就暫停（`video[data-lazy-play]`、`main.js`）。首頁「Our Work」與 Work 頁的作品卡都適用；燈箱、Solutions 頁影片不變。主要原因其實是客戶 10 月換上的主視覺影片是 4K 原檔（電腦 285.8 MB、手機 257.7 MB），已另外壓成網頁版（9.0 MB／4.5 MB）並換到測試站（資料調整，不在主題內）。
+- **首頁跑馬燈改為每次隨機 8 個 Client logo**（客戶要求）：從所有有圖片的 Client logos 隨機抽，不必再逐一勾選；Client logos 編輯畫面的「Homepage ticker」勾選框與列表欄位一併拿掉。數量在 `template-parts/logo-ticker.php` 的 `$guru_ticker_count`。還沒有任何 Client logo 時，仍顯示原設計的六個品牌。
+
 ## 1.2.11 — 2026-11-06
 
 - **辦公室資料更新為客戶 11/06 提供的版本**（About「Our Offices」與 Investor「IR & Office Contacts」）：香港（總部）、澳門、廣州、南京、台北、新加坡，每間都有 E-mail 與地址。Investor 拿掉北京、原本的電話改成 E-mail。

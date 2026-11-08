@@ -2,10 +2,10 @@
 /**
  * Client logo ticker (homepage).
  *
- * Shows the Client logos the editor has ticked "Show this logo in the homepage
- * marquee"; when none are ticked it shows the six brand wordmarks of the static
- * page. (The square client-wall logos are not used here — at 34px they vanish.)
- * The marquee duration scales with the number of logos so the speed stays the same.
+ * Shows eight Client logos picked at random on every page load (client request,
+ * v1.2.12) — the same logos as the About page client wall. When there are no
+ * Client logos with an image yet, it shows the six brand wordmarks of the static
+ * page. The marquee duration scales with the number of logos so the speed stays the same.
  *
  * @package Guru
  */
@@ -14,19 +14,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$guru_ticker_count = 8; // How many logos each page load shows.
+
 $guru_logos = new WP_Query(
 	array(
 		'post_type'      => 'client_logo',
-		'posts_per_page' => 12,
-		'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'ASC' ),
+		'posts_per_page' => $guru_ticker_count,
+		'orderby'        => 'rand',
+		'no_found_rows'  => true,
 		'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery
 			array(
 				'key'     => '_thumbnail_id',
 				'compare' => 'EXISTS',
-			),
-			array(
-				'key'   => '_guru_in_ticker',
-				'value' => '1',
 			),
 		),
 	)

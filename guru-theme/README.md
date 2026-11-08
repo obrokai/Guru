@@ -41,7 +41,7 @@
 | 上架 / 修改作品 | **Showcase** → 新增項目。填標題 → 標題下方的 **Showcase details** 填 Client、Card labels、Homepage position（1～4 = 首頁「Our Work」四格，1 是大卡；一個數字只有一個作品，原本佔那格的會自動讓位）、Video（影片作品用媒體庫選檔）→ **右欄「Cover image」設定封面圖** → 右欄勾分類 → 發布。**封面圖請用右欄的 Cover image，不要貼進中間的內文編輯器**（內文只會出現在作品自己的頁面） |
 | 服務內容 | **Solutions** → 編輯。標題、摘要（頁面上的導言）、內文（選用）；排序用「順序」欄位。下方 **Solution media & highlights** 可設定短標籤、手機截圖／影片輪播／單支影片，以及四張重點卡 |
 | 客戶 logo（About 頁客戶牆） | **Client logos** → 每則設一張 **Logo image** 即可。建議上傳 **PNG 或 JPG**（正方形、約 480px）；主機的圖片程式庫版本較舊，上傳 WebP 會被壓出色偏 |
-| 首頁 logo 跑馬燈 | 預設顯示原設計的六個品牌字標。要換：在 **Client logos** 編輯畫面右側勾「**Show this logo in the homepage marquee**」（適合橫式字標，方形 logo 會太小） |
+| 首頁 logo 跑馬燈 | 每次載入隨機顯示 8 個 **Client logos**（有設定 Logo image 的；與 About 客戶牆同一批），不需另外設定。數量在 `template-parts/logo-ticker.php` 的 `$guru_ticker_count`。還沒有任何 Client logo 時顯示原設計的六個品牌字標 |
 | 表單來信 | **Enquiries** → 所有送出的表單都會存檔並可下載 CSV，同時寄到聯絡信箱 |
 | 網誌文章 | **文章** → 一般 WordPress 文章；文章的第一個分類決定卡片顏色 |
 | 首頁文字（Solutions 導言、About 區標題／數字／段落）、首頁影片 | **外觀 → 自訂 → Guru site settings → Homepage** |

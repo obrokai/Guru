@@ -246,6 +246,32 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   });
 })();
 
+/* ── Showcase card films: load and play only while on screen ── */
+(function () {
+  var vids = document.querySelectorAll('video[data-lazy-play]');
+  if (!vids.length) return;
+
+  function play(v) {
+    if (v.preload !== 'auto') v.preload = 'auto';
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    vids.forEach(play);
+    return;
+  }
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) play(entry.target);
+      else entry.target.pause();
+    });
+  }, { rootMargin: '200px 0px' });
+
+  vids.forEach(function (v) { observer.observe(v); });
+})();
+
 /* ── Count-up animation for stat numbers ── */
 (function () {
   var els = document.querySelectorAll('.abt-stat-num[data-count]');

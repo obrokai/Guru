@@ -184,7 +184,8 @@ $guru_cta   = guru_mod( 'guru_home_about_cta' );
 
 						<?php if ( $guru_data['video'] ) : ?>
 							<div class="wrk-video-card">
-								<video autoplay muted loop playsinline preload="metadata">
+								<?php // Loaded and played only while on screen (main.js) so the homepage opens fast. ?>
+								<video muted loop playsinline preload="none" data-lazy-play>
 									<source src="<?php echo esc_url( $guru_data['video'] ); ?>" type="video/mp4" />
 								</video>
 								<div class="wrk-play-btn"></div>

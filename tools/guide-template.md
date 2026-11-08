@@ -101,7 +101,7 @@
 |---|---|
 | 服務項目（Solutions）文字與圖片 | **Solutions** → 點項目編輯；標題下方 **Solution media & highlights** 設定媒體與四張重點卡 |
 | 客戶 logo 牆 | **Client logos** → Add new → 右欄設 Logo image（PNG／JPG，正方形約 480px） |
-| 首頁跑馬燈 logo | **Client logos** → 編輯某個 logo → 右欄勾 **Show this logo in the homepage marquee** |
+| 首頁跑馬燈 logo | 每次自動從 **Client logos** 隨機挑 8 個顯示，不需要設定；要加入新的 logo，在 **Client logos** 新增並設定 Logo image 即可 |
 | 表單來信 | **Enquiries**（每筆都會存檔並寄到聯絡信箱，可下載 CSV） |
 | 電話、WhatsApp、Email | **外觀 → 自訂 → Guru site settings → Contact details** |
 | 社群連結 | **外觀 → 自訂 → Guru site settings → Social links** |

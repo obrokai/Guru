@@ -300,7 +300,8 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 
 		<div class="prj-img">
 			<?php if ( $data['video'] ) : ?>
-				<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" autoplay muted loop playsinline preload="metadata"></video>
+				<?php // Loaded and played only while on screen (main.js); the Work page can hold a dozen films. ?>
+				<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" muted loop playsinline preload="none" data-lazy-play></video>
 				<div class="prj-play-btn"></div>
 				<div class="prj-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
 			<?php elseif ( $data['image'] ) : ?>
