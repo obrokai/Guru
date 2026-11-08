@@ -250,7 +250,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 
 ### 上線前必做
 
-- [ ] **投資人文件模板（第二批）**：正式站有 1,045 筆 `investor_document`。目前 `page-investor.php` 的文件清單來自 Customizer textarea（示範資料）。需要：以 `! post_type_exists()` 防禦式註冊 `investor_document` + `document_category`（slug 與舊站相同）；在 Investor 頁以真資料取代 textarea（分類 tab、分頁 20 筆、日期倒序、中英配對用同日 + 檔名 `_c`）；後台新增流程沿用 ACF 欄位或主題自建 meta box（讀 `date_of_publish` 的 `Ymd` 與 `document` 的附件 ID，不依賴 ACF）。**強烈建議先請使用者從正式站 工具 → 匯出 拿一份 XML 匯進本機，拿真資料測。** 同時要跟客戶談：這是原範圍外的追加開發。
+- [x] **投資人文件（v1.2.13，2026-11-08）**：`inc/investor-docs.php` 讀 Pods 註冊的 `investor_document`＋`document_category`（缺才自行註冊），Investor 頁分 Financial Information／Last Announcement 各 6 筆＋「View All」，完整列表 `?docs=<slug>&pg=<n>` 每頁 20 列；同日相鄰 ID 一中一英配一列（`_c` 檔名或標題含中文判斷），staging 真資料 84＋447 列、未配對 2＋15（多為舊資料中英日期不同）；快取一天、文件異動即清。**上線風險**：staging 是 9/8 的資料，正式站之後新增的公告上線前要補回，或只推主題不推資料庫。
 - [x] **301 對照表**（`inc/redirects.php`）：`/about-us/`→About、`/our-work/`與`/portfolio-item/*`→Work、`/contact-us/`→首頁表單、`/service/<x>/`→Solutions 對應面板（12 個舊 service 的對應表在 `guru_legacy_service_map()`）、`/last-announcement/`、`/financial-information/`、`/document-category/*`→Investor、`/blog/digital-marketing-solution/`→Blog、`/home-new/`、`/test-chatbot/`→首頁、`/d-bizsolution/`、`/global-marketing-cn/`→Solutions。`/investor-document/*` 與 `/privacy-policy/`、`/fanalytics-privacy/` 保留（法律頁改由 `page.php` 呈現，舊 page-builder 標籤會被清掉）。第二批做投資人分類頁時，把 last-announcement / financial-information 改指到對應分類。
 - [ ] **上正式站前務必執行匯入步驟 4**，否則作品與 Solutions 影片還指向 Vercel。
 - [ ] 請客戶提供：正式 WhatsApp 號碼；確認 Pods 是否註冊 investor_document；確認是否接受刪除停用外掛與 WP Staging 殘留。
