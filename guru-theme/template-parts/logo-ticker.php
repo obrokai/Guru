@@ -31,9 +31,10 @@ $guru_logos = new WP_Query(
 	)
 );
 
-$guru_items = array();
+$guru_items        = array();
+$guru_from_clients = $guru_logos->have_posts();
 
-if ( $guru_logos->have_posts() ) {
+if ( $guru_from_clients ) {
 	while ( $guru_logos->have_posts() ) {
 		$guru_logos->the_post();
 		$guru_items[] = array(
@@ -78,7 +79,7 @@ $guru_svg_kses = array(
 	'text'   => array( 'x' => true, 'y' => true, 'font-family' => true, 'font-weight' => true, 'font-size' => true, 'letter-spacing' => true, 'fill' => true ),
 );
 ?>
-<div class="logo-ticker" aria-label="<?php esc_attr_e( "Clients we've worked with", 'guru' ); ?>">
+<div class="logo-ticker<?php echo $guru_from_clients ? ' logo-ticker--clients' : ''; ?>" aria-label="<?php esc_attr_e( "Clients we've worked with", 'guru' ); ?>">
 	<div class="logo-ticker-track" style="animation-duration: <?php echo esc_attr( $guru_duration ); ?>s">
 		<?php // Rendered twice so the marquee loops seamlessly. ?>
 		<?php for ( $guru_pass = 0; $guru_pass < 2; $guru_pass++ ) : ?>

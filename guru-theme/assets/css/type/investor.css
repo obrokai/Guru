@@ -5,6 +5,7 @@
 .inv-hero-desc { font-size: calc(clamp(16px, 1.3vw, 20px) * var(--guru-fs-body, 1)); }
 .inv-doc-date { font-size: calc(12px * var(--guru-fs-body, 1)); }
 .inv-doc-name { font-size: calc(15px * var(--guru-fs-body, 1)); }
+.inv-back-link { font-size: calc(14px * var(--guru-fs-body, 1)); }
 .inv-info-row { font-size: calc(14px * var(--guru-fs-body, 1)); }
 .inv-hkex-link { font-size: calc(14px * var(--guru-fs-body, 1)); }
 .inv-contact-row { font-size: calc(14px * var(--guru-fs-body, 1)); }

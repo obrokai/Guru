@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.2.13
+Version:     1.2.14
 Released:    2026-11-08
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -1374,6 +1374,30 @@ Text Domain: guru
   }
   .logo-ticker:hover .logo-item img { filter: grayscale(1) contrast(0.6); }
   .logo-ticker:hover .logo-item:hover img { filter: grayscale(0) contrast(1); }
+
+  /* Client logos in the ticker (v1.2.14). They are square 480px images on white with ~19%
+     empty space above and below the mark, so they are shown about as wide as the original
+     wordmarks (150px) with the empty top and bottom cropped, and the white is blended into
+     the page with multiply. The fade lives on the image (filter opacity), not on .logo-item:
+     an opacity on the item would isolate the blend and bring the white squares back. */
+  .logo-ticker--clients .logo-ticker-track { padding: 14px 0; background: var(--bg); }
+  .logo-ticker--clients .logo-item,
+  .logo-ticker--clients:hover .logo-item,
+  .logo-ticker--clients:hover .logo-item:hover { opacity: 1; height: 94px; padding: 0 44px; overflow: hidden; }
+  .logo-ticker--clients .logo-item img {
+    width: 150px; height: 150px; max-width: none; flex-shrink: 0;
+    mix-blend-mode: multiply;
+    filter: grayscale(1) opacity(0.5);
+    transition: filter 0.35s;
+  }
+  .logo-ticker--clients:hover .logo-item img { filter: grayscale(1) opacity(0.3); }
+  .logo-ticker--clients:hover .logo-item:hover img { filter: grayscale(0) opacity(1); }
+  @media (max-width: 760px) {
+    .logo-ticker--clients .logo-item,
+    .logo-ticker--clients:hover .logo-item,
+    .logo-ticker--clients:hover .logo-item:hover { height: 75px; padding: 0 28px; }
+    .logo-ticker--clients .logo-item img { width: 120px; height: 120px; }
+  }
 
   /* ================================================== PAGE LOAD ANIMATIONS */
 

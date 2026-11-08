@@ -8,6 +8,13 @@
 
 ---
 
+## 1.2.14 — 2026-11-08
+
+- **首頁跑馬燈的 Client logo 放大並修飾**（Mike：「好像很小，跟上一版一樣寬，也要兼具美觀」）。Client logos 是 480px 正方形、白底、上下約 19% 留白，原本塞在 52px 高的格子裡只剩約 30px 的 logo，還被濾鏡壓成灰色方塊。現在（只在顯示 Client logos 時，`.logo-ticker--clients`）：
+  - 每個 logo 顯示 150px 寬（約等於上一版字標的寬度），上下多餘留白裁掉，整條高度 124px（上一版 102px）；手機 120px 寬、整條 105px。
+  - 白底用 `mix-blend-mode: multiply` 融進頁面背景，看不到方塊；灰階＋半透明改由圖片自己的 filter 處理（item 不能再有 opacity，否則會隔離混合、白底又出現），滑鼠移上去恢復原色。
+  - 沒有 Client logo 時顯示的原設計字標不受影響。
+
 ## 1.2.13 — 2026-11-08
 
 - **Investor 頁接上真正的投資人文件**（客戶要求「新增 announcement，參考原本網站」）。資料就是原網站後台「Investor Doc」裡的文件（`investor_document`，正式站與測試站約 1,045 筆，由 Pods 註冊；ACF 欄位 `date_of_publish`＝Ymd、`document`＝PDF 附件 ID；分類 `document_category`：`financial-information`、`last-announcement`）。新檔 `inc/investor-docs.php`。
