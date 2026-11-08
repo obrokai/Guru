@@ -8,6 +8,18 @@
 
 ---
 
+## 1.2.13 — 2026-11-08
+
+- **Investor 頁接上真正的投資人文件**（客戶要求「新增 announcement，參考原本網站」）。資料就是原網站後台「Investor Doc」裡的文件（`investor_document`，正式站與測試站約 1,045 筆，由 Pods 註冊；ACF 欄位 `date_of_publish`＝Ymd、`document`＝PDF 附件 ID；分類 `document_category`：`financial-information`、`last-announcement`）。新檔 `inc/investor-docs.php`。
+  - Investor 頁分兩區：**Financial Information**、**Last Announcement**，各顯示最新 6 列，下方「View All …」按鈕；其後保留 HKEXnews 連結與 Corporate Governance。
+  - **完整列表**在同一頁：`?docs=last-announcement`（或 `financial-information`），每頁 20 列、可翻頁（`&pg=2`），上方「← Investor Relations」返回。用網址參數而不是新頁面或分類網址，測試站的 `?page_id=` 網址與正式站的漂亮網址都能用。
+  - **中英文合併成一列**：同一天發佈、ID 相鄰的一中一英配成一列（中文以 PDF 檔名結尾 `_c`／`_c-1` 或標題含中文字判斷），英文標題為主、中文標題在下，附 EN／中文按鈕；落單的單獨一列。
+  - 列表結果快取一天；新增、修改、刪除、改分類任何一份文件都會立刻清掉快取。
+  - 客戶新增公告的方式不變：後台「Investor Doc」照原本新增即可。
+  - 還沒有任何文件時（新安裝），沿用 Customizer 的「Financial results & reports」清單（欄位改名為 fallback 並加說明）。
+  - 舊網址 `/last-announcement/`、`/financial-information/`、`/document-category/…` 改為 301 到對應的完整列表（原本只到 Investor 頁）。
+  - 主題只在沒有外掛註冊時才自行註冊 `investor_document` 與 `document_category`。
+
 ## 1.2.12 — 2026-11-08
 
 - **首頁載入卡頓**（客戶回報）：作品卡影片不再一打開頁面就全部下載、播放；改為捲到畫面附近（上下 200px）才載入並播放，離開畫面就暫停（`video[data-lazy-play]`、`main.js`）。首頁「Our Work」與 Work 頁的作品卡都適用；燈箱、Solutions 頁影片不變。主要原因其實是客戶 10 月換上的主視覺影片是 4K 原檔（電腦 285.8 MB、手機 257.7 MB），已另外壓成網頁版（9.0 MB／4.5 MB）並換到測試站（資料調整，不在主題內）。

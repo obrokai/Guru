@@ -282,7 +282,7 @@ function guru_customize_register( $wp_customize ) {
 			'guru_investor_entity'     => array( __( 'Listed company name (heading)', 'guru' ), 'textarea', __( 'Line breaks are kept.', 'guru' ) ),
 			'guru_investor_intro'      => array( __( 'Intro paragraph', 'guru' ), 'textarea', __( 'Used when the Investor page has no excerpt of its own.', 'guru' ) ),
 			'guru_stock_code'          => array( __( 'Stock code', 'guru' ), 'text', __( 'Shown in the disclaimer strip at the bottom of the page.', 'guru' ) ),
-			'guru_investor_docs'       => array( __( 'Financial results & reports', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: YYYY.MM.DD | Title | Subtitle (optional) | English PDF URL | Chinese PDF URL', 'guru' ) ),
+			'guru_investor_docs'       => array( __( 'Financial results & reports (fallback)', 'guru' ), 'textarea', __( 'Only shown while there are no documents under "Investor Doc" in the admin menu — once there are, the page lists those instead.', 'guru' ) . ' ' . $pipe . ' ' . __( 'Format: YYYY.MM.DD | Title | Subtitle (optional) | English PDF URL | Chinese PDF URL', 'guru' ) ),
 			'guru_investor_more_url'   => array( __( '"View all announcements" link', 'guru' ), 'url' ),
 			'guru_investor_governance' => array( __( 'Corporate governance documents', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: Label | Title | URL | Link text', 'guru' ) ),
 			'guru_investor_contacts'   => array( __( 'IR & office contacts', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | E-mail | Address', 'guru' ) ),

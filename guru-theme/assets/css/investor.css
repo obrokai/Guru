@@ -190,6 +190,32 @@
     transition: color 0.15s, border-color 0.15s;
   }
   .inv-more-btn:hover { color: var(--blue); border-color: var(--blue); }
+  /* The HKEXnews link sits under the last document list (v1.2.13). */
+  .inv-more-btn-ext { margin: -24px 0 56px; }
+
+  /* Full list of one document category: back link and pager (v1.2.13). */
+  #inv-list { scroll-margin-top: 110px; }
+  .inv-back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 20px;
+    font-size: 14px; font-weight: 600; color: var(--ink-3);
+    transition: color 0.15s;
+  }
+  .inv-back-link:hover { color: var(--blue); }
+  .inv-pager {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    margin-top: 28px;
+  }
+  .inv-pager-num, .inv-pager-step, .inv-pager-gap {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 38px; height: 38px; padding: 0 12px;
+    font-size: 14px; font-weight: 600; color: var(--ink-3);
+    border: 1.5px solid var(--line); border-radius: 10px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .inv-pager-gap { border-color: transparent; min-width: 20px; padding: 0 2px; }
+  .inv-pager-num:hover, .inv-pager-step:hover { color: var(--blue); border-color: var(--blue); }
+  .inv-pager-num.current { color: #fff; background: var(--blue); border-color: var(--blue); }
 
   /* ══════════ SIDEBAR */
   .inv-sidebar { display: flex; flex-direction: column; gap: 32px; }

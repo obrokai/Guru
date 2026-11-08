@@ -75,10 +75,11 @@ function guru_legacy_redirects() {
 		'd-bizsolution'                           => $solutions,
 		'global-marketing-cn'                     => $solutions . '#go-global',
 		'blog/digital-marketing-solution'         => $blog,
-		'last-announcement'                       => $investor,
-		'financial-information'                   => $investor,
-		'document-category/last-announcement'     => $investor,
-		'document-category/financial-information' => $investor,
+		// The old document list pages open the matching full list on the Investor page (v1.2.13).
+		'last-announcement'                       => guru_investor_list_url( 'last-announcement' ),
+		'financial-information'                   => guru_investor_list_url( 'financial-information' ),
+		'document-category/last-announcement'     => guru_investor_list_url( 'last-announcement' ),
+		'document-category/financial-information' => guru_investor_list_url( 'financial-information' ),
 		'service'                                 => $solutions,
 		'portfolio-item'                          => $work,
 	);

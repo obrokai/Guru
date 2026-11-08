@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Keep in step with the Version header in style.css — that is the number the
  * Appearance → Themes screen shows, and the one the package filename uses.
  */
-define( 'GURU_VERSION', '1.2.12' );
+define( 'GURU_VERSION', '1.2.13' );
 
 /**
  * Theme supports and menus.
@@ -132,6 +132,7 @@ require_once get_stylesheet_directory() . '/inc/template-helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
 require_once get_stylesheet_directory() . '/inc/typography.php';
 require_once get_stylesheet_directory() . '/inc/menu-colors.php';
+require_once get_stylesheet_directory() . '/inc/investor-docs.php';
 require_once get_stylesheet_directory() . '/inc/post-types.php';
 require_once get_stylesheet_directory() . '/inc/fields.php';
 require_once get_stylesheet_directory() . '/inc/media.php';
