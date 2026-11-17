@@ -39,6 +39,7 @@ $guru_services = array(
 		<div class="vmodal-video-wrap" id="vmodalVideoWrap">
 			<video id="vmodalVideo" controls playsinline></video>
 		</div>
+		<?php guru_gallery_markup( array(), 'vmodalGallery' ); ?>
 		<div class="vmodal-tags" id="vmodalTags"></div>
 		<div class="vmodal-cta-row">
 			<button type="button" class="vmodal-btn vmodal-btn-contact" id="vmodalContactBtn"><?php esc_html_e( 'Contact Us', 'guru' ); ?></button>

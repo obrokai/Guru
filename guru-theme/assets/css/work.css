@@ -756,6 +756,7 @@
   /* The film plays whole; a cover image sits in a 16:9 frame, cropped from the centre. */
   .wrk-single-media video { width: 100%; height: auto; display: block; }
   .wrk-single-media img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .wrk-single .guru-gallery { border-radius: 20px; background: #0e0e10; margin-bottom: 28px; }
   .wrk-single .prj-tags { margin-bottom: 28px; }
   .wrk-single-body { max-width: 820px; font-size: 17px; line-height: 1.75; color: var(--ink-2); }
   .wrk-single-body p { margin: 0 0 1.3em; }

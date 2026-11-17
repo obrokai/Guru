@@ -28,16 +28,23 @@ while ( have_posts() ) :
 			<?php endif; ?>
 		</div>
 
-		<div class="wrk-single-media">
-			<?php if ( $guru['video'] ) : ?>
+		<?php
+		$guru_body = apply_filters( 'the_content', get_the_content() );
+		if ( $guru['video'] ) :
+			?>
+			<div class="wrk-single-media">
 				<video controls playsinline preload="metadata"
 					<?php echo $guru['image'] ? 'poster="' . esc_url( $guru['image'] ) . '"' : ''; ?>>
 					<source src="<?php echo esc_url( $guru['video'] ); ?>" type="video/mp4" />
 				</video>
-			<?php elseif ( $guru['image'] ) : ?>
-				<img src="<?php echo esc_url( $guru['image'] ); ?>" alt="<?php the_title_attribute(); ?>" />
-			<?php endif; ?>
-		</div>
+			</div>
+			<?php
+		elseif ( $guru['gallery'] ) :
+			// Pictures go in the slider (like the film player), so they are taken out of the text below.
+			guru_gallery_markup( $guru['gallery'], 'wrkSingleGallery', $guru['title'] );
+			$guru_body = guru_strip_content_images( $guru_body );
+		endif;
+		?>
 
 		<?php if ( $guru['tags'] ) : ?>
 			<div class="prj-tags">
@@ -47,7 +54,9 @@ while ( have_posts() ) :
 			</div>
 		<?php endif; ?>
 
-		<div class="wrk-single-body guru-editor"><?php the_content(); ?></div>
+		<?php if ( trim( $guru_body ) ) : ?>
+			<div class="wrk-single-body guru-editor"><?php echo $guru_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the_content output. ?></div>
+		<?php endif; ?>
 
 		<p><a href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>" class="srv-panel-cta">
 			&larr; <?php esc_html_e( 'All Projects', 'guru' ); ?>

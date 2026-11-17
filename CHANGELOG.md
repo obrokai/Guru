@@ -8,6 +8,16 @@
 
 ---
 
+## 1.2.15 — 2026-11-17
+
+- **圖片作品改成跟影片一樣的瀏覽方式，多張圖可左右切換**（客戶：Construction Industry Council 是上傳圖片，呈現不好看，希望像影片那樣；Mike：多張圖可以左右 slide，手機也要兼顧）。
+  - 沒有影片的作品，圖片取自精選圖片（第一張）＋內文中所有 `<img>`（依出現順序；有 `wp-image-N` 就用附件的 1536 尺寸，同一附件只算一次）。新函式 `guru_work_gallery()`，`guru_get_work_data()` 多一個 `gallery`。
+  - 卡片（首頁 `front-page.php`、Work 頁 `guru_work_card()`）多帶 `data-gallery`（JSON），點了開燈箱而不是跳頁；沒影片也沒圖片的仍然跳到作品頁（首頁的圖片卡片原本開空燈箱，現在也一樣跳頁）。
+  - 兩個燈箱（`work-modal.php`、`work-modal-archive.php`）在影片下方加輪播 `guru_gallery_markup()`；`main.js` 新增 `guruGallery()`：CSS scroll-snap（手機原生滑動）、左右箭頭、鍵盤 ← →、滑鼠拖曳、圓點；關燈箱會清空。開表單時圖片框縮到 38vh，跟影片一致。
+  - 作品頁 `single-work.php`：有圖片就顯示同一個輪播，內文用 `guru_strip_content_images()` 拿掉圖片（只剩圖片時整段不顯示）。
+  - 樣式在 `style.css`（`.guru-gallery`、`.gg-*`）：電腦 16:9、黑底、圖片 contain；手機（≤700px）正方形框、隱藏「2 / 4」計數；圓點放在圖片下方的黑條，不蓋住圖。
+  - 影片作品不受影響。
+
 ## 1.2.14 — 2026-11-08
 
 - **首頁跑馬燈的 Client logo 放大並修飾**（Mike：「好像很小，跟上一版一樣寬，也要兼具美觀」）。Client logos 是 480px 正方形、白底、上下約 19% 留白，原本塞在 52px 高的格子裡只剩約 30px 的 logo，還被濾鏡壓成灰色方塊。現在（只在顯示 Client logos 時，`.logo-ticker--clients`）：

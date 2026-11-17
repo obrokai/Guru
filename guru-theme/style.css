@@ -3,8 +3,8 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.2.14
-Released:    2026-11-08
+Version:     1.2.15
+Released:    2026-11-17
 Requires at least: 6.0
 Requires PHP: 7.4
 License:     Proprietary
@@ -887,6 +887,116 @@ Text Domain: guru
   }
   .hw-vmodal-box.form-open #hwVmodalVideo { max-height: 38vh !important; }
   .hw-vmodal-video-wrap.is-hidden { display: none; }
+
+  /* Image slider — showcase items without a film (lightboxes + item page). v1.2.15 */
+  .guru-gallery {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    line-height: 0;
+  }
+  .guru-gallery.is-hidden { display: none; }
+  .gg-track {
+    display: flex;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: calc(100vh - 180px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    cursor: grab;
+    outline: none;
+    transition: max-height 0.45s cubic-bezier(.2,.8,.3,1);
+  }
+  .gg-track::-webkit-scrollbar { display: none; }
+  .gg-track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+  .guru-gallery.is-single .gg-track { cursor: default; }
+  .gg-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+  .gg-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .hw-vmodal-box.form-open .gg-track,
+  .vmodal-box.form-open .gg-track { max-height: 38vh; }
+
+  .gg-nav {
+    position: absolute;
+    top: calc(50% - 15px); /* centred on the picture, above the dots strip */
+    width: 46px; height: 46px;
+    margin-top: -23px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    background: rgba(14,14,16,0.45);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, opacity 0.18s;
+    z-index: 2;
+  }
+  .gg-prev { left: 16px; }
+  .gg-next { right: 16px; }
+  .gg-nav:hover { background: #fff; color: #0e0e10; }
+  .gg-nav:disabled { opacity: 0; pointer-events: none; }
+  .gg-nav:focus-visible, .gg-dot:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+  .gg-count {
+    position: absolute;
+    top: 14px; right: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(14,14,16,0.55);
+    color: #fff;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+    line-height: 1;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .gg-count:empty { display: none; }
+  /* Dots sit in a strip under the picture, like a player's control bar, so they never cover the artwork. */
+  .gg-dots {
+    display: flex; justify-content: center; align-items: center; gap: 6px;
+    padding: 12px 0;
+  }
+  .gg-dot {
+    width: 7px; height: 7px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.45);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+  .gg-dot.active { width: 22px; background: #fff; }
+  .guru-gallery.is-single .gg-nav,
+  .guru-gallery.is-single .gg-dots { display: none; }
+
+  @media (max-width: 700px) {
+    /* Phones: a square frame so portrait and square pictures stay large; swipe to move. */
+    .gg-track { aspect-ratio: 1 / 1; max-height: calc(100svh - 170px); }
+    .gg-nav { width: 36px; height: 36px; margin-top: -18px; }
+    .gg-prev { left: 10px; }
+    .gg-next { right: 10px; }
+    /* The dots already show the position; the counter would cover the picture. */
+    .gg-count { display: none; }
+    .gg-dots { padding: 10px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .gg-track { scroll-behavior: auto; } }
 
   /* In-modal contact CTA + form (homepage) */
   .hw-cta-row {

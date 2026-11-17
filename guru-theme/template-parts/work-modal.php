@@ -38,6 +38,7 @@ $guru_services = array(
 		<div class="hw-vmodal-video-wrap" id="hwVmodalVideoWrap">
 			<video id="hwVmodalVideo" controls playsinline></video>
 		</div>
+		<?php guru_gallery_markup( array(), 'hwVmodalGallery' ); ?>
 
 		<div class="hw-cta-row">
 			<button type="button" class="hw-cta-btn hw-cta-btn-contact" id="hwContactBtn"><?php esc_html_e( 'Contact Us', 'guru' ); ?></button>

@@ -1,5 +1,146 @@
 /* Guru theme — front-end behaviour. Mirrors the inline scripts of the static site. */
 
+/* ── Image slider for showcase items without a film ──
+ * Swipe on phones (native scroll-snap), arrows / keys / trackpad on desktop.
+ * Used in both lightboxes (filled from the card's data-gallery) and on the
+ * item's own page (slides already in the markup). */
+function guruGallery(root) {
+  if (!root) return null;
+  var track = root.querySelector('.gg-track');
+  var prev  = root.querySelector('.gg-prev');
+  var next  = root.querySelector('.gg-next');
+  var count = root.querySelector('.gg-count');
+  var dots  = root.querySelector('.gg-dots');
+  var cur = 0;
+
+  function slides() { return track.querySelectorAll('.gg-slide'); }
+
+  function render() {
+    var n = slides().length;
+    root.setAttribute('data-count', n);
+    root.classList.toggle('is-single', n < 2);
+    dots.innerHTML = '';
+    for (var i = 0; i < n; i++) {
+      var d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'gg-dot';
+      d.setAttribute('aria-label', 'Image ' + (i + 1));
+      d.setAttribute('data-idx', i);
+      dots.appendChild(d);
+    }
+    cur = 0;
+    track.scrollLeft = 0;
+    update();
+  }
+
+  function update() {
+    var n = slides().length;
+    if (count) count.textContent = n > 1 ? (cur + 1) + ' / ' + n : '';
+    if (prev) prev.disabled = cur <= 0;
+    if (next) next.disabled = cur >= n - 1;
+    dots.querySelectorAll('.gg-dot').forEach(function (d, i) { d.classList.toggle('active', i === cur); });
+  }
+
+  function go(i, instant) {
+    var n = slides().length;
+    if (!n) return;
+    cur = Math.max(0, Math.min(n - 1, i));
+    track.scrollTo({ left: cur * track.clientWidth, behavior: instant ? 'auto' : 'smooth' });
+    update();
+  }
+
+  var raf = 0;
+  track.addEventListener('scroll', function () {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(function () {
+      var w = track.clientWidth || 1;
+      var i = Math.round(track.scrollLeft / w);
+      if (i !== cur) { cur = i; update(); }
+    });
+  }, { passive: true });
+
+  if (prev) prev.addEventListener('click', function (e) { e.stopPropagation(); go(cur - 1); });
+  if (next) next.addEventListener('click', function (e) { e.stopPropagation(); go(cur + 1); });
+  dots.addEventListener('click', function (e) {
+    var d = e.target.closest('.gg-dot');
+    if (d) go(+d.getAttribute('data-idx'));
+  });
+  track.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+  });
+
+  // Desktop: drag with the mouse like on a phone.
+  var down = false, startX = 0, startLeft = 0, moved = false;
+  track.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
+    track.classList.add('is-dragging');
+  });
+  window.addEventListener('mousemove', function (e) {
+    if (!down) return;
+    var dx = e.clientX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    track.scrollLeft = startLeft - dx;
+  });
+  window.addEventListener('mouseup', function (e) {
+    if (!down) return;
+    down = false;
+    track.classList.remove('is-dragging');
+    var dx = e.clientX - startX;
+    var w = track.clientWidth || 1;
+    // A short flick is enough to move one picture.
+    var target = Math.abs(dx) > w * 0.12 ? cur + (dx < 0 ? 1 : -1) : cur;
+    go(target);
+  });
+  track.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+  // Keep the current picture in place when the window is resized or rotated.
+  window.addEventListener('resize', function () { if (slides().length) go(cur, true); });
+
+  render();
+
+  return {
+    set: function (items) {
+      track.innerHTML = '';
+      (items || []).forEach(function (it, i) {
+        var slide = document.createElement('div');
+        slide.className = 'gg-slide';
+        slide.setAttribute('role', 'group');
+        slide.setAttribute('aria-roledescription', 'slide');
+        slide.setAttribute('aria-label', (i + 1) + ' / ' + items.length);
+        var img = document.createElement('img');
+        img.src = it.s;
+        img.alt = it.a || '';
+        if (it.w && it.h) { img.width = it.w; img.height = it.h; }
+        img.decoding = 'async';
+        img.draggable = false;
+        if (i > 1) img.loading = 'lazy';
+        slide.appendChild(img);
+        track.appendChild(slide);
+      });
+      root.classList.toggle('is-hidden', !items || !items.length);
+      render();
+    },
+    clear: function () { track.innerHTML = ''; root.classList.add('is-hidden'); render(); },
+    go: function (i) { go(i); },
+    step: function (d) { go(cur + d); },
+    count: function () { return slides().length; }
+  };
+}
+
+/* The item's own page: slides are already in the markup. */
+(function () {
+  var g = guruGallery(document.getElementById('wrkSingleGallery'));
+  if (!g) return;
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.closest('.gg-track'))) return;
+    if (e.key === 'ArrowLeft') g.step(-1);
+    if (e.key === 'ArrowRight') g.step(1);
+  });
+})();
+
 /* ── Showcase lightbox ──
  * Two markups share one controller: the homepage modal (#hwVmodal, styled in
  * style.css) and the Work archive modal (#vmodal, styled in work.css) — the
@@ -23,6 +164,7 @@ function guruModal(ids) {
   var scrollHint = $(ids.scrollHint);
   var projectEl  = $(ids.project);
   var firstField = $(ids.firstField);
+  var gallery    = guruGallery($(ids.gallery));
 
   if (modalForm) setupPhoneGroup(modalForm);
 
@@ -71,6 +213,13 @@ function guruModal(ids) {
         videoEl.removeAttribute('src');
       }
     }
+    if (gallery) {
+      var pics = [];
+      if (!src) {
+        try { pics = JSON.parse(card.getAttribute('data-gallery') || '[]'); } catch (err) { pics = []; }
+      }
+      gallery.set(pics);
+    }
     collapseForm();
     overlay.classList.add('open');
     overlay.scrollTop = 0;
@@ -81,6 +230,7 @@ function guruModal(ids) {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
     if (videoEl) { videoEl.pause(); videoEl.removeAttribute('src'); }
+    if (gallery) gallery.clear();
     collapseForm();
   }
 
@@ -126,20 +276,28 @@ function guruModal(ids) {
   if (scrollHint) scrollHint.addEventListener('click', function () { overlay.scrollBy({ top: overlay.clientHeight * 0.7, behavior: 'smooth' }); });
   if (closeBtn) closeBtn.addEventListener('click', close);
   overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  document.addEventListener('keydown', function (e) {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    // Left / right arrows page through the pictures (not while typing in the form).
+    var t = e.target;
+    if (!gallery || !gallery.count() || (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.closest('.gg-track')))) return;
+    if (e.key === 'ArrowLeft') gallery.step(-1);
+    if (e.key === 'ArrowRight') gallery.step(1);
+  });
 
   return { open: open, close: close };
 }
 
 (function () {
   var homeModal = guruModal({
-    overlay: 'hwVmodal', box: '.hw-vmodal-box', video: 'hwVmodalVideo', videoWrap: 'hwVmodalVideoWrap',
+    overlay: 'hwVmodal', box: '.hw-vmodal-box', video: 'hwVmodalVideo', videoWrap: 'hwVmodalVideoWrap', gallery: 'hwVmodalGallery',
     title: 'hwVmodalTitle', sub: 'hwVmodalSub', close: 'hwVmodalClose', contactBtn: 'hwContactBtn',
     formWrap: 'hwFormWrap', form: 'hwContactForm', note: 'hwfNote', scrollHint: 'hwScrollHint',
     project: 'hwf-project', firstField: 'hwf-name', tagClass: ''
   });
   var workModal = guruModal({
-    overlay: 'vmodal', box: '.vmodal-box', video: 'vmodalVideo', videoWrap: 'vmodalVideoWrap',
+    overlay: 'vmodal', box: '.vmodal-box', video: 'vmodalVideo', videoWrap: 'vmodalVideoWrap', gallery: 'vmodalGallery',
     title: 'vmodalTitle', client: 'vmodalClient', tags: 'vmodalTags', close: 'vmodalClose', contactBtn: 'vmodalContactBtn',
     formWrap: 'vmodalFormWrap', form: 'vmodalForm', note: 'vmfNote', scrollHint: 'vmodalScrollHint',
     project: 'vmf-project', firstField: 'vmf-name', tagClass: 'vmodal-tag'
@@ -153,7 +311,7 @@ function guruModal(ids) {
     card.style.cursor = 'pointer';
     card.addEventListener('click', function (e) {
       e.preventDefault();
-      if (!card.getAttribute('data-video') && url) { window.location.href = url; return; }
+      if (!card.getAttribute('data-video') && !card.getAttribute('data-gallery') && url) { window.location.href = url; return; }
       modal.open(card);
     });
   });

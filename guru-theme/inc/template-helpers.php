@@ -182,14 +182,158 @@ function guru_get_work_data( $post_id = null ) {
 	$tags = get_post_meta( $post_id, '_guru_tags', true );
 	$tags = is_array( $tags ) ? array_values( array_filter( array_map( 'strval', $tags ) ) ) : array();
 
+	$video = (string) get_post_meta( $post_id, '_guru_video_url', true );
+
 	return array(
-		'title'  => get_the_title( $post_id ),
-		'client' => (string) get_post_meta( $post_id, '_guru_client', true ),
-		'video'  => (string) get_post_meta( $post_id, '_guru_video_url', true ),
-		'image'  => get_the_post_thumbnail_url( $post_id, 'large' ),
-		'cats'   => implode( ' ', array_unique( $slugs ) ),
-		'tags'   => $tags ? $tags : $names,
+		'title'   => get_the_title( $post_id ),
+		'client'  => (string) get_post_meta( $post_id, '_guru_client', true ),
+		'video'   => $video,
+		'image'   => get_the_post_thumbnail_url( $post_id, 'large' ),
+		// Items without a film show their pictures in a slider instead (v1.2.15).
+		'gallery' => $video ? array() : guru_work_gallery( $post_id ),
+		'cats'    => implode( ' ', array_unique( $slugs ) ),
+		'tags'    => $tags ? $tags : $names,
 	);
+}
+
+/**
+ * Pictures of a showcase item, for the image slider.
+ *
+ * The featured image comes first, then every picture placed in the item's
+ * text (Add Media, Image or Gallery blocks), in the order they appear. The
+ * same picture is listed only once.
+ *
+ * @param int $post_id Post ID.
+ * @return array[] Each: src, alt, w, h.
+ */
+function guru_work_gallery( $post_id ) {
+	$items = array();
+	$seen  = array();
+
+	$add = function ( $id, $src = '', $alt = '' ) use ( &$items, &$seen ) {
+		$w = 0;
+		$h = 0;
+		if ( $id ) {
+			$img = wp_get_attachment_image_src( $id, '1536x1536' );
+			if ( ! $img ) {
+				return;
+			}
+			list( $src, $w, $h ) = $img;
+			if ( '' === $alt ) {
+				$alt = (string) get_post_meta( $id, '_wp_attachment_image_alt', true );
+			}
+		}
+		$key = $id ? 'id' . $id : preg_replace( '/-\d+x\d+(?=\.\w+$)/', '', strtok( $src, '?' ) );
+		if ( ! $src || isset( $seen[ $key ] ) ) {
+			return;
+		}
+		$seen[ $key ] = true;
+		$items[]      = array(
+			'src' => $src,
+			'alt' => $alt,
+			'w'   => (int) $w,
+			'h'   => (int) $h,
+		);
+	};
+
+	$thumb = (int) get_post_thumbnail_id( $post_id );
+	if ( $thumb ) {
+		$add( $thumb );
+	}
+
+	$content = (string) get_post_field( 'post_content', $post_id );
+	if ( preg_match_all( '/<img\b[^>]*>/i', $content, $tags ) ) {
+		foreach ( $tags[0] as $tag ) {
+			$id  = preg_match( '/\bwp-image-(\d+)\b/', $tag, $m ) ? (int) $m[1] : 0;
+			$src = preg_match( '/\bsrc=["\']([^"\']+)["\']/i', $tag, $m ) ? html_entity_decode( $m[1] ) : '';
+			$alt = preg_match( '/\balt=["\']([^"\']*)["\']/i', $tag, $m ) ? html_entity_decode( $m[1] ) : '';
+			if ( $id && ! wp_attachment_is_image( $id ) ) {
+				$id = 0;
+			}
+			$add( $id, $src, $alt );
+		}
+	}
+
+	return $items;
+}
+
+/**
+ * Item text with its pictures taken out — they are shown in the slider.
+ *
+ * @param string $html Rendered content.
+ * @return string Empty when nothing but pictures was left.
+ */
+function guru_strip_content_images( $html ) {
+	$html = preg_replace( '/<img\b[^>]*>/i', '', $html );
+	// Captions, links and wrappers left empty once their picture is gone.
+	$html = preg_replace( '#<figcaption\b[^>]*>.*?</figcaption>#is', '', $html );
+	do {
+		$before = $html;
+		$html   = preg_replace( '#<(a|p|figure|div|ul|li)\b[^>]*>(\s|&nbsp;|<br\s*/?>)*</\1>#i', '', $html );
+	} while ( $html !== $before );
+
+	return '' === trim( wp_strip_all_tags( $html ) ) ? '' : $html;
+}
+
+/**
+ * Image slider markup. Filled server-side on the item page, or left empty
+ * for the lightbox to fill from the card it opens (main.js, guruGallery).
+ *
+ * @param array  $items Pictures from guru_work_gallery(); empty for the lightbox.
+ * @param string $id    Element ID.
+ * @param string $title Item title, used as alt text when a picture has none.
+ */
+function guru_gallery_markup( $items = array(), $id = '', $title = '' ) {
+	$count = count( $items );
+	?>
+	<div class="guru-gallery<?php echo $count ? '' : ' is-hidden'; ?>"<?php echo $id ? ' id="' . esc_attr( $id ) . '"' : ''; ?>
+		role="region" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Project images', 'guru' ); ?>"
+		data-count="<?php echo (int) $count; ?>">
+		<div class="gg-track" tabindex="0">
+			<?php foreach ( $items as $i => $item ) : ?>
+				<div class="gg-slide" role="group" aria-roledescription="slide"
+					aria-label="<?php echo esc_attr( ( $i + 1 ) . ' / ' . $count ); ?>">
+					<img src="<?php echo esc_url( $item['src'] ); ?>"
+						alt="<?php echo esc_attr( $item['alt'] ? $item['alt'] : $title ); ?>"
+						<?php if ( $item['w'] && $item['h'] ) : ?>
+							width="<?php echo (int) $item['w']; ?>" height="<?php echo (int) $item['h']; ?>"
+						<?php endif; ?>
+						<?php echo $i ? 'loading="lazy"' : 'fetchpriority="high"'; ?> decoding="async" draggable="false" />
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<button type="button" class="gg-nav gg-prev" aria-label="<?php esc_attr_e( 'Previous image', 'guru' ); ?>">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12.5 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+		</button>
+		<button type="button" class="gg-nav gg-next" aria-label="<?php esc_attr_e( 'Next image', 'guru' ); ?>">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+		</button>
+		<div class="gg-count" aria-live="polite"></div>
+		<div class="gg-dots"></div>
+	</div>
+	<?php
+}
+
+/**
+ * The item's pictures as a data attribute for the lightbox.
+ *
+ * @param array $data From guru_get_work_data().
+ * @return string Attribute markup (with a leading space), or ''.
+ */
+function guru_gallery_attr( $data ) {
+	if ( empty( $data['gallery'] ) ) {
+		return '';
+	}
+	$list = array();
+	foreach ( $data['gallery'] as $item ) {
+		$list[] = array(
+			's' => $item['src'],
+			'a' => $item['alt'] ? $item['alt'] : $data['title'],
+			'w' => $item['w'],
+			'h' => $item['h'],
+		);
+	}
+	return ' data-gallery="' . esc_attr( wp_json_encode( $list ) ) . '"';
 }
 
 /**
@@ -289,8 +433,9 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 		<?php if ( $data['video'] ) : ?>
 			data-video="<?php echo esc_url( $data['video'] ); ?>"
 		<?php else : ?>
-			<?php // No film to play — the "View Project" label opens the item's own page. ?>
+			<?php // No film: its pictures open in the lightbox slider; with no pictures either, the card opens the item's own page. ?>
 			data-url="<?php echo esc_url( get_permalink( $post_id ? $post_id : get_the_ID() ) ); ?>"
+			<?php echo guru_gallery_attr( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>
 		<?php endif; ?>
 		data-title="<?php echo esc_attr( $data['title'] ); ?>"
 		data-client="<?php echo esc_attr( $data['client'] ); ?>"
