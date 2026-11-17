@@ -4,7 +4,7 @@
 > 讀完這份文件就能掌握全部背景，不需要舊對話紀錄。
 >
 > 專案路徑：`/Users/mike/Guru/`
-> 最後更新：2026-10-23（v1.2.8；各版細節見 `CHANGELOG.md`，客戶現況與測試站操作紀錄見主資料夾 `HANDOFF-20261015.md`）
+> 最後更新：2026-11-17（v1.2.14 已裝 staging；**最新現況、待決事項與 staging 操作方式先讀 `交接-給桌面Claude-20261117.md`**，各版細節見 `CHANGELOG.md`）
 
 ---
 
@@ -22,7 +22,7 @@ cd /Users/mike/Guru && git log --oneline -5 && ls guru-theme tools
 
 **三條硬規則（務必遵守）**：
 
-1. **絕不接受、不索取、不處理客戶的 WordPress 帳號密碼。** 使用者曾主動要貼帳密，前兩個 session 都明確拒絕過。工作流程是：本機建主題 → 打包 `.zip` → 交給使用者自己上傳。**不要登入客戶的後台。** 使用者自己有後台權限，需要後台資訊時請他截圖放到 `~/Desktop/guru/`，用 Read 工具看圖。
+1. **只動測試站（staging），正式站一律不登入、不修改。** 自 10-23 起，Mike 會在對話中給 staging 帳密，由 Claude 上傳主題並驗證（工具在 `tools/staging/`，網址不是 `/staging` 會拒絕）。帳密只放在指令的環境變數 `WP_USER`／`WP_PASS`，**絕不寫進檔案、記憶或 commit**。
 2. **舊的 GitHub PAT 視為已外洩憑證。** 曾有一組 `ghp_...` token 在對話中明文出現過。這份文件不含該 token。若需要推送，請使用者自己執行 `git push`，並提醒他到 GitHub → Settings → Developer settings → Personal access tokens **撤銷舊的那一組**。
 3. **客戶的正式站是 live 網站**（`guruonline.com.hk`，港交所 GEM 上市公司 08121 的官網，投資人區有監管義務）。任何動作都先在測試站驗證。舊的 `/prometheus/` 測試站已決定不留；新的測試站流程見 §6。
 
@@ -273,7 +273,7 @@ phase 3 的驗證結果（2026-09-10）：六頁 HTTP 200、`debug.log` 零錯�
 
 ## 9. Git 狀態
 
-所有主題工作都在分支 `worktree-theme-parity`（工作資料夾 `.claude/worktrees/theme-parity`，已鎖定）。**2026-10-14 起已 push 到 `origin/worktree-theme-parity`，尚未合併到 main**；最新是 v1.2.8。查看這個資料夾請用 `git -C` 或絕對路徑，**不要在 shell 裡 `cd` 進去**（10-14 曾因此被系統自動刪除，後來從 git 救回）。`.gitignore` 已排除兩個 zip 與 `.DS_Store`。
+所有主題工作都在分支 `worktree-theme-parity`（工作資料夾 `.claude/worktrees/theme-parity`，已鎖定）。**2026-10-14 起已 push 到 `origin/worktree-theme-parity`，尚未合併到 main**；最新是 v1.2.14（`699f167`）。查看這個資料夾請用 `git -C` 或絕對路徑，**不要在 shell 裡 `cd` 進去**（10-14 曾因此被系統自動刪除，後來從 git 救回）。`.gitignore` 已排除兩個 zip 與 `.DS_Store`。
 
 重新打包：
 
