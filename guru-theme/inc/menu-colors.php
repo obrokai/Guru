@@ -23,7 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function guru_menu_color_settings() {
 	return array(
-		'guru_menu_bg'       => array( __( 'Menu background', 'guru' ), '#f7f4e8' ),
+		// White since v1.2.16 (was beige #f7f4e8, at the client's request).
+		'guru_menu_bg'       => array( __( 'Menu background', 'guru' ), '#ffffff' ),
 		'guru_menu_text'     => array( __( 'Menu text', 'guru' ), '#0e0e10' ),
 		'guru_menu_cta'      => array( __( '"Contact Us" button', 'guru' ), '#1b23e0' ),
 		'guru_menu_whatsapp' => array( __( '"WhatsApp" button', 'guru' ), '#25d366' ),

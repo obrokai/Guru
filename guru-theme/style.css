@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.2.15
+Version:     1.2.16
 Released:    2026-11-17
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -99,23 +99,23 @@ Text Domain: guru
     align-items: center;
     height: 56px;
     padding: 0 18px;
-    background: rgba(247, 244, 232, 0.92);
+    background: rgba(255,255,255,0.94);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-radius: 999px;
-    box-shadow: 0 2px 18px rgba(14,14,16,0.05);
+    box-shadow: 0 2px 14px rgba(14,14,16,0.10), 0 0 0 1px rgba(14,14,16,0.05);
   }
   .gn-logo img { height: 18px; width: auto; display: block; }
   .gn-pill {
     display: flex;
     align-items: center;
     gap: 4px;
-    background: rgba(247, 244, 232, 0.92);
+    background: rgba(255,255,255,0.94);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-radius: 999px;
     padding: 8px;
-    box-shadow: 0 2px 18px rgba(14,14,16,0.05);
+    box-shadow: 0 2px 14px rgba(14,14,16,0.10), 0 0 0 1px rgba(14,14,16,0.05);
   }
   .gn-nav-links {
     display: flex;
@@ -193,7 +193,7 @@ Text Domain: guru
     position: fixed;
     top: 68px;
     left: 12px; right: 12px;
-    background: rgba(242,238,223,0.97);
+    background: rgba(255,255,255,0.97);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1.5px solid var(--line);
@@ -1655,6 +1655,10 @@ Text Domain: guru
     .wrk-header-right { align-items: flex-start; }
     .wrk-title { font-size: clamp(40px, 12vw, 80px); }
     .svc-title { font-size: clamp(40px, 12vw, 80px); }
+    /* Client 11-17: less empty space on phones — under "What we do", and between Solutions and Our Work (was 160px). */
+    .svc-label { margin-bottom: 20px; }
+    .svc { padding-bottom: 40px; }
+    .wrk { padding-top: 40px; }
     .svc-layout { grid-template-columns: 1fr; gap: 40px; }
     .svc-intro { position: static; top: auto; }
     .svc-lead { font-size: 17px; max-width: none; }

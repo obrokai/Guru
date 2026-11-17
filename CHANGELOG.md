@@ -8,6 +8,11 @@
 
 ---
 
+## 1.2.16 — 2026-11-17
+
+- **選單改白色**（客戶 Fontane：「Menu bar 的顏色麻煩調校跟背景白色一樣，現在是米黃色」；Mike：加一點陰影，不然跟底部看不清）。`.gn-logo`／`.gn-pill` 由 `rgba(247,244,232,.92)` 改 `rgba(255,255,255,.94)`，陰影改 `0 2px 14px rgba(14,14,16,.10), 0 0 0 1px rgba(14,14,16,.05)`；手機選單面板 `.gn-mobile-menu` 改 `rgba(255,255,255,.97)`。六個樣式檔（style、about、blog、work、services、investor）都有自己的一份，全部同步。Customizer「Menu background」預設值改 `#ffffff`（staging 沒存過這個值，上傳即生效）。
+- **手機首頁間距縮小**（≤980px）：`.svc-label` margin-bottom 56 → 20px；Solutions 與 Our Work 之間 160 → 80px（`.svc` padding-bottom 40px、`.wrk` padding-top 40px）。電腦版不變。
+
 ## 1.2.15 — 2026-11-17
 
 - **圖片作品改成跟影片一樣的瀏覽方式，多張圖可左右切換**（客戶：Construction Industry Council 是上傳圖片，呈現不好看，希望像影片那樣；Mike：多張圖可以左右 slide，手機也要兼顧）。
