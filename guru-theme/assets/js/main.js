@@ -33,7 +33,17 @@ function guruGallery(root) {
     update();
   }
 
+  // Only the film on the current slide may play (v1.3.1).
+  function pauseOthers() {
+    slides().forEach(function (sl, i) {
+      if (i === cur) return;
+      var v = sl.querySelector('video');
+      if (v && !v.paused) v.pause();
+    });
+  }
+
   function update() {
+    pauseOthers();
     var n = slides().length;
     if (count) count.textContent = n > 1 ? (cur + 1) + ' / ' + n : '';
     if (prev) prev.disabled = cur <= 0;
@@ -74,6 +84,7 @@ function guruGallery(root) {
   var down = false, startX = 0, startLeft = 0, moved = false;
   track.addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
+    if (e.target.closest && e.target.closest('video')) return; // film controls (seek bar, volume) keep the mouse
     down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
     track.classList.add('is-dragging');
   });
@@ -109,6 +120,19 @@ function guruGallery(root) {
         slide.setAttribute('role', 'group');
         slide.setAttribute('aria-roledescription', 'slide');
         slide.setAttribute('aria-label', (i + 1) + ' / ' + items.length);
+        if (it.v) {
+          // Film slide (v1.3.1): first in the slider when the item has a film and pictures.
+          slide.className += ' gg-slide-video';
+          var vid = document.createElement('video');
+          vid.controls = true;
+          vid.playsInline = true;
+          vid.setAttribute('playsinline', '');
+          vid.preload = 'metadata';
+          vid.src = it.v;
+          slide.appendChild(vid);
+          track.appendChild(slide);
+          return;
+        }
         var img = document.createElement('img');
         img.src = it.s;
         img.alt = it.a || '';
@@ -122,7 +146,11 @@ function guruGallery(root) {
       root.classList.toggle('is-hidden', !items || !items.length);
       render();
     },
-    clear: function () { track.innerHTML = ''; root.classList.add('is-hidden'); render(); },
+    clear: function () {
+      track.querySelectorAll('video').forEach(function (v) { v.pause(); v.removeAttribute('src'); v.load(); });
+      track.innerHTML = ''; root.classList.add('is-hidden'); render();
+    },
+    video: function () { var s = slides()[cur]; return s ? s.querySelector('video') : null; },
     go: function (i) { go(i); },
     step: function (d) { go(cur + d); },
     count: function () { return slides().length; }
@@ -206,8 +234,15 @@ function guruModal(ids) {
         tagsEl.appendChild(pill);
       });
     }
+    var pics = [];
+    if (gallery) {
+      try { pics = JSON.parse(card.getAttribute('data-gallery') || '[]'); } catch (err) { pics = []; }
+    }
+    // Film and pictures (v1.3.1): the film becomes the first slide of the slider.
+    var mixed = !!(src && gallery && pics.length);
+
     if (videoEl) {
-      if (src) {
+      if (src && !mixed) {
         if (videoWrap) { videoWrap.classList.remove('is-hidden'); videoWrap.style.display = ''; }
         videoEl.src = src;
         videoEl.play().catch(function () {});
@@ -217,11 +252,13 @@ function guruModal(ids) {
       }
     }
     if (gallery) {
-      var pics = [];
-      if (!src) {
-        try { pics = JSON.parse(card.getAttribute('data-gallery') || '[]'); } catch (err) { pics = []; }
+      if (mixed) {
+        gallery.set([{ v: src }].concat(pics));
+        var first = gallery.video();
+        if (first) { var pr = first.play(); if (pr && pr.catch) pr.catch(function () {}); }
+      } else {
+        gallery.set(src ? [] : pics);
       }
-      gallery.set(pics);
     }
     collapseForm();
     overlay.classList.add('open');

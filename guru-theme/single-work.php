@@ -30,7 +30,20 @@ while ( have_posts() ) :
 
 		<?php
 		$guru_body = apply_filters( 'the_content', get_the_content() );
-		if ( $guru['video'] ) :
+		if ( $guru['video'] && $guru['gallery'] ) :
+			// Film first, then the pictures, in one slider (v1.3.1). Pictures are taken out of the text below.
+			$guru_slides = array_merge(
+				array(
+					array(
+						'video'  => $guru['video'],
+						'poster' => $guru['image'],
+					),
+				),
+				$guru['gallery']
+			);
+			guru_gallery_markup( $guru_slides, 'wrkSingleGallery', $guru['title'] );
+			$guru_body = guru_strip_content_images( $guru_body );
+		elseif ( $guru['video'] ) :
 			?>
 			<div class="wrk-single-media">
 				<video controls playsinline preload="metadata"

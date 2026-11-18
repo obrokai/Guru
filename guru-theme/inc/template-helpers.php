@@ -189,8 +189,9 @@ function guru_get_work_data( $post_id = null ) {
 		'client'  => (string) get_post_meta( $post_id, '_guru_client', true ),
 		'video'   => $video,
 		'image'   => get_the_post_thumbnail_url( $post_id, 'large' ),
-		// Items without a film show their pictures in a slider instead (v1.2.15).
-		'gallery' => $video ? array() : guru_work_gallery( $post_id ),
+		// Pictures for the slider (v1.2.15). Items with a film show it as the first
+		// slide, followed by these pictures (v1.3.1, client request 11-18).
+		'gallery' => guru_work_gallery( $post_id ),
 		'cats'    => implode( ' ', array_unique( $slugs ) ),
 		'tags'    => $tags ? $tags : $names,
 	);
@@ -287,25 +288,33 @@ function guru_gallery_markup( $items = array(), $id = '', $title = '' ) {
 	$count = count( $items );
 	?>
 	<div class="guru-gallery<?php echo $count ? '' : ' is-hidden'; ?>"<?php echo $id ? ' id="' . esc_attr( $id ) . '"' : ''; ?>
-		role="region" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Project images', 'guru' ); ?>"
+		role="region" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Project film and images', 'guru' ); ?>"
 		data-count="<?php echo (int) $count; ?>">
 		<div class="gg-track" tabindex="0">
 			<?php foreach ( $items as $i => $item ) : ?>
-				<div class="gg-slide" role="group" aria-roledescription="slide"
+				<div class="gg-slide<?php echo ! empty( $item['video'] ) ? ' gg-slide-video' : ''; ?>" role="group" aria-roledescription="slide"
 					aria-label="<?php echo esc_attr( ( $i + 1 ) . ' / ' . $count ); ?>">
-					<img src="<?php echo esc_url( $item['src'] ); ?>"
-						alt="<?php echo esc_attr( $item['alt'] ? $item['alt'] : $title ); ?>"
-						<?php if ( $item['w'] && $item['h'] ) : ?>
-							width="<?php echo (int) $item['w']; ?>" height="<?php echo (int) $item['h']; ?>"
-						<?php endif; ?>
-						<?php echo $i ? 'loading="lazy"' : 'fetchpriority="high"'; ?> decoding="async" draggable="false" />
+					<?php if ( ! empty( $item['video'] ) ) : ?>
+						<?php // The film as the first slide when the item also has pictures (v1.3.1). ?>
+						<video controls playsinline preload="metadata"
+							<?php echo ! empty( $item['poster'] ) ? 'poster="' . esc_url( $item['poster'] ) . '"' : ''; ?>>
+							<source src="<?php echo esc_url( $item['video'] ); ?>" type="video/mp4" />
+						</video>
+					<?php else : ?>
+						<img src="<?php echo esc_url( $item['src'] ); ?>"
+							alt="<?php echo esc_attr( $item['alt'] ? $item['alt'] : $title ); ?>"
+							<?php if ( $item['w'] && $item['h'] ) : ?>
+								width="<?php echo (int) $item['w']; ?>" height="<?php echo (int) $item['h']; ?>"
+							<?php endif; ?>
+							<?php echo $i ? 'loading="lazy"' : 'fetchpriority="high"'; ?> decoding="async" draggable="false" />
+					<?php endif; ?>
 				</div>
 			<?php endforeach; ?>
 		</div>
-		<button type="button" class="gg-nav gg-prev" aria-label="<?php esc_attr_e( 'Previous image', 'guru' ); ?>">
+		<button type="button" class="gg-nav gg-prev" aria-label="<?php esc_attr_e( 'Previous', 'guru' ); ?>">
 			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12.5 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 		</button>
-		<button type="button" class="gg-nav gg-next" aria-label="<?php esc_attr_e( 'Next image', 'guru' ); ?>">
+		<button type="button" class="gg-nav gg-next" aria-label="<?php esc_attr_e( 'Next', 'guru' ); ?>">
 			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 		</button>
 		<div class="gg-count" aria-live="polite"></div>
@@ -432,6 +441,7 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 		data-cats="<?php echo esc_attr( $data['cats'] ); ?>"
 		<?php if ( $data['video'] ) : ?>
 			data-video="<?php echo esc_url( $data['video'] ); ?>"
+			<?php echo guru_gallery_attr( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper; pictures after the film (v1.3.1). ?>
 		<?php else : ?>
 			<?php // No film: its pictures open in the lightbox slider; with no pictures either, the card opens the item's own page. ?>
 			data-url="<?php echo esc_url( get_permalink( $post_id ? $post_id : get_the_ID() ) ); ?>"

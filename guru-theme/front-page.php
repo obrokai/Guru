@@ -197,6 +197,7 @@ $guru_cta   = guru_mod( 'guru_home_about_cta' );
 					<div class="wrk-card <?php echo esc_attr( $guru_size . ' ' . $guru_class ); ?>"
 						<?php if ( $guru_data['video'] ) : ?>
 							data-video="<?php echo esc_url( $guru_data['video'] ); ?>"
+							<?php echo guru_gallery_attr( $guru_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper; pictures after the film (v1.3.1). ?>
 						<?php else : ?>
 							data-url="<?php echo esc_url( get_permalink() ); ?>"
 							<?php echo guru_gallery_attr( $guru_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>

@@ -8,6 +8,14 @@
 
 ---
 
+## 1.3.1 — 2026-11-18
+
+- **有影片也有圖片的作品：影片和圖片放在同一個輪播**（客戶：「如果又有 video 又有圖片的話，它好像只可以 show 到 video，不能有圖片」；Mike：影片＋圖片也用 slide）。staging 上「留心蛋 Mr. Safegg」就是這種（影片＋精選圖片＋內文 3 張圖）。
+  - `guru_get_work_data()` 的 `gallery` 不再因為有影片而清空；首頁與 Work 頁的影片卡片也帶 `data-gallery`。
+  - 燈箱：有影片又有圖片時，影片變成輪播第一張（自動播放），後面接圖片；切到別張時影片暫停，關燈箱時停止並清空。只有影片、或只有圖片的作品維持原樣。影片那一張不能用滑鼠拖曳換頁（保留影片進度條操作），用箭頭、圓點、鍵盤或手機滑動。
+  - 作品頁 `single-work.php`：同樣用一個輪播（影片在前、精選圖片當封面），內文的圖片移到輪播裡。
+  - `guru_gallery_markup()` 支援影片項目；`guruGallery().set()` 支援 `{v: 影片網址}`；`.gg-slide video` 黑底、contain。
+
 ## 1.3.0 — 2026-11-18
 
 客戶 11-17 的《Website 2.0 Programmer 執行規格》第一批（#1–#3、#10–#13、首頁 H1、導覽與表單）。客戶已在 staging 裝好 Yoast SEO，主題不輸出任何 title／description／canonical／robots／schema，全部交給 Yoast。
