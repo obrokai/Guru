@@ -3,8 +3,8 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.2.16
-Released:    2026-11-17
+Version:     1.3.0
+Released:    2026-11-18
 Requires at least: 6.0
 Requires PHP: 7.4
 License:     Proprietary
@@ -1710,3 +1710,93 @@ Text Domain: guru
 
   /* Honeypot field for the contact forms: off-screen for people, present for bots. */
   .cf-hp { position: absolute !important; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
+
+  /* ================================================== v1.3.0 — CLIENT SPEC BATCH 1 */
+  /* Skip link: hidden until a keyboard user tabs to it (spec #2). */
+  .skip-link {
+    position: fixed;
+    left: 16px;
+    top: -120px;
+    z-index: 100000;
+    background: var(--ink);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: top .15s;
+  }
+  .skip-link:focus { top: 16px; outline: 2px solid var(--lime); outline-offset: 2px; }
+  .site-main { display: block; }
+  .site-main:focus { outline: none; }
+
+  /* Homepage hero H1 (spec 6.1): bottom-left, near-white, readable on any frame. */
+  .gh .gh-bottom { z-index: 3; } /* text and buttons above the backdrop */
+  .gh-copy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    max-width: 760px;
+  }
+  /* Dark backdrop tied to the text block: full strength under the text, fading out
+     over 420px to the right and 120px above it, so white text keeps at least 4.5:1 even
+     on the film's white frames, at any screen width. */
+  .gh-copy::before {
+    content: '';
+    position: absolute;
+    top: -120px; bottom: -48px; left: -80px; right: -420px;
+    background: linear-gradient(to right, rgba(14,14,16,0.78) 0%, rgba(14,14,16,0.70) calc(100% - 420px), rgba(14,14,16,0.42) calc(100% - 260px), rgba(14,14,16,0.14) calc(100% - 110px), rgba(14,14,16,0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.55) 70px, #000 120px);
+            mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.55) 70px, #000 120px);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .gh-copy { isolation: isolate; }
+  .gh-title {
+    margin: 0;
+    font-size: clamp(36px, 3vw, 44px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 1px 18px rgba(14,14,16,0.35);
+    text-wrap: balance;
+  }
+  .gh-intro {
+    margin: 0;
+    max-width: 600px;
+    font-size: 17px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: rgba(255,255,255,0.88);
+    text-shadow: 0 1px 12px rgba(14,14,16,0.35);
+  }
+  .gh-copy .gh-btns { flex-wrap: wrap; margin-top: 6px; }
+  .gh-copy .gh-btn-solid, .gh-copy .gh-btn-ghost { padding: 16px 28px; font-size: 16px; }
+
+  /* Short screens: let the hero grow with its text instead of clipping it. */
+  @media (max-height: 700px) {
+    .gh { max-height: none; min-height: 100vh; }
+  }
+  @media (max-width: 767px) {
+    .gh { max-height: none; height: auto; }
+    .gh-title { font-size: clamp(30px, 8.4vw, 36px); line-height: 1.1; }
+    .gh-intro { font-size: 15px; }
+    .gh-copy { gap: 14px; max-width: 100%; }
+    .gh-copy .gh-btns { width: 100%; }
+    .gh-copy .gh-btn-solid { flex: 1 1 100%; justify-content: center; }
+    .gh-copy .gh-btn-ghost { flex: 1 1 0; justify-content: center; padding: 14px 16px; font-size: 15px; }
+  }
+
+  /* Accordion rows are H3s now (spec #1): the heading adds no styling of its own. */
+  .svc-acc-h { margin: 0; font: inherit; letter-spacing: inherit; }
+
+  /* Card titles are real links (spec #13): look unchanged. */
+  .wrk-card-link, .prj-link { color: inherit; text-decoration: none; }
+  .wrk-card-link:focus-visible, .prj-link:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+
+  /* Play overlays are buttons now: drop the browser's button look. */
+  .wrk-play-btn, .prj-play-btn { border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; width: 100%; }
+  .wrk-play-btn:focus-visible, .prj-play-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: -3px; }

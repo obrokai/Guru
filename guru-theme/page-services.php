@@ -40,7 +40,8 @@ $guru_work_url = get_post_type_archive_link( 'work' );
 
 <div class="srv-wrap">
 	<aside class="srv-sidebar">
-		<p class="srv-sidebar-label"><?php esc_html_e( 'What We Do', 'guru' ); ?></p>
+		<?php // The page's one H1 (v1.3.0, client spec #1); each solution below is an H2. ?>
+		<h1 class="srv-sidebar-label srv-page-title"><?php echo esc_html( guru_mod( 'guru_solutions_heading' ) ); ?></h1>
 
 		<nav class="srv-nav">
 			<?php foreach ( $guru_items as $guru_i => $guru_item ) : ?>
@@ -58,7 +59,7 @@ $guru_work_url = get_post_type_archive_link( 'work' );
 		</a>
 	</aside>
 
-	<main class="srv-main" id="srvMain">
+	<div class="srv-main" id="srvMain">
 		<?php if ( ! $guru_items ) : ?>
 			<p><?php esc_html_e( 'No solutions have been added yet. Add them under Solutions in the admin.', 'guru' ); ?></p>
 		<?php endif; ?>
@@ -69,7 +70,7 @@ $guru_work_url = get_post_type_archive_link( 'work' );
 					<span class="srv-panel-tag-dot"></span><?php echo esc_html( $guru_item['tag'] ); ?>
 				</div>
 
-				<h1 class="srv-panel-title"><?php echo esc_html( $guru_item['title'] ); ?></h1>
+				<h2 class="srv-panel-title"><?php echo esc_html( $guru_item['title'] ); ?></h2>
 
 				<?php if ( $guru_item['excerpt'] ) : ?>
 					<p class="srv-panel-desc"><?php echo esc_html( $guru_item['excerpt'] ); ?></p>
@@ -99,7 +100,7 @@ $guru_work_url = get_post_type_archive_link( 'work' );
 				<?php get_template_part( 'template-parts/solution-form', null, array( 'solution' => $guru_item['title'] ) ); ?>
 			</div>
 		<?php endforeach; ?>
-	</main>
+	</div>
 </div>
 
 <?php

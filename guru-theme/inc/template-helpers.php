@@ -447,7 +447,8 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 			<?php if ( $data['video'] ) : ?>
 				<?php // Loaded and played only while on screen (main.js); the Work page can hold a dozen films. ?>
 				<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" muted loop playsinline preload="none" data-lazy-play></video>
-				<div class="prj-play-btn"></div>
+				<?php /* translators: %s: project title. */ ?>
+				<button type="button" class="prj-play-btn" aria-label="<?php echo esc_attr( sprintf( __( 'Play film: %s', 'guru' ), $data['title'] ) ); ?>"></button>
 				<div class="prj-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
 			<?php elseif ( $data['image'] ) : ?>
 				<img src="<?php echo esc_url( $data['image'] ); ?>"
@@ -467,7 +468,8 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
-			<h3 class="prj-title"><?php echo esc_html( $data['title'] ); ?></h3>
+			<?php // A real link to the project page, so search engines and keyboards can reach it (client spec #13). ?>
+			<h3 class="prj-title"><a class="prj-link" href="<?php echo esc_url( get_permalink( $post_id ? $post_id : get_the_ID() ) ); ?>"><?php echo esc_html( $data['title'] ); ?></a></h3>
 			<?php if ( $data['client'] ) : ?>
 				<p class="prj-client"><?php echo esc_html( $data['client'] ); ?></p>
 			<?php endif; ?>

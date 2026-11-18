@@ -10,7 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-wp_footer();
 ?>
+</main>
+<?php wp_footer(); ?>
 </body>
 </html>

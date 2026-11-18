@@ -79,7 +79,7 @@ function guru_handle_contact() {
 	$body .= "\n" . __( 'Message', 'guru' ) . ":\n" . ( $message ? $message : '—' ) . "\n";
 
 	// Archive it first, so a mail failure never loses the enquiry.
-	guru_enquiry_insert(
+	$stored = guru_enquiry_insert(
 		array(
 			'name'       => $name,
 			'company'    => $company,
@@ -106,7 +106,14 @@ function guru_handle_contact() {
 		'Reply-To: ' . $name . ' <' . $email . '>',
 	);
 
-	wp_mail( $to, $subject, $body, $headers );
+	$mailed = wp_mail( $to, $subject, $body, $headers );
+
+	// Only report success when the enquiry actually went somewhere (v1.3.0):
+	// neither stored nor e-mailed means it is lost, so ask the visitor to retry.
+	if ( ! $stored && ! $mailed ) {
+		wp_safe_redirect( $fail );
+		exit;
+	}
 
 	wp_safe_redirect( $ok );
 	exit;

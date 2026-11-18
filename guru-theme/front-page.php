@@ -17,13 +17,13 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 ?>
 
 <div class="gh-wrap">
-	<section class="gh">
+	<section class="gh" aria-labelledby="home-title">
 		<?php
 		$guru_hero_desktop = guru_hero_video_url( 'desktop' );
 		$guru_hero_mobile  = guru_hero_video_url( 'mobile' );
 		if ( $guru_hero_desktop || $guru_hero_mobile ) :
 			?>
-			<video id="heroVideo" autoplay muted playsinline preload="auto">
+			<video id="heroVideo" autoplay muted playsinline preload="auto" aria-hidden="true">
 				<?php if ( $guru_hero_mobile ) : ?>
 					<source src="<?php echo esc_url( $guru_hero_mobile ); ?>" media="(max-width: 900px)" type="video/mp4" />
 				<?php endif; ?>
@@ -33,15 +33,31 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 			</video>
 		<?php endif; ?>
 
+		<?php
+		/*
+		 * The homepage's one H1, in the HTML from the start (v1.3.0, client spec #1 / 6.1).
+		 * Bottom-left, clear of the logo in the middle of the film; a local scrim behind
+		 * it keeps it readable on bright and dark frames. Edited in Customize → Homepage.
+		 */
+		$guru_hero_title = guru_mod( 'guru_hero_title' );
+		$guru_hero_intro = guru_mod( 'guru_hero_intro' );
+		?>
 		<div class="gh-bottom">
-			<div class="gh-btns">
-				<?php // Scrolls to the Our Work block below, as on the static page. ?>
-				<a href="#work" class="gh-btn-solid">
-					<?php esc_html_e( 'Our Works', 'guru' ); ?> <span style="opacity:.7">&rarr;</span>
-				</a>
-				<a href="<?php echo esc_url( $guru_solutions_url ); ?>" class="gh-btn-ghost">
-					<?php esc_html_e( 'Our Services', 'guru' ); ?>
-				</a>
+			<div class="gh-copy">
+				<?php if ( $guru_hero_title ) : ?>
+					<h1 class="gh-title" id="home-title"><?php echo esc_html( $guru_hero_title ); ?></h1>
+				<?php endif; ?>
+				<?php if ( $guru_hero_intro ) : ?>
+					<p class="gh-intro"><?php echo esc_html( $guru_hero_intro ); ?></p>
+				<?php endif; ?>
+				<div class="gh-btns">
+					<a href="#contact" class="gh-btn-solid">
+						<?php echo esc_html( guru_mod( 'guru_hero_cta_contact' ) ); ?> <span aria-hidden="true" style="opacity:.7">&rarr;</span>
+					</a>
+					<?php // Scrolls to the Our Work block below, as on the static page. ?>
+					<a href="#work" class="gh-btn-ghost"><?php echo esc_html( guru_mod( 'guru_hero_cta_work' ) ); ?></a>
+					<a href="<?php echo esc_url( $guru_solutions_url ); ?>" class="gh-btn-ghost"><?php echo esc_html( guru_mod( 'guru_hero_cta_solutions' ) ); ?></a>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -119,12 +135,15 @@ $guru_cta   = guru_mod( 'guru_home_about_cta' );
 						$guru_solutions->the_post();
 						?>
 						<div class="svc-acc-item">
-							<button class="svc-acc-head" type="button">
-								<span class="svc-acc-name"><?php the_title(); ?></span>
-								<svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-									<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-								</svg>
-							</button>
+							<?php // H3 under the "Our Solutions" H2; the button inside keeps the row operable (client spec #1). ?>
+							<h3 class="svc-acc-h">
+								<button class="svc-acc-head" type="button" aria-expanded="false">
+									<span class="svc-acc-name"><?php the_title(); ?></span>
+									<svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+									</svg>
+								</button>
+							</h3>
 							<div class="svc-acc-body">
 								<div class="svc-acc-inner">
 									<p class="svc-acc-desc"><?php echo esc_html( get_the_excerpt() ); ?></p>
@@ -191,7 +210,8 @@ $guru_cta   = guru_mod( 'guru_home_about_cta' );
 								<video muted loop playsinline preload="none" data-lazy-play>
 									<source src="<?php echo esc_url( $guru_data['video'] ); ?>" type="video/mp4" />
 								</video>
-								<div class="wrk-play-btn"></div>
+								<?php /* translators: %s: project title. */ ?>
+								<button type="button" class="wrk-play-btn" aria-label="<?php echo esc_attr( sprintf( __( 'Play film: %s', 'guru' ), $guru_data['title'] ) ); ?>"></button>
 								<div class="wrk-card-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
 							</div>
 						<?php else : ?>
@@ -215,7 +235,8 @@ $guru_cta   = guru_mod( 'guru_home_about_cta' );
 									<?php endforeach; ?>
 								</div>
 							<?php endif; ?>
-							<h3 class="wrk-card-title"><?php echo esc_html( $guru_data['title'] ); ?></h3>
+							<?php // A real link to the project page, so search engines and keyboards can reach it (client spec #13). ?>
+							<h3 class="wrk-card-title"><a class="wrk-card-link" href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( $guru_data['title'] ); ?></a></h3>
 						</div>
 					</div>
 					<?php

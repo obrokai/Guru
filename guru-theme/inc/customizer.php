@@ -49,7 +49,14 @@ function guru_default( $id ) {
 			'guru_contact_heading'   => 'Talk to Us and We Build Something Great Together.',
 			'guru_contact_cta_heading' => "Let's Build Something Great Together.",
 			'guru_contact_cta_button'  => 'Get In Touch',
+			// Homepage hero (v1.3.0). Draft copy from the client's spec of 2026-11-17 — GURU to confirm.
+			'guru_hero_title'        => 'Digital Marketing for Hong Kong, China & Global Growth',
+			'guru_hero_intro'        => 'GURU combines strategy, creative, media, creators, search and technology to help brands enter markets, build demand and measure business impact.',
+			'guru_hero_cta_contact'  => 'Discuss Your Growth Challenge',
+			'guru_hero_cta_work'     => 'Our Work',
+			'guru_hero_cta_solutions' => 'Our Solutions',
 			// Homepage.
+			'guru_solutions_heading' => 'Our Solutions',
 			'guru_solutions_lead'    => 'We craft integrated digital marketing solutions for ambitious brands — blending strategy, creativity, media, data, technology and AI into measurable growth.',
 			'guru_home_about_title'  => 'Your Holistic Digital Partner',
 			'guru_home_about_stats'  => "200 |  | Digital Specialists\n500 | + | International Clients\n6 |  | Offices\n100 | + | Awards & Recognitions",
@@ -232,7 +239,13 @@ function guru_customize_register( $wp_customize ) {
 		$wp_customize,
 		'guru_home',
 		array(
+			'guru_hero_title'         => array( __( 'Hero — main heading (H1)', 'guru' ), 'text', __( 'The one main heading of the homepage. Search engines read it, so keep it a plain description of what Guru does.', 'guru' ) ),
+			'guru_hero_intro'         => array( __( 'Hero — intro line', 'guru' ), 'textarea', __( 'Leave empty to hide.', 'guru' ) ),
+			'guru_hero_cta_contact'   => array( __( 'Hero — main button (goes to the contact form)', 'guru' ), 'text' ),
+			'guru_hero_cta_work'      => array( __( 'Hero — "Work" button', 'guru' ), 'text' ),
+			'guru_hero_cta_solutions' => array( __( 'Hero — "Solutions" button', 'guru' ), 'text' ),
 			'guru_solutions_lead'   => array( __( '"Our Solutions" intro', 'guru' ), 'textarea' ),
+			'guru_solutions_heading' => array( __( 'Solutions page — main heading (H1)', 'guru' ), 'text', __( 'Shown above the list of solutions on the Solutions page.', 'guru' ) ),
 			'guru_home_about_title' => array( __( 'About block — heading', 'guru' ), 'text' ),
 			'guru_home_about_stats' => array( __( 'About block — statistics', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: number | suffix | label (e.g. "500 | + | International Clients").', 'guru' ) ),
 			'guru_home_about_copy'  => array( __( 'About block — paragraphs', 'guru' ), 'textarea', __( 'Leave an empty line between paragraphs.', 'guru' ) ),

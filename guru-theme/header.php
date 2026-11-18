@@ -32,12 +32,13 @@ $guru_nav = guru_nav_items();
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<a class="skip-link" href="#main-content"><?php esc_html_e( 'Skip to main content', 'guru' ); ?></a>
 
 <?php if ( $guru_intro ) : ?>
 	<div class="pg-intro" aria-hidden="true"></div>
 <?php endif; ?>
 
-<nav class="gn-nav">
+<nav class="gn-nav" aria-label="<?php esc_attr_e( 'Main', 'guru' ); ?>">
 	<div class="gn-nav-inner">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="gn-logo" aria-label="<?php esc_attr_e( 'Guru — home', 'guru' ); ?>">
 			<img src="<?php echo $guru_logo; ?>" alt="<?php esc_attr_e( 'Guru', 'guru' ); ?>" />
@@ -88,3 +89,6 @@ $guru_nav = guru_nav_items();
 		<a href="<?php echo esc_url( $guru_wa ); ?>" class="gn-link-whatsapp" target="_blank" rel="noopener"><?php esc_html_e( 'WhatsApp', 'guru' ); ?></a>
 	</div>
 </div>
+
+<?php // One main landmark per page; header above and footer below stay outside it (client spec #2). Closed in footer.php / footer-minimal.php. ?>
+<main id="main-content" class="site-main" tabindex="-1">

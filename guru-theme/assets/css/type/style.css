@@ -65,3 +65,12 @@
 @media (max-width: 980px) {
   .ftr-cta-heading { font-size: calc(clamp(30px, 8vw, 44px) * var(--guru-fs-heading, 1)); }
 }
+.skip-link { font-size: calc(15px * var(--guru-fs-body, 1)); }
+.gh-title { font-size: calc(clamp(36px, 3vw, 44px) * var(--guru-fs-hero, 1)); }
+.gh-intro { font-size: calc(17px * var(--guru-fs-body, 1)); }
+@media (max-width: 767px) {
+  .gh-title { font-size: calc(clamp(30px, 8.4vw, 36px) * var(--guru-fs-hero, 1)); }
+}
+@media (max-width: 767px) {
+  .gh-intro { font-size: calc(15px * var(--guru-fs-body, 1)); }
+}

@@ -47,6 +47,7 @@ $guru_services = array(
 
 $guru_sent = isset( $_GET['contact'] ) ? sanitize_key( wp_unslash( $_GET['contact'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 ?>
+</main>
 
 <footer id="contact" class="ftr">
 	<?php if ( ! $guru_bare ) : ?>

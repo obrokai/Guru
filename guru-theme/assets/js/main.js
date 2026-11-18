@@ -182,7 +182,10 @@ function guruModal(ids) {
     if (scrollHint) scrollHint.classList.remove('show');
   }
 
+  var lastFocus = null;
+
   function open(card) {
+    lastFocus = document.activeElement;
     var src    = card.getAttribute('data-video');
     var title  = card.getAttribute('data-title') || '';
     var client = card.getAttribute('data-client') || '';
@@ -225,6 +228,8 @@ function guruModal(ids) {
     overlay.scrollTop = 0;
     document.body.style.overflow = 'hidden';
     setTimeout(updateScrollHint, 100);
+    // Keyboard users land inside the lightbox (v1.3.0).
+    if (closeBtn) setTimeout(function () { closeBtn.focus({ preventScroll: true }); }, 60);
   }
   function close() {
     overlay.classList.remove('open');
@@ -232,6 +237,9 @@ function guruModal(ids) {
     if (videoEl) { videoEl.pause(); videoEl.removeAttribute('src'); }
     if (gallery) gallery.clear();
     collapseForm();
+    // Back to the card that opened it.
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (err) {} }
+    lastFocus = null;
   }
 
   if (contactBtn && formWrap) {
@@ -268,7 +276,9 @@ function guruModal(ids) {
         e.preventDefault();
         modalForm.elements['phone'].focus();
         if (formNote) { formNote.style.color = '#ff6b6b'; formNote.textContent = phoneErr; }
+        return;
       }
+      lockSubmit(modalForm, e);
     });
   }
 
@@ -370,6 +380,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if (!el) return;
     e.preventDefault();
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
+    // Skip link: move keyboard focus into the main content too, not just the view.
+    if (a.classList.contains('skip-link')) el.focus({ preventScroll: true });
   });
 });
 
@@ -501,9 +513,14 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   var mouse = window.matchMedia('(hover: hover) and (pointer: fine)');
   var timer = null;
 
+  function setOpen(item, on) {
+    item.classList.toggle('open', on);
+    var h = item.querySelector('.svc-acc-head');
+    if (h) h.setAttribute('aria-expanded', on ? 'true' : 'false');
+  }
   function open(item) {
-    items.forEach(function (i) { if (i !== item) i.classList.remove('open'); });   // single-open
-    item.classList.add('open');
+    items.forEach(function (i) { if (i !== item) setOpen(i, false); });   // single-open
+    setOpen(item, true);
   }
 
   items.forEach(function (item) {
@@ -525,8 +542,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
         return;
       }
       var isOpen = item.classList.contains('open');
-      items.forEach(function (i) { i.classList.remove('open'); });
-      if (!isOpen) item.classList.add('open');
+      items.forEach(function (i) { setOpen(i, false); });
+      if (!isOpen) setOpen(item, true);
     });
   });
 })();
@@ -710,7 +727,9 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
       form.elements['phone'].focus();
       note.style.color = '#c0392b';
       note.textContent = phoneErr;
+      return;
     }
+    lockSubmit(form, e);
   });
 })();
 
@@ -734,7 +753,25 @@ document.querySelectorAll('.spf-form').forEach(function (form) {
       e.preventDefault();
       form.elements['phone'].focus();
       if (note) { note.style.color = '#c0392b'; note.textContent = phoneErr; }
+      return;
     }
+    lockSubmit(form, e);
+  });
+});
+
+/* ── Block a second click while the form is on its way (v1.3.0) ── */
+function lockSubmit(form, e) {
+  if (form.getAttribute('data-sending')) { e.preventDefault(); return; }
+  form.setAttribute('data-sending', '1');
+  var btn = form.querySelector('[type="submit"]');
+  if (btn) { btn.setAttribute('aria-disabled', 'true'); btn.style.opacity = '0.6'; }
+}
+// Coming back with the browser's Back button: allow sending again.
+window.addEventListener('pageshow', function () {
+  document.querySelectorAll('form[data-sending]').forEach(function (f) {
+    f.removeAttribute('data-sending');
+    var btn = f.querySelector('[type="submit"]');
+    if (btn) { btn.removeAttribute('aria-disabled'); btn.style.opacity = ''; }
   });
 });
 

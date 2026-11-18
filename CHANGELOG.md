@@ -8,6 +8,25 @@
 
 ---
 
+## 1.3.0 — 2026-11-18
+
+客戶 11-17 的《Website 2.0 Programmer 執行規格》第一批（#1–#3、#10–#13、首頁 H1、導覽與表單）。客戶已在 staging 裝好 Yoast SEO，主題不輸出任何 title／description／canonical／robots／schema，全部交給 Yoast。
+
+- **#1 標題階層**：
+  - 首頁新增唯一 H1（`.gh-title`，左下、近白 alpha .92、桌機 36–44px、手機 30–36px），下方 intro 一句與三個按鈕（Discuss Your Growth Challenge → `#contact`、Our Work、Our Solutions）。文字都在 Customize → Guru site settings → Homepage（新欄位 `guru_hero_title`／`guru_hero_intro`／`guru_hero_cta_*`），預設值為規格的英文草稿，待 GURU 確認。舊的「Our Works／Our Services」兩顆按鈕由這三顆取代。
+  - 文字後方加局部深色漸層（`.gh-copy::before`，跟著文字區塊，右側 420px、上方 120px 漸淡），白色影格上白字對比約 6:1（規格要求 4.5:1）。影片加 `aria-hidden`。
+  - 視窗 ≤767px 寬或 ≤700px 高時 hero 不再限制高度，文字不會被裁掉。
+  - 首頁 Our Solutions 手風琴每列改成 `<h3><button aria-expanded>`。
+  - Solutions 頁：側欄標籤改成頁面唯一 H1（Customizer `guru_solutions_heading`，預設「Our Solutions」，手機也顯示在膠囊列上方）；九個服務標題由 H1 改 H2。
+- **#2 Main／Skip link**：`header.php` 開 `<main id="main-content" tabindex="-1">`，`footer.php`／`footer-minimal.php` 關閉；選單與頁尾在 main 外。Solutions 頁原本的 `<main class="srv-main">` 改 div（id 不變）。第一個 Tab 出現「Skip to main content」，按下後焦點移進 main。
+- **#3 語言**：新檔 `inc/seo.php`。前台 `<html lang>` 改 `en-HK`（後台仍是繁中）；Yoast `og:locale` 跟著改（Yoast 不認得 en_HK，會輸出 en_US）。之後裝多語外掛時自動讓出。
+- **#10／#12 SEO**：主題沒有寫死 `/staging/`。Yoast 沒填 description 時，用自動描述補上（首頁＝hero intro、Solutions＝intro、Investor＝介紹、Work 列表＝固定一句、文章／作品＝摘要或內文開頭，作品沒內文時＝「標題 — a project for 客戶」）。沒有任何 SEO 外掛時主題才自己印 description。Investor 完整列表（`?docs=…`）設 `noindex, follow`。
+- **#13 可爬取連結**：首頁與 Work 頁的作品卡片標題改成真正的 `<a href="作品頁">`，播放鈕改 `<button>`；點擊行為不變（有影片／圖片開燈箱）。卡片因此可以用鍵盤操作（原本只能用滑鼠）。
+- **燈箱**：開啟時焦點移到關閉鈕，Esc 關閉後回到原本的卡片。
+- **表單**：只有在「存進後台」或「寄出 email」至少一項成功時才顯示成功，否則顯示錯誤（以前一律顯示成功）。送出後按鈕鎖住，避免連按重複送出；用瀏覽器返回時解鎖。
+
+本機測試（WordPress 7.1＋Yoast 28.8）：六頁各一個 H1、一個 main、lang=en-HK；Yoast 的 title／description／canonical／robots／JSON-LD 各一份、無重複；手機 375px 無橫向捲動；`tools/test-form.py` 五項全過。
+
 ## 1.2.16 — 2026-11-17
 
 - **選單改白色**（客戶 Fontane：「Menu bar 的顏色麻煩調校跟背景白色一樣，現在是米黃色」；Mike：加一點陰影，不然跟底部看不清）。`.gn-logo`／`.gn-pill` 由 `rgba(247,244,232,.92)` 改 `rgba(255,255,255,.94)`，陰影改 `0 2px 14px rgba(14,14,16,.10), 0 0 0 1px rgba(14,14,16,.05)`；手機選單面板 `.gn-mobile-menu` 改 `rgba(255,255,255,.97)`。六個樣式檔（style、about、blog、work、services、investor）都有自己的一份，全部同步。Customizer「Menu background」預設值改 `#ffffff`（staging 沒存過這個值，上傳即生效）。
