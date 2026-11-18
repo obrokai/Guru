@@ -89,7 +89,7 @@ if ( is_home() ) {
 					<span class="art-cat cat-<?php echo esc_attr( $guru_first ); ?>"><?php echo esc_html( $guru_cats[0]->name ); ?></span>
 				<?php endif; ?>
 				<h2 class="art-title"><?php the_title(); ?></h2>
-				<p class="art-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 24 ) ); ?></p>
+				<p class="art-excerpt"><?php echo esc_html( guru_card_excerpt() ); ?></p>
 				<div class="art-meta">
 					<span><?php echo guru_post_date(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- English date (v1.4.0). ?></span>
 				</div>

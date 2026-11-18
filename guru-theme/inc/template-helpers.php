@@ -455,8 +455,13 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 
 		<div class="prj-img">
 			<?php if ( $data['video'] ) : ?>
-				<?php // Loaded and played only while on screen (main.js); the Work page can hold a dozen films. ?>
-				<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" muted loop playsinline preload="none" data-lazy-play<?php echo $data['image'] ? ' poster="' . esc_url( $data['image'] ) . '"' : ''; ?>></video>
+				<?php if ( $data['image'] ) : ?>
+					<?php // Client spec #4 (v1.4.1): the cover picture only; the film loads when the card is clicked (lightbox). ?>
+					<img class="prj-video" src="<?php echo esc_url( $data['image'] ); ?>" alt="<?php echo esc_attr( $data['title'] ); ?>" loading="lazy" />
+				<?php else : ?>
+					<?php // No cover picture yet: a silent preview, loaded and played only while on screen (main.js). ?>
+					<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" muted loop playsinline preload="none" data-lazy-play></video>
+				<?php endif; ?>
 				<?php /* translators: %s: project title. */ ?>
 				<button type="button" class="prj-play-btn" aria-label="<?php echo esc_attr( sprintf( __( 'Play film: %s', 'guru' ), $data['title'] ) ); ?>"></button>
 				<div class="prj-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
@@ -785,3 +790,47 @@ function guru_post_author( $post = null ) {
 	return $name;
 }
 
+
+/**
+ * Card summary for the Insights list (v1.4.1).
+ *
+ * wp_trim_words() counts characters, not words, when the site language is Chinese
+ * (the admin is zh_TW), so cards were cut to 24 letters ("Selecting a Hong Kong KO…").
+ * This trims by length instead: English to the last whole word before $latin
+ * characters, Chinese/Japanese/Korean to $cjk characters. The card's CSS then shows
+ * at most three lines.
+ *
+ * @param int|WP_Post|null $post  Post; default the current one.
+ * @param int              $latin Maximum length for Latin-script text.
+ * @param int              $cjk   Maximum length for CJK text.
+ * @return string Plain text (not escaped).
+ */
+function guru_card_excerpt( $post = null, $latin = 200, $cjk = 96 ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return '';
+	}
+	$text = has_excerpt( $post ) ? $post->post_excerpt : $post->post_content;
+	$text = preg_replace( '/\[\/?[a-z][^\]]*\]/i', '', strip_shortcodes( $text ) ); // old page-builder tags
+	$text = trim( preg_replace( '/\s+/u', ' ', html_entity_decode( wp_strip_all_tags( $text ), ENT_QUOTES, 'UTF-8' ) ) );
+	if ( '' === $text ) {
+		return '';
+	}
+
+	$letters = preg_match_all( '/\S/u', $text );
+	$cjk_n   = preg_match_all( '/[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}]/u', $text );
+	$is_cjk  = $letters && $cjk_n / $letters > 0.3;
+	$max     = $is_cjk ? $cjk : $latin;
+	if ( mb_strlen( $text ) <= $max ) {
+		return $text;
+	}
+
+	$cut = mb_substr( $text, 0, $max );
+	if ( ! $is_cjk ) {
+		$space = mb_strrpos( $cut, ' ' );
+		if ( false !== $space && $space > $max * 0.6 ) {
+			$cut = mb_substr( $cut, 0, $space );
+		}
+	}
+	return preg_replace( '/[\s,.;:!?\-–—、，。；：！？（(「『]+$/u', '', $cut ) . '…';
+}

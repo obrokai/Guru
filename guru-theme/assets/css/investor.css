@@ -67,13 +67,16 @@
   }
 
   /* ══════════ PAGE HERO */
-  /* v1.4.0 (spec 6.3): 1160px content column (+40px gutters) shared with the body below;
-     the label sits 72px under the menu, like the Insights title. */
+  /* v1.4.1: the same frame as Insights, About and Work — 40px gutters inside a
+     1500px column, so the title starts on the same line as theirs (and as the GURU
+     logo on wide screens). The content itself stays 1160px wide (spec 6.3), from the
+     left. The label sits 72px under the menu, like the Insights title. */
   .inv-hero {
     padding: 156px 40px 0;
-    max-width: 1240px;
+    max-width: 1580px;
     margin: 0 auto;
   }
+  .inv-hero > * { max-width: 1160px; }
   .inv-hero-label {
     font-size: 11px; font-weight: 700; letter-spacing: 0.22em;
     text-transform: uppercase; color: var(--ink-3);
@@ -130,11 +133,12 @@
   /* ══════════ MAIN LAYOUT */
   /* 84px from the intro to the document lists; 64px between the lists and the contact card. */
   .inv-body {
-    max-width: 1240px;
+    max-width: 1580px;
     margin: 0 auto;
     padding: 84px 40px 100px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-columns: minmax(0, 756px) 340px; /* 756 + 64 + 340 = 1160 */
+    justify-content: start;
     gap: 64px;
     align-items: start;
   }
@@ -290,7 +294,7 @@
     font-size: 13px;
     line-height: 1.6;
   }
-  .inv-footer-inner { max-width: 1160px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .inv-footer-inner { max-width: 1500px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
   .inv-footer a { color: rgba(255,255,255,0.7); transition: color 0.15s; }
   .inv-footer a:hover { color: #fff; }
 
@@ -302,10 +306,10 @@
     .inv-sidebar { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
   }
   @media (max-width: 980px) {
-    .inv-hero { padding: 140px 20px 0; }
+    .inv-hero { padding: 140px 22px 0; }
     .inv-stock-strip { padding: 28px 20px; }
     .inv-stock-strip-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .inv-body { padding: 64px 20px 72px; }
+    .inv-body { padding: 64px 22px 72px; }
     .inv-sidebar { grid-template-columns: 1fr; }
   }
   @media (max-width: 767px) {

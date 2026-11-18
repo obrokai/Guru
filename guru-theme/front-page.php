@@ -253,10 +253,15 @@ $guru_cta   = guru_mod( 'guru_home_about_cta' );
 
 						<?php if ( $guru_data['video'] ) : ?>
 							<div class="wrk-video-card">
-								<?php // Loaded and played only while on screen (main.js) so the homepage opens fast. ?>
-								<video muted loop playsinline preload="none" data-lazy-play<?php echo $guru_data['image'] ? ' poster="' . esc_url( $guru_data['image'] ) . '"' : ''; ?>>
-									<source src="<?php echo esc_url( $guru_data['video'] ); ?>" type="video/mp4" />
-								</video>
+								<?php if ( $guru_data['image'] ) : ?>
+									<?php // Client spec #4 (v1.4.1): the cover picture only; the film loads when the card is clicked (lightbox). ?>
+									<img src="<?php echo esc_url( $guru_data['image'] ); ?>" alt="<?php echo esc_attr( $guru_data['title'] ); ?>" loading="lazy" />
+								<?php else : ?>
+									<?php // No cover picture yet: a silent preview, loaded and played only while on screen (main.js). ?>
+									<video muted loop playsinline preload="none" data-lazy-play>
+										<source src="<?php echo esc_url( $guru_data['video'] ); ?>" type="video/mp4" />
+									</video>
+								<?php endif; ?>
 								<?php /* translators: %s: project title. */ ?>
 								<button type="button" class="wrk-play-btn" aria-label="<?php echo esc_attr( sprintf( __( 'Play film: %s', 'guru' ), $guru_data['title'] ) ); ?>"></button>
 								<div class="wrk-card-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
