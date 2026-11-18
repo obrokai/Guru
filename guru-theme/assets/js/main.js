@@ -637,7 +637,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     carousels.push({ el: outer, play: function () { go(cur); }, pause: pause });
   });
 
-  function showPanel(slug) {
+  function showPanel(slug, fromUser) {
     var target = document.getElementById('panel-' + slug);
     if (!target) return false;
     var navItem = document.querySelector('.srv-nav-item[data-panel="' + slug + '"]');
@@ -658,7 +658,11 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
       navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
     if (window.innerWidth < 980) {
-      window.scrollTo({ top: main.offsetTop - 120, behavior: 'smooth' });
+      // Phones/tablets: the page title, service row and panel stack in one column.
+      // Only scroll when a tap leaves the panel's top out of view (e.g. "Next" at the
+      // end of a long panel), and go to the page top so the title is not left under
+      // the fixed logo. Never scroll on page load.
+      if (fromUser && main.getBoundingClientRect().top < 0) window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       main.scrollTop = 0;
     }
@@ -669,11 +673,11 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   navItems.forEach(function (item) {
     item.addEventListener('click', function (e) {
       e.preventDefault();
-      showPanel(item.getAttribute('data-panel'));
+      showPanel(item.getAttribute('data-panel'), true);
     });
   });
   nextBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () { showPanel(btn.getAttribute('data-next')); });
+    btn.addEventListener('click', function () { showPanel(btn.getAttribute('data-next'), true); });
   });
 
   // Phone mockups: drag / touch to scroll the screenshot.
@@ -710,7 +714,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   // Also react to hash changes from links elsewhere on the page.
   window.addEventListener('hashchange', function () {
     var slug = window.location.hash.replace('#', '');
-    if (slug) showPanel(slug);
+    if (slug) showPanel(slug, true);
   });
 })();
 
@@ -836,3 +840,68 @@ function validatePhone(form) {
   }
   return '';
 }
+
+/* ── Homepage hero, frosted-glass card (gh--glass): adapt to dark footage ──
+   Every 400ms, reads how bright the film is right behind the title card (an 8×4
+   sample of the current frame) and sets --gh-glass-a: 58% white on light, green or
+   colourful frames, rising to 88% on dark ones, so the glass stays bright and clean
+   instead of turning into a grey slab. If the frame can't be read (e.g. a video on
+   another domain), the card simply keeps 58%, which is still readable. */
+(function () {
+  var hero = document.querySelector('.gh.gh--glass');
+  var video = document.getElementById('heroVideo');
+  if (!hero || !video) return;
+  var title = hero.querySelector('.gh-title');
+  var intro = hero.querySelector('.gh-intro');
+  var ctx = null;
+  function freshCanvas() {   // a canvas that once read an unreadable frame stays locked
+    var c = document.createElement('canvas');
+    c.width = 8; c.height = 4;
+    ctx = c.getContext('2d', { willReadFrequently: true });
+  }
+  freshCanvas();
+  if (!ctx || !title) return;
+  var LIGHT = 0.58, DARK = 0.88;   // white layer on light / on dark footage
+  var HI = 0.35, LO = 0.08;        // film brightness (0–1) for each end
+  var last = -1, timer = null, visible = true, broken = false;
+
+  function sample() {
+    if (broken || !visible || document.hidden || video.readyState < 2 || !video.videoWidth) return;
+    var vr = video.getBoundingClientRect();
+    var a = title.getBoundingClientRect();
+    var b = intro ? intro.getBoundingClientRect() : a;
+    var left = Math.min(a.left, b.left), top = Math.min(a.top, b.top);
+    var right = Math.max(a.right, b.right), bottom = Math.max(a.bottom, b.bottom);
+    // object-fit: cover — map the card's box on screen to the video frame
+    var scale = Math.max(vr.width / video.videoWidth, vr.height / video.videoHeight);
+    var ox = (vr.width - video.videoWidth * scale) / 2, oy = (vr.height - video.videoHeight * scale) / 2;
+    var sx = Math.max(0, (left - vr.left - ox) / scale), sy = Math.max(0, (top - vr.top - oy) / scale);
+    var sw = Math.min(video.videoWidth - sx, (right - left) / scale), sh = Math.min(video.videoHeight - sy, (bottom - top) / scale);
+    if (sw <= 0 || sh <= 0) return;
+    var d;
+    try {
+      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, 8, 4);
+      d = ctx.getImageData(0, 0, 8, 4).data;
+    } catch (e) { broken = true; stop(); return; }   // unreadable frame: keep the CSS default
+    var sum = 0;
+    for (var i = 0; i < d.length; i += 4) sum += 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+    var lum = sum / (d.length / 4) / 255;
+    var t = Math.min(1, Math.max(0, (HI - lum) / (HI - LO)));
+    var alpha = Math.round((LIGHT + (DARK - LIGHT) * t) * 50) / 50;   // 2% steps
+    if (alpha !== last) { hero.style.setProperty('--gh-glass-a', alpha); last = alpha; }
+  }
+  function start() { if (broken) return; if (!timer) timer = setInterval(sample, 400); sample(); }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      if (visible) start(); else stop();
+    }).observe(hero);
+  }
+  video.addEventListener('loadeddata', function () {   // a new source may be readable
+    if (broken) { broken = false; freshCanvas(); }
+    start();
+  });
+  video.addEventListener('seeked', sample);
+  start();
+})();

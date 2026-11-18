@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.3.2
+Version:     1.3.3
 Released:    2026-11-18
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -1827,6 +1827,9 @@ Text Domain: guru
   .gh-copy .gh-btn-solid, .gh-copy .gh-btn-ghost { padding: 16px 28px; font-size: 16px; }
   /* White buttons on a white frame: the nav's hairline ring keeps their edge. */
   .gh-copy .gh-btn-ghost { box-shadow: 0 4px 20px rgba(14,14,16,0.14), 0 0 0 1px rgba(14,14,16,0.06); }
+  /* Black button on black frames: a faint light hairline (the white buttons' 1px ring,
+     inverted) keeps its edge; on white it disappears, on green it is barely there. */
+  .gh-copy .gh-btn-solid { box-shadow: 0 0 0 1px rgba(255,255,255,0.26); }
   /* gh--nobg: no backdrop behind the bottom text at all. The words carry their own
      legibility, the way film subtitles do: pure white, with a dark halo that hugs each
      letter (a crisp 1px rim, a 2-3px edge, a 4-8px soft edge and a short glow) and
@@ -1914,9 +1917,14 @@ Text Domain: guru
   /* Frosted glass. The white layer is as thin as the darkest frames allow: on the
      night and party shots the card's darkest pixel still gives the title and intro
      at least 4.5:1 (measured). */
-  .gh--glass { --gh-glass-a: .58; } /* 58% white: even over a black frame the intro (--ink-2) is 4.6:1 */
+  /* 58% white: even over a black frame the intro (--ink-2) is 4.6:1. On dark footage
+     main.js raises it smoothly (up to 88%, set inline on section.gh) from the film's
+     brightness behind the card, so the glass reads bright and clean instead of grey;
+     on light, green and colourful frames it stays at 58%. */
+  .gh--glass { --gh-glass-a: .58; }
   .gh--glass .gh-copy::before {
     background: rgba(255,255,255,var(--gh-glass-a));
+    transition: background-color .8s ease;
     -webkit-backdrop-filter: blur(32px) saturate(180%);
     backdrop-filter: blur(32px) saturate(180%);
     border: 1px solid rgba(255,255,255,.5);
@@ -1938,6 +1946,7 @@ Text Domain: guru
   }
   .gh--glass-dark .gh-title { color: #fff; }
   .gh--glass-dark .gh-intro { color: rgba(255,255,255,.92); }
+  @media (prefers-reduced-motion: reduce) { .gh--glass .gh-copy::before { transition: none; } }
   /* browsers without backdrop blur: a plain, more solid card, text just as clear */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .gh--glass .gh-copy::before { background: rgba(255,255,255,.9); }
