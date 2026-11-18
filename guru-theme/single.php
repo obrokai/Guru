@@ -24,8 +24,11 @@ while ( have_posts() ) :
 			<?php endif; ?>
 			<h1 class="blg-single-title"><?php the_title(); ?></h1>
 			<div class="art-meta">
-				<span><?php echo esc_html( get_the_date() ); ?></span>
-				<span><?php echo esc_html( get_the_author() ); ?></span>
+				<span><?php echo guru_post_date(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?></span>
+				<?php $guru_author = guru_post_author(); ?>
+				<?php if ( $guru_author ) : ?>
+					<span><?php echo esc_html( $guru_author ); ?></span>
+				<?php endif; ?>
 			</div>
 		</div>
 

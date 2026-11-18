@@ -52,14 +52,15 @@ function guru_handle_contact() {
 	$email   = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
 	$message = isset( $_POST['message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '';
 
-	// Required fields.
-	if ( '' === $name || '' === $company || '' === $phone || ! is_email( $email ) ) {
+	// Required fields. Contact No. is optional (client spec, section 9, v1.4.0).
+	$phone = preg_replace( '/[^0-9]/', '', $phone );
+	if ( '' === $name || '' === $company || ! is_email( $email ) ) {
 		wp_safe_redirect( $fail );
 		exit;
 	}
 
 	$cc    = ( '+other' === $cc ) ? '' : $cc;
-	$tel   = trim( $cc . ' ' . $phone );
+	$tel   = '' === $phone ? '—' : trim( $cc . ' ' . $phone );
 	$lines = array(
 		__( 'Name', 'guru' )           => $name,
 		__( 'Company', 'guru' )        => $company,
@@ -119,4 +120,19 @@ function guru_handle_contact() {
 	exit;
 }
 add_action( 'admin_post_nopriv_guru_contact', 'guru_handle_contact' );
+
+/**
+ * One line under every contact form saying what the details are used for, with a
+ * link to the Privacy Policy page when one is set in Settings → Privacy
+ * (client spec, section 9, v1.4.0). Wording to be confirmed by GURU.
+ */
+function guru_form_privacy_note() {
+	$url = function_exists( 'get_privacy_policy_url' ) ? get_privacy_policy_url() : '';
+	echo '<p class="guru-form-privacy">';
+	esc_html_e( 'We only use these details to reply to your enquiry.', 'guru' );
+	if ( $url ) {
+		echo ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Privacy Policy', 'guru' ) . '</a>';
+	}
+	echo '</p>';
+}
 add_action( 'admin_post_guru_contact', 'guru_handle_contact' );

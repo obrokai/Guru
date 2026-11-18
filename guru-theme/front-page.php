@@ -22,16 +22,61 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 		<?php
 		$guru_hero_desktop = guru_hero_video_url( 'desktop' );
 		$guru_hero_mobile  = guru_hero_video_url( 'mobile' );
+		$guru_poster_desktop = guru_hero_poster_url( 'desktop' );
+		$guru_poster_mobile  = guru_hero_poster_url( 'mobile' );
 		if ( $guru_hero_desktop || $guru_hero_mobile ) :
+			/*
+			 * Client spec #4 / #5 (v1.4.0). The film's files are attached by the small
+			 * script below, not in the HTML, so a visitor who has turned off motion
+			 * effects never downloads or plays it: they get the still picture (poster).
+			 * Without JavaScript the still picture shows too. If autoplay is refused
+			 * (e.g. battery saver) or the film fails, main.js falls back to the still.
+			 */
 			?>
-			<video id="heroVideo" autoplay muted playsinline preload="auto" aria-hidden="true">
+			<video id="heroVideo" muted playsinline preload="metadata" aria-hidden="true"
+				poster="<?php echo esc_url( $guru_poster_desktop ); ?>"
+				data-poster="<?php echo esc_url( $guru_poster_desktop ); ?>"
+				data-poster-mobile="<?php echo esc_url( $guru_poster_mobile ); ?>">
 				<?php if ( $guru_hero_mobile ) : ?>
-					<source src="<?php echo esc_url( $guru_hero_mobile ); ?>" media="(max-width: 900px)" type="video/mp4" />
+					<source data-src="<?php echo esc_url( $guru_hero_mobile ); ?>" media="(max-width: 900px)" type="video/mp4" />
 				<?php endif; ?>
 				<?php if ( $guru_hero_desktop ) : ?>
-					<source src="<?php echo esc_url( $guru_hero_desktop ); ?>" type="video/mp4" />
+					<source data-src="<?php echo esc_url( $guru_hero_desktop ); ?>" type="video/mp4" />
 				<?php endif; ?>
 			</video>
+			<script>
+			(function () {
+				var v = document.getElementById('heroVideo');
+				var mm = window.matchMedia;
+				var reduce = mm ? mm('(prefers-reduced-motion: reduce)') : null;
+				var src = v.querySelectorAll('source[data-src]');
+				var i;
+				function poster() {
+					return mm && mm('(max-width: 900px)').matches ? v.getAttribute('data-poster-mobile') : v.getAttribute('data-poster');
+				}
+				function still() { /* back to the still picture, nothing loading */
+					for (i = 0; i < src.length; i++) src[i].removeAttribute('src');
+					v.autoplay = false;
+					v.poster = poster();
+					v.load();
+				}
+				function play() {
+					v.removeAttribute('poster'); /* no green flash before the film's white first frame */
+					for (i = 0; i < src.length; i++) src[i].src = src[i].getAttribute('data-src');
+					v.autoplay = true;
+					v.load();
+					var p = v.play();
+					if (p && p.catch) p.catch(function (e) { if (e && e.name !== 'AbortError') still(); });
+				}
+				if (src.length) src[src.length - 1].addEventListener('error', still);
+				if (reduce && reduce.matches) v.poster = poster(); else play();
+				/* Motion setting changed while the page is open: pause on "reduce", start again when allowed. */
+				if (reduce) {
+					var onChange = function () { if (reduce.matches) v.pause(); else if (!v.currentSrc) play(); else if (!v.ended) v.play(); };
+					if (reduce.addEventListener) reduce.addEventListener('change', onChange); else if (reduce.addListener) reduce.addListener(onChange);
+				}
+			})();
+			</script>
 		<?php endif; ?>
 
 		<?php
@@ -209,7 +254,7 @@ $guru_cta   = guru_mod( 'guru_home_about_cta' );
 						<?php if ( $guru_data['video'] ) : ?>
 							<div class="wrk-video-card">
 								<?php // Loaded and played only while on screen (main.js) so the homepage opens fast. ?>
-								<video muted loop playsinline preload="none" data-lazy-play>
+								<video muted loop playsinline preload="none" data-lazy-play<?php echo $guru_data['image'] ? ' poster="' . esc_url( $guru_data['image'] ) . '"' : ''; ?>>
 									<source src="<?php echo esc_url( $guru_data['video'] ); ?>" type="video/mp4" />
 								</video>
 								<?php /* translators: %s: project title. */ ?>

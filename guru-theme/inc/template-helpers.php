@@ -456,7 +456,7 @@ function guru_work_card( $post_id = null, $index = 0 ) {
 		<div class="prj-img">
 			<?php if ( $data['video'] ) : ?>
 				<?php // Loaded and played only while on screen (main.js); the Work page can hold a dozen films. ?>
-				<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" muted loop playsinline preload="none" data-lazy-play></video>
+				<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" muted loop playsinline preload="none" data-lazy-play<?php echo $data['image'] ? ' poster="' . esc_url( $data['image'] ) . '"' : ''; ?>></video>
 				<?php /* translators: %s: project title. */ ?>
 				<button type="button" class="prj-play-btn" aria-label="<?php echo esc_attr( sprintf( __( 'Play film: %s', 'guru' ), $data['title'] ) ); ?>"></button>
 				<div class="prj-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
@@ -745,3 +745,43 @@ class Guru_Nav_Walker extends Walker_Nav_Menu {
 	 */
 	public function end_el( &$output, $item, $depth = 0, $args = null ) {}
 }
+
+/**
+ * Post date for the front end, always in English ("10 Nov 2026") — the site's
+ * language setting is Chinese for the admin, which made posts show "10 11 月, 2026"
+ * on English pages. Wrapped in <time> so the date is machine-readable (v1.4.0).
+ *
+ * @param int|WP_Post|null $post Post; default the current one.
+ * @return string HTML.
+ */
+function guru_post_date( $post = null ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return '';
+	}
+	return '<time datetime="' . esc_attr( get_post_time( 'c', false, $post ) ) . '">'
+		. esc_html( mysql2date( 'j M Y', $post->post_date, false ) ) . '</time>';
+}
+
+/**
+ * Author name to show on a post, or '' to show none. Client spec #15: never show
+ * "admin" (or a bare login name) as the author — only a real name set in
+ * Users → Profile ("Display name publicly as").
+ *
+ * @param int|WP_Post|null $post Post; default the current one.
+ * @return string
+ */
+function guru_post_author( $post = null ) {
+	$post = get_post( $post );
+	$user = $post ? get_userdata( (int) $post->post_author ) : null;
+	if ( ! $user ) {
+		return '';
+	}
+	$name = trim( $user->display_name );
+	if ( '' === $name || in_array( strtolower( $name ), array( 'admin', 'administrator', 'editor', 'webmaster' ), true )
+		|| strtolower( $name ) === strtolower( $user->user_login ) ) {
+		return '';
+	}
+	return $name;
+}
+

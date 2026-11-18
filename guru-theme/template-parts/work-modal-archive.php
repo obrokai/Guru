@@ -57,14 +57,15 @@ $guru_services = array(
 				</div>
 
 				<div class="vmf-field">
-					<input class="vmf-input" type="text" id="vmf-name" name="name"
-						placeholder="<?php esc_attr_e( 'Name *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Name', 'guru' ); ?>" required />
+					<label class="guru-label" for="vmf-name"><?php esc_html_e( 'Name', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+					<input class="vmf-input" type="text" id="vmf-name" name="name" autocomplete="name" required />
 				</div>
 				<div class="vmf-field">
-					<input class="vmf-input" type="text" id="vmf-company" name="company"
-						placeholder="<?php esc_attr_e( 'Company Name *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Company Name', 'guru' ); ?>" required />
+					<label class="guru-label" for="vmf-company"><?php esc_html_e( 'Company Name', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+					<input class="vmf-input" type="text" id="vmf-company" name="company" autocomplete="organization" required />
 				</div>
 				<div class="vmf-field">
+					<label class="guru-label" for="vmf-phone"><?php esc_html_e( 'Contact No.', 'guru' ); ?> <span class="guru-label-opt"><?php esc_html_e( '(optional)', 'guru' ); ?></span></label>
 					<div class="vmf-phone-group">
 						<select class="vmf-input vmf-cc" name="cc" aria-label="<?php esc_attr_e( 'Country code', 'guru' ); ?>">
 							<option value="+852" data-len="8" selected>+852</option>
@@ -79,28 +80,29 @@ $guru_services = array(
 							<option value="+61" data-len="">+61</option>
 							<option value="+other" data-len=""><?php esc_html_e( 'Other', 'guru' ); ?></option>
 						</select>
-						<input class="vmf-input vmf-phone" type="tel" id="vmf-phone" name="phone"
-							placeholder="<?php esc_attr_e( 'Contact No. *', 'guru' ); ?>" inputmode="numeric"
-							aria-label="<?php esc_attr_e( 'Contact No.', 'guru' ); ?>" required />
+						<input class="vmf-input vmf-phone" type="tel" id="vmf-phone" name="phone" inputmode="numeric" autocomplete="tel-national" />
 					</div>
 				</div>
 				<div class="vmf-field">
-					<input class="vmf-input" type="email" id="vmf-email" name="email"
-						placeholder="<?php esc_attr_e( 'Business Email *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Business Email', 'guru' ); ?>" required />
+					<label class="guru-label" for="vmf-email"><?php esc_html_e( 'Business Email', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+					<input class="vmf-input" type="email" id="vmf-email" name="email" autocomplete="email"
+						placeholder="<?php esc_attr_e( 'name@company.com', 'guru' ); ?>" required />
 				</div>
 				<div class="vmf-field full">
-					<select class="vmf-select" id="vmf-service" name="service" aria-label="<?php esc_attr_e( "Service You're Looking For", 'guru' ); ?>">
-						<option value=""><?php esc_html_e( "Service You're Looking For", 'guru' ); ?></option>
+					<label class="guru-label" for="vmf-service"><?php esc_html_e( "Service You're Looking For", 'guru' ); ?></label>
+					<select class="vmf-select" id="vmf-service" name="service">
+						<option value=""><?php esc_html_e( 'Select a service', 'guru' ); ?></option>
 						<?php foreach ( $guru_services as $guru_service ) : ?>
 							<option><?php echo esc_html( $guru_service ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>
 				<div class="vmf-field full">
+					<label class="guru-label" for="vmf-message"><?php esc_html_e( 'Tell Us More', 'guru' ); ?></label>
 					<textarea class="vmf-textarea" id="vmf-message" name="message"
-						aria-label="<?php esc_attr_e( 'Tell Us More', 'guru' ); ?>"
 						placeholder="<?php esc_attr_e( 'How can we help you?', 'guru' ); ?>"></textarea>
 				</div>
+				<?php guru_form_privacy_note(); ?>
 				<p class="vmf-note" id="vmfNote"></p>
 				<button class="vmf-submit" type="submit"><?php esc_html_e( 'Send Message', 'guru' ); ?> <span>&rarr;</span></button>
 			</form>

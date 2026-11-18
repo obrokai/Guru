@@ -28,7 +28,8 @@ $guru_code       = guru_mod( 'guru_stock_code' );
  * @param string $date  Left column.
  * @param string $title Document name.
  * @param string $sub   Optional subtitle.
- * @param array  $links [ [ url, label, extra class ], … ].
+ * @param array  $links [ [ url, label, extra class, bytes, document name, lang ], … ];
+ *                      the last three are optional.
  */
 function guru_investor_doc_row( $date, $title, $sub, $links ) {
 	?>
@@ -44,8 +45,28 @@ function guru_investor_doc_row( $date, $title, $sub, $links ) {
 			<?php if ( $links ) : ?>
 				<div class="inv-doc-links">
 					<?php foreach ( $links as $link ) : ?>
+						<?php
+						// Visible: language, then file type and size ("English  PDF · 2.3 MB").
+						// Read aloud: the document's own name first, then the same words.
+						$guru_meta = guru_investor_doc_meta( $link[0], isset( $link[3] ) ? (int) $link[3] : 0 );
+						$guru_name = ! empty( $link[4] ) ? $link[4] : $title;
+						$guru_aria = sprintf(
+							/* translators: 1: document name, 2: language or link text, 3: file type and size, e.g. "PDF, 2.3 MB". */
+							__( '%1$s – %2$s %3$s (opens in a new tab)', 'guru' ),
+							$guru_name,
+							$link[1],
+							str_replace( ' · ', ', ', $guru_meta )
+						);
+						?>
 						<a class="inv-doc-link<?php echo ! empty( $link[2] ) ? ' ' . esc_attr( $link[2] ) : ''; ?>"
-							href="<?php echo esc_url( $link[0] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $link[1] ); ?> &#8599;</a>
+							href="<?php echo esc_url( $link[0] ); ?>" target="_blank" rel="noopener"
+							aria-label="<?php echo esc_attr( preg_replace( '/\s+/', ' ', $guru_aria ) ); ?>">
+							<span class="inv-doc-lang"<?php echo ! empty( $link[5] ) ? ' lang="' . esc_attr( $link[5] ) . '"' : ''; ?>><?php echo esc_html( $link[1] ); ?></span>
+							<?php if ( $guru_meta ) : ?>
+								<span class="inv-doc-meta"><?php echo esc_html( $guru_meta ); ?></span>
+							<?php endif; ?>
+							<span class="inv-doc-arrow" aria-hidden="true">&#8599;</span>
+						</a>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
@@ -63,7 +84,8 @@ while ( have_posts() ) :
 
 	<div class="inv-hero">
 		<p class="inv-hero-label"><?php esc_html_e( 'Investor Relations', 'guru' ); ?></p>
-		<h1 class="inv-hero-title"><?php echo wp_kses_post( nl2br( esc_html( guru_mod( 'guru_investor_entity' ) ) ) ); ?></h1>
+		<?php // One line on desktop, wrapping naturally on narrow screens: line breaks typed in the Customizer are ignored (spec 6.3). ?>
+		<h1 class="inv-hero-title page-title"><?php echo esc_html( trim( preg_replace( '/\s+/', ' ', (string) guru_mod( 'guru_investor_entity' ) ) ) ); ?></h1>
 		<?php if ( $guru_intro ) : ?>
 			<p class="inv-hero-desc"><?php echo esc_html( $guru_intro ); ?></p>
 		<?php endif; ?>
@@ -178,10 +200,10 @@ while ( have_posts() ) :
 						}
 						$guru_links_row = array();
 						if ( ! empty( $guru_p[3] ) ) {
-							$guru_links_row[] = array( $guru_p[3], 'EN', '' );
+							$guru_links_row[] = array( $guru_p[3], 'English', '', 0, $guru_p[1], 'en' );
 						}
 						if ( ! empty( $guru_p[4] ) ) {
-							$guru_links_row[] = array( $guru_p[4], '中文', 'inv-doc-link-zh' );
+							$guru_links_row[] = array( $guru_p[4], '中文', 'inv-doc-link-zh', 0, ! empty( $guru_p[2] ) ? $guru_p[2] : $guru_p[1], 'zh-HK' );
 						}
 						guru_investor_doc_row( $guru_p[0], $guru_p[1], isset( $guru_p[2] ) ? $guru_p[2] : '', $guru_links_row );
 					}

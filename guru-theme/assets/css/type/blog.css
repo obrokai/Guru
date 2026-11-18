@@ -2,7 +2,6 @@
 .gn-link { font-size: calc(16px * var(--guru-fs-nav, 1)); }
 .gn-mobile-link { font-size: calc(32px * var(--guru-fs-nav, 1)); }
 .gn-mobile-link::after { font-size: calc(20px * var(--guru-fs-nav, 1)); }
-.blg-hero-title { font-size: calc(clamp(52px, 8vw, 128px) * var(--guru-fs-hero, 1)); }
 .blg-hero-desc { font-size: calc(15px * var(--guru-fs-body, 1)); }
 .blg-feat-title { font-size: calc(clamp(30px, 3.4vw, 52px) * var(--guru-fs-heading, 1)); }
 .blg-feat-excerpt { font-size: calc(16px * var(--guru-fs-body, 1)); }

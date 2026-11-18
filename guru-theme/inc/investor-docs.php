@@ -9,8 +9,8 @@
  * They are registered here only when missing, so a fresh install still works.
  *
  * English and Chinese versions are separate posts published on the same date; the
- * Chinese PDF's file name ends in "_c". Each pair is shown as one row with EN / 中文
- * buttons, newest first.
+ * Chinese PDF's file name ends in "_c". Each pair is shown as one row with an English
+ * and a 中文 link (language, file type and file size), newest first.
  *
  * @package Guru
  */
@@ -82,15 +82,60 @@ function guru_investor_doc_url( $id ) {
 }
 
 /**
+ * File size in bytes of a document's PDF, or 0 when it cannot be read.
+ *
+ * Uses the attachment metadata WordPress stores on upload (`filesize`), then the file
+ * on disk. A plain URL in the `document` field is looked up as an attachment first.
+ *
+ * @param int $id Post ID.
+ * @return int
+ */
+function guru_investor_doc_bytes( $id ) {
+	$value = get_post_meta( $id, 'document', true );
+	$att   = is_numeric( $value ) ? (int) $value : ( is_string( $value ) && $value ? attachment_url_to_postid( $value ) : 0 );
+	if ( ! $att ) {
+		return 0;
+	}
+	$meta = wp_get_attachment_metadata( $att );
+	if ( is_array( $meta ) && ! empty( $meta['filesize'] ) ) {
+		return (int) $meta['filesize'];
+	}
+	$file = get_attached_file( $att );
+	return ( $file && is_readable( $file ) ) ? (int) filesize( $file ) : 0;
+}
+
+/**
+ * "PDF · 2.3 MB" for a document link: the file type from the URL and the size when known.
+ *
+ * @param string $url   File URL.
+ * @param int    $bytes Size in bytes (0 = unknown, left out).
+ * @return string
+ */
+function guru_investor_doc_meta( $url, $bytes = 0 ) {
+	$parts = array();
+	$ext   = strtolower( pathinfo( (string) wp_parse_url( $url, PHP_URL_PATH ), PATHINFO_EXTENSION ) );
+	if ( in_array( $ext, array( 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip' ), true ) ) {
+		$parts[] = strtoupper( $ext );
+	}
+	if ( $bytes > 0 ) {
+		// Under 1 MB in whole KB ("412 KB"), above with one decimal ("2.3 MB").
+		$parts[] = $bytes < MB_IN_BYTES
+			? max( 1, (int) round( $bytes / KB_IN_BYTES ) ) . ' KB'
+			: number_format_i18n( $bytes / MB_IN_BYTES, 1 ) . ' MB';
+	}
+	return implode( ' · ', $parts );
+}
+
+/**
  * All rows of one category, newest first, English and Chinese paired.
  *
  * Cached for a day; any change to an investor document clears the cache.
  *
  * @param string $slug Category slug.
- * @return array[] Each row: date (Y.m.d), title, sub, links ([ url, label, class ]).
+ * @return array[] Each row: date (Y.m.d), title, sub, links ([ url, label, class, bytes, document name, lang ]).
  */
 function guru_investor_doc_rows( $slug ) {
-	$key  = 'guru_inv_docs_' . md5( $slug ) . '_v1';
+	$key  = 'guru_inv_docs_' . md5( $slug ) . '_v2';
 	$rows = get_transient( $key );
 	if ( is_array( $rows ) ) {
 		return $rows;
@@ -127,6 +172,7 @@ function guru_investor_doc_rows( $slug ) {
 				'id'    => $post->ID,
 				'title' => $post->post_title,
 				'url'   => $url,
+				'bytes' => $url ? guru_investor_doc_bytes( $post->ID ) : 0,
 				'zh'    => (bool) $zh,
 			);
 		}
@@ -149,10 +195,10 @@ function guru_investor_doc_rows( $slug ) {
 
 				$links = array();
 				if ( $en && $en['url'] ) {
-					$links[] = array( $en['url'], 'EN', '' );
+					$links[] = array( $en['url'], 'English', '', $en['bytes'], $en['title'], 'en' );
 				}
 				if ( $zh && $zh['url'] ) {
-					$links[] = array( $zh['url'], '中文', 'inv-doc-link-zh' );
+					$links[] = array( $zh['url'], '中文', 'inv-doc-link-zh', $zh['bytes'], $zh['title'], 'zh-HK' );
 				}
 				$day_rows[] = array(
 					'order' => max( $a['id'], $b ? $b['id'] : 0 ),
@@ -186,6 +232,7 @@ function guru_investor_doc_rows( $slug ) {
 function guru_investor_docs_flush() {
 	foreach ( array_keys( guru_investor_doc_categories() ) as $slug ) {
 		delete_transient( 'guru_inv_docs_' . md5( $slug ) . '_v1' );
+		delete_transient( 'guru_inv_docs_' . md5( $slug ) . '_v2' );
 	}
 }
 

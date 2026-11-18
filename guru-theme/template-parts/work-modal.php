@@ -57,14 +57,15 @@ $guru_services = array(
 				</div>
 
 				<div class="hwf-field">
-					<input class="hwf-input" type="text" id="hwf-name" name="name"
-						placeholder="<?php esc_attr_e( 'Name *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Name', 'guru' ); ?>" required />
+					<label class="guru-label" for="hwf-name"><?php esc_html_e( 'Name', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+					<input class="hwf-input" type="text" id="hwf-name" name="name" autocomplete="name" required />
 				</div>
 				<div class="hwf-field">
-					<input class="hwf-input" type="text" id="hwf-company" name="company"
-						placeholder="<?php esc_attr_e( 'Company Name *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Company Name', 'guru' ); ?>" required />
+					<label class="guru-label" for="hwf-company"><?php esc_html_e( 'Company Name', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+					<input class="hwf-input" type="text" id="hwf-company" name="company" autocomplete="organization" required />
 				</div>
 				<div class="hwf-field">
+					<label class="guru-label" for="hwf-phone"><?php esc_html_e( 'Contact No.', 'guru' ); ?> <span class="guru-label-opt"><?php esc_html_e( '(optional)', 'guru' ); ?></span></label>
 					<div class="hwf-phone-group">
 						<select class="hwf-input hwf-cc" name="cc" aria-label="<?php esc_attr_e( 'Country code', 'guru' ); ?>">
 							<option value="+852" data-len="8" selected>+852</option>
@@ -79,28 +80,29 @@ $guru_services = array(
 							<option value="+61" data-len="">+61</option>
 							<option value="+other" data-len=""><?php esc_html_e( 'Other', 'guru' ); ?></option>
 						</select>
-						<input class="hwf-input hwf-phone" type="tel" id="hwf-phone" name="phone"
-							placeholder="<?php esc_attr_e( 'Contact No. *', 'guru' ); ?>" inputmode="numeric"
-							aria-label="<?php esc_attr_e( 'Contact No.', 'guru' ); ?>" required />
+						<input class="hwf-input hwf-phone" type="tel" id="hwf-phone" name="phone" inputmode="numeric" autocomplete="tel-national" />
 					</div>
 				</div>
 				<div class="hwf-field">
-					<input class="hwf-input" type="email" id="hwf-email" name="email"
-						placeholder="<?php esc_attr_e( 'Business Email *', 'guru' ); ?>" aria-label="<?php esc_attr_e( 'Business Email', 'guru' ); ?>" required />
+					<label class="guru-label" for="hwf-email"><?php esc_html_e( 'Business Email', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+					<input class="hwf-input" type="email" id="hwf-email" name="email" autocomplete="email"
+						placeholder="<?php esc_attr_e( 'name@company.com', 'guru' ); ?>" required />
 				</div>
 				<div class="hwf-field full">
-					<select class="hwf-select" id="hwf-service" name="service" aria-label="<?php esc_attr_e( "Service You're Looking For", 'guru' ); ?>">
-						<option value=""><?php esc_html_e( "Service You're Looking For", 'guru' ); ?></option>
+					<label class="guru-label" for="hwf-service"><?php esc_html_e( "Service You're Looking For", 'guru' ); ?></label>
+					<select class="hwf-select" id="hwf-service" name="service">
+						<option value=""><?php esc_html_e( 'Select a service', 'guru' ); ?></option>
 						<?php foreach ( $guru_services as $guru_service ) : ?>
 							<option><?php echo esc_html( $guru_service ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>
 				<div class="hwf-field full">
+					<label class="guru-label" for="hwf-message"><?php esc_html_e( 'Tell Us More', 'guru' ); ?></label>
 					<textarea class="hwf-textarea" id="hwf-message" name="message"
-						aria-label="<?php esc_attr_e( 'Tell Us More', 'guru' ); ?>"
 						placeholder="<?php esc_attr_e( 'How can we help you?', 'guru' ); ?>"></textarea>
 				</div>
+				<?php guru_form_privacy_note(); ?>
 				<p class="hwf-note" id="hwfNote"></p>
 				<button class="hwf-submit" type="submit"><?php esc_html_e( 'Send Message', 'guru' ); ?> <span>&rarr;</span></button>
 			</form>

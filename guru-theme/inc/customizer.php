@@ -156,7 +156,7 @@ function guru_customize_fields( $wp_customize, $section, $fields ) {
  * @param string               $label        Control label.
  * @param string               $description  Help text.
  */
-function guru_customize_video( $wp_customize, $id, $section, $label, $description ) {
+function guru_customize_video( $wp_customize, $id, $section, $label, $description, $mime = 'video' ) {
 	// A Media control stores the attachment ID, so sanitise as an integer (0 = none).
 	$wp_customize->add_setting(
 		$id,
@@ -172,7 +172,7 @@ function guru_customize_video( $wp_customize, $id, $section, $label, $descriptio
 			array(
 				'label'       => $label,
 				'section'     => $section,
-				'mime_type'   => 'video',
+				'mime_type'   => $mime,
 				'description' => $description,
 			)
 		)
@@ -254,6 +254,9 @@ function guru_customize_register( $wp_customize ) {
 	);
 	guru_customize_video( $wp_customize, 'guru_hero_video', 'guru_home', __( 'Hero video (desktop)', 'guru' ), __( 'Leave empty to use the video bundled with the theme.', 'guru' ) );
 	guru_customize_video( $wp_customize, 'guru_hero_video_mobile', 'guru_home', __( 'Hero video (mobile)', 'guru' ), __( 'Smaller file served under 900px wide.', 'guru' ) );
+	// Still picture for visitors who turned off motion, or when the film can't play (client spec #4 / #5).
+	guru_customize_video( $wp_customize, 'guru_hero_poster', 'guru_home', __( 'Hero still picture (desktop)', 'guru' ), __( 'Shown instead of the video when a visitor has turned off motion effects, or if the video can\'t play. Use a frame from the video, 1920×1080. Leave empty to use the picture bundled with the theme (the green GURU logo frame).', 'guru' ), 'image' );
+	guru_customize_video( $wp_customize, 'guru_hero_poster_mobile', 'guru_home', __( 'Hero still picture (mobile)', 'guru' ), __( 'Same, for screens under 900px wide (portrait, 720×1280).', 'guru' ), 'image' );
 
 	/* ------------------------------------------------------- About page */
 	$wp_customize->add_section(
@@ -364,6 +367,19 @@ function guru_hero_video_url( $which = 'desktop' ) {
 	return 'mobile' === $which
 		? guru_video_url( 'guru_hero_video_mobile', 'hero-bg-mobile.mp4' )
 		: guru_video_url( 'guru_hero_video', 'hero-bg.mp4' );
+}
+
+/**
+ * Hero still picture (video poster) URL. Same lookup as the video: the Customizer
+ * upload, else the frame bundled with the theme.
+ *
+ * @param string $which 'desktop' or 'mobile'.
+ * @return string
+ */
+function guru_hero_poster_url( $which = 'desktop' ) {
+	return 'mobile' === $which
+		? guru_video_url( 'guru_hero_poster_mobile', 'hero-poster-mobile.jpg' )
+		: guru_video_url( 'guru_hero_poster', 'hero-poster.jpg' );
 }
 
 /**

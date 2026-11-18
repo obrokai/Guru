@@ -8,6 +8,31 @@
 
 ---
 
+## 1.4.0 — 2026-11-18
+
+客戶 11-17《Website 2.0 Programmer 執行規格》第二批中不需要客戶資料的項目：#4、#5、#7、#8、第 6.2／6.3 節版面，以及第 9 節的表單、404、作者。GA4（#9）、公司資料（#14）、內容（#15）、Search Console（#16）、手機影片壓縮（#6，要換 staging 媒體）等客戶資料。
+
+- **#4 首頁影片預覽圖**：新增 `assets/media/hero-poster.jpg`（1920×1080，18 KB）、`hero-poster-mobile.jpg`（720×1280，9 KB），取自影片 42 秒的綠底 GURU logo 畫面；Customizer → Homepage 新增「Hero still picture (desktop／mobile)」可換。影片檔不寫在 HTML，由 `front-page.php` 緊接在 video 後的小段程式掛上（`source[data-src]`），`preload="metadata"`。沒有 JavaScript、自動播放被擋（`play()` 被拒）或影片載入失敗時顯示預覽圖。正常播放時不先顯示預覽圖（影片第一格是白的，避免綠色閃一下）。
+- **#4 作品卡片**：首頁與 Work 頁有影片的卡片加 `poster`（精選圖片）。
+- **#5 減少動態效果**：使用者開了 `prefers-reduced-motion` 時，首頁影片不下載、不播放，只顯示預覽圖；開著頁面時改設定會暫停，改回會播放。作品卡片影片不載入；Solutions 頁影片不自動播放，改成有播放控制列。
+- **修正：開了減少動態效果的人整頁空白**。開場遮罩 `.pg-intro` 的淡出動畫被關掉後就一直蓋著；現在這種情況下直接不顯示（style.css 一條規則，涵蓋所有頁）。
+- **#7 不載入 Contact Form 7**：staging 每頁都載入 CF7 的 css、js 及 wp-hooks／wp-i18n，但表單都是主題自己的。`wpcf7_load_js`／`wpcf7_load_css` 只在頁面真的有 CF7 區塊時才回 true。
+- **#8 鍵盤與讀屏**：
+  - 手機選單：打開時焦點到第一個連結，Tab 只在選單按鈕與選單之間循環，Esc 關閉並回到選單按鈕；選單按鈕加 `aria-controls`。
+  - 作品燈箱：`role="dialog"`、`aria-modal`、以作品標題命名；Tab 只在燈箱內循環（`guruTrapTab()`）。
+  - 修正：關著的燈箱只是透明，Tab 仍會走到看不見的關閉鈕和表單；現在淡出後 `visibility: hidden`。
+- **表單（#8、第 9 節）**：
+  - 電話改選填（前端、後端都改）；有填時仍檢查位數。
+  - 四個表單共用 `guruCheckForm()`：一次列出所有問題（「Please check: Name is required; …」），`role="alert"` 讓讀屏讀出，問題欄位標 `aria-invalid`，游標移到第一個。
+  - 每個表單送出鈕上方加一行私隱說明（`guru_form_privacy_note()`）；後台「設定 → 隱私權」有設私隱政策頁時附連結。文字待 GURU 確認。
+  - 每個欄位加看得見的 `<label class="guru-label">`（12px 粗體大寫，必填藍色 *、選填「(optional)」），拿掉重複的 aria-label；Email placeholder 改範例、服務下拉第一項改「Select a service」；加 `autocomplete`；`aria-invalid` 欄位紅框（#c0392b）。燈箱表單錯誤字由 #ff6b6b 改 #c0392b（淺色卡片上 2.72 → 5.34:1）。
+  - `tools/test-form.py` 加兩項：沒填電話要成功、沒填公司要失敗，七項全過。
+- **文章**：日期一律英文（「17 Nov 2026」，`<time datetime>`），原本跟著後台語言顯示成「10 11 月, 2026」；作者是 admin、或沒設公開名稱（顯示名稱＝登入帳號）時不顯示（規格 #15：不顯示 admin）。`guru_post_date()`、`guru_post_author()`。
+- **6.3 Insights 與 Investor 標題統一**：共用 `.page-title`（`clamp(44px, 3.7vw, 52px)`、700、行高 1.05、字距 -0.03em，≤767px 36px），1440 寬時兩頁都是 52px（原本 115px／86px）。字級工具把 `page-title` 歸在「Page titles」，兩頁一起縮放。
+- **Insights 頁**：標題區高度隨內容；選單底到標題 72px、標題底到分隔線約 64px；文章格子 3／2／1 欄、圖片 16:9；手機篩選列可橫滑且不撐寬頁面。
+- **Investor 頁**：公司名稱不再強制換行（1440 一行，窄螢幕自然換行）；主內容 1160px、介紹 1040px；H1 到介紹 28px、介紹到資料區 84px、文件欄與聯絡卡間距 64px；1440×900 首屏可同時看到標題、介紹、第一筆文件和聯絡卡頂部。文件按鈕顯示語言、PDF 和檔案大小（「English PDF · 412 KB」），讀屏名稱含文件名；大小先讀附件資料，再讀伺服器上的檔案，都沒有就不顯示。列表快取鍵改 `_v2`。
+- **6.2 首頁 Our Solutions**：上下 72px、左右 40px、欄寬約 0.9／1.2、欄距 72px、eyebrow 到標題 32px、手風琴頂部與標題頂部對齊；「Our Solutions」改 6vw 保持一行；手機上下 40／48px、左右 20px、兩部分間距 32px。
+
 ## 1.3.3 — 2026-11-18
 
 修 1.3.2 驗收找到的問題。

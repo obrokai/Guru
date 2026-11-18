@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Keep in step with the Version header in style.css — that is the number the
  * Appearance → Themes screen shows, and the one the package filename uses.
  */
-define( 'GURU_VERSION', '1.3.3' );
+define( 'GURU_VERSION', '1.4.0' );
 
 /**
  * Theme supports and menus.
@@ -141,3 +141,20 @@ require_once get_stylesheet_directory() . '/inc/contact-form.php';
 require_once get_stylesheet_directory() . '/inc/importer.php';
 require_once get_stylesheet_directory() . '/inc/redirects.php';
 require_once get_stylesheet_directory() . '/inc/seo.php';
+
+/**
+ * Contact Form 7 is installed on the site, but every contact form here is the
+ * theme's own (inc/contact-form.php), and old [contact-form-7] codes are stripped
+ * from page content. So its script, styles and their helpers load on no page,
+ * unless a page really holds a CF7 block (client spec #7, v1.4.0).
+ *
+ * @return bool
+ */
+function guru_cf7_needed() {
+	$post = is_singular() ? get_queried_object() : null;
+	return $post instanceof WP_Post
+		&& function_exists( 'has_block' )
+		&& has_block( 'contact-form-7/contact-form-selector', $post );
+}
+add_filter( 'wpcf7_load_js', 'guru_cf7_needed' );
+add_filter( 'wpcf7_load_css', 'guru_cf7_needed' );

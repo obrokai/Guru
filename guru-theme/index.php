@@ -39,7 +39,7 @@ if ( is_home() ) {
 
 <div class="blg-hero">
 	<div class="blg-hero-left">
-		<h1 class="blg-hero-title"><?php echo esc_html( $guru_heading ); ?></h1>
+		<h1 class="blg-hero-title page-title"><?php echo esc_html( $guru_heading ); ?></h1>
 	</div>
 	<?php // The blog intro beside the heading was removed at the client's request (v1.2.10); only the 404 page keeps its explanation. ?>
 	<?php if ( is_404() ) : ?>
@@ -91,7 +91,7 @@ if ( is_home() ) {
 				<h2 class="art-title"><?php the_title(); ?></h2>
 				<p class="art-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 24 ) ); ?></p>
 				<div class="art-meta">
-					<span><?php echo esc_html( get_the_date() ); ?></span>
+					<span><?php echo guru_post_date(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- English date (v1.4.0). ?></span>
 				</div>
 			</a>
 			<?php

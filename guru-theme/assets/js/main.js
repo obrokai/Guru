@@ -195,6 +195,10 @@ function guruModal(ids) {
   var gallery    = guruGallery($(ids.gallery));
 
   if (modalForm) setupPhoneGroup(modalForm);
+  // Screen readers: announce it as a dialog named after the project (client spec #8).
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  if (titleEl && titleEl.id) overlay.setAttribute('aria-labelledby', titleEl.id);
 
   function updateScrollHint() {
     if (!scrollHint) return;
@@ -298,23 +302,7 @@ function guruModal(ids) {
   if (modalForm) {
     modalForm.addEventListener('submit', function (e) {
       if (projectEl && titleEl) projectEl.value = titleEl.textContent || '';
-      var required = ['name','email','phone','company'];
-      for (var i = 0; i < required.length; i++) {
-        var f = modalForm.elements[required[i]];
-        if (f && !f.value.trim()) {
-          e.preventDefault();
-          f.focus();
-          if (formNote) { formNote.style.color = '#ff6b6b'; formNote.textContent = 'Please fill in all required (*) fields.'; }
-          return;
-        }
-      }
-      var phoneErr = validatePhone(modalForm);
-      if (phoneErr) {
-        e.preventDefault();
-        modalForm.elements['phone'].focus();
-        if (formNote) { formNote.style.color = '#ff6b6b'; formNote.textContent = phoneErr; }
-        return;
-      }
+      if (!guruCheckForm(modalForm, formNote, '#c0392b')) { e.preventDefault(); return; }
       lockSubmit(modalForm, e);
     });
   }
@@ -326,6 +314,7 @@ function guruModal(ids) {
   document.addEventListener('keydown', function (e) {
     if (!overlay.classList.contains('open')) return;
     if (e.key === 'Escape') close();
+    if (e.key === 'Tab') { guruTrapTab(e, overlay); return; }
     // Left / right arrows page through the pictures (not while typing in the form).
     var t = e.target;
     if (!gallery || !gallery.count() || (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.closest('.gg-track')))) return;
@@ -428,15 +417,22 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   var menu   = document.getElementById('gnMobileMenu');
   if (!toggle || !menu) return;
 
+  toggle.setAttribute('aria-controls', 'gnMobileMenu');
+
   function openMenu() {
     menu.classList.add('open');
     toggle.classList.add('open');
     toggle.setAttribute('aria-expanded', 'true');
+    // Keyboard (client spec #8): start on the first link.
+    var first = menu.querySelector('a[href], button');
+    if (first) first.focus({ preventScroll: true });
   }
-  function closeMenu() {
+  function closeMenu(backToToggle) {
+    if (!menu.classList.contains('open')) return;
     menu.classList.remove('open');
     toggle.classList.remove('open');
     toggle.setAttribute('aria-expanded', 'false');
+    if (backToToggle === true) toggle.focus({ preventScroll: true });
   }
 
   toggle.addEventListener('click', function() {
@@ -449,14 +445,36 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if (!menu.contains(e.target) && !toggle.contains(e.target)) closeMenu();
   });
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeMenu();
+    if (!menu.classList.contains('open')) return;
+    if (e.key === 'Escape') closeMenu(true);
+    // Tab stays between the menu button and the menu's links while it is open.
+    if (e.key === 'Tab') guruTrapTab(e, menu, toggle);
   });
 })();
+
+/* ── Keep Tab inside an open menu / lightbox (client spec #8) ──
+   `extra` is an element outside `root` that belongs to the loop (the menu button). */
+function guruTrapTab(e, root, extra) {
+  var sel = 'a[href], button:not([disabled]), input:not([type="hidden"]):not([tabindex="-1"]), select, textarea, video[controls], [tabindex]:not([tabindex="-1"])';
+  var list = [].slice.call(root.querySelectorAll(sel)).filter(function (el) {
+    return el.getClientRects().length && !el.closest('[aria-hidden="true"]');
+  });
+  if (extra) list.unshift(extra);
+  if (!list.length) return;
+  var first = list[0], last = list[list.length - 1], cur = document.activeElement;
+  var inside = root.contains(cur) || cur === extra;
+  if (e.shiftKey && (cur === first || !inside)) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && (cur === last || !inside)) { e.preventDefault(); first.focus(); }
+}
 
 /* ── Showcase card films: load and play only while on screen ── */
 (function () {
   var vids = document.querySelectorAll('video[data-lazy-play]');
   if (!vids.length) return;
+  // Motion effects turned off (client spec #5): keep the cover picture, load nothing.
+  // The play button still opens the film in the lightbox.
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  if (reduce && reduce.matches) return;
 
   function play(v) {
     if (v.preload !== 'auto') v.preload = 'auto';
@@ -477,6 +495,28 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   }, { rootMargin: '200px 0px' });
 
   vids.forEach(function (v) { observer.observe(v); });
+})();
+
+/* ── Motion effects turned off: other looping films (Solutions page) stay still ── */
+(function () {
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  if (!reduce) return;
+  function apply() {
+    if (!reduce.matches) return;
+    document.querySelectorAll('video[autoplay]:not(#heroVideo)').forEach(function (v) {
+      v.removeAttribute('autoplay');
+      v.autoplay = false;
+      v.pause();
+    });
+    // Solutions films have no controls of their own: give them some, so they can still be watched.
+    document.querySelectorAll('.srv-video-wrap video, .srv-carousel-slide video').forEach(function (v) {
+      v.pause();
+      v.controls = true;
+    });
+  }
+  apply();
+  if (reduce.addEventListener) reduce.addEventListener('change', apply);
+  else if (reduce.addListener) reduce.addListener(apply);
 })();
 
 /* ── Count-up animation for stat numbers ── */
@@ -594,6 +634,9 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   var panels   = document.querySelectorAll('.srv-panel');
   var nextBtns = document.querySelectorAll('.srv-panel-next');
   var carousels = [];
+  // Motion effects turned off (client spec #5): films don't start by themselves;
+  // they get playback controls instead (see the block before the count-up animation).
+  function still() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
 
   // Carousels — one instance per .srv-carousel-outer, no shared ids.
   document.querySelectorAll('.srv-carousel-outer').forEach(function (outer) {
@@ -615,7 +658,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
       slides.forEach(function (s, i) {
         var v = s.querySelector('video');
         if (!v) return;
-        if (i === cur) { v.play().catch(function () {}); }
+        if (i === cur) { if (!still()) v.play().catch(function () {}); }
         else { v.pause(); v.currentTime = 0; }
       });
     }
@@ -650,7 +693,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
     target.classList.add('active');
     // Autoplaying videos (single-video block) resume; carousels play their current slide.
-    target.querySelectorAll('.srv-video-wrap video, video[autoplay]').forEach(function (v) { v.play().catch(function () {}); });
+    if (!still()) target.querySelectorAll('.srv-video-wrap video, video[autoplay]').forEach(function (v) { v.play().catch(function () {}); });
     carousels.forEach(function (c) { if (target.contains(c.el)) c.play(); else c.pause(); });
 
     if (navItem) {
@@ -751,25 +794,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   if (!form) return;
   setupPhoneGroup(form);
   form.addEventListener('submit', function (e) {
-    var required = ['name','email','phone','company'];
-    for (var i = 0; i < required.length; i++) {
-      var f = form.elements[required[i]];
-      if (f && !f.value.trim()) {
-        e.preventDefault();
-        f.focus();
-        note.style.color = '#c0392b';
-        note.textContent = 'Please fill in all required (*) fields.';
-        return;
-      }
-    }
-    var phoneErr = validatePhone(form);
-    if (phoneErr) {
-      e.preventDefault();
-      form.elements['phone'].focus();
-      note.style.color = '#c0392b';
-      note.textContent = phoneErr;
-      return;
-    }
+    if (!guruCheckForm(form, note, '#c0392b')) { e.preventDefault(); return; }
     lockSubmit(form, e);
   });
 })();
@@ -779,26 +804,48 @@ document.querySelectorAll('.spf-form').forEach(function (form) {
   var note = form.querySelector('.spf-note');
   setupPhoneGroup(form);
   form.addEventListener('submit', function (e) {
-    var required = ['name','email','phone','company'];
-    for (var i = 0; i < required.length; i++) {
-      var f = form.elements[required[i]];
-      if (f && !f.value.trim()) {
-        e.preventDefault();
-        f.focus();
-        if (note) { note.style.color = '#c0392b'; note.textContent = 'Please fill in all required (*) fields.'; }
-        return;
-      }
-    }
-    var phoneErr = validatePhone(form);
-    if (phoneErr) {
-      e.preventDefault();
-      form.elements['phone'].focus();
-      if (note) { note.style.color = '#c0392b'; note.textContent = phoneErr; }
-      return;
-    }
+    if (!guruCheckForm(form, note, '#c0392b')) { e.preventDefault(); return; }
     lockSubmit(form, e);
   });
 });
+
+/* ── Form check with an error summary (client spec #8, v1.4.0) ──
+   Lists every field that needs attention in the note under the form (read out by
+   screen readers), marks those fields invalid and puts the cursor in the first one.
+   Contact No. is optional; when given it must have the right number of digits. */
+function guruCheckForm(form, note, color) {
+  var checks = [
+    ['name', 'Name'],
+    ['company', 'Company Name'],
+    ['email', 'Business Email']
+  ];
+  var problems = [], firstBad = null;
+  function mark(f, bad) {
+    if (!f) return;
+    if (bad) { f.setAttribute('aria-invalid', 'true'); if (!firstBad) firstBad = f; }
+    else f.removeAttribute('aria-invalid');
+  }
+  checks.forEach(function (c) {
+    var f = form.elements[c[0]];
+    if (!f) return;
+    var v = f.value.trim(), bad = false;
+    if (!v) { problems.push(c[1] + ' is required'); bad = true; }
+    else if (c[0] === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { problems.push(c[1] + ' is not a valid address'); bad = true; }
+    mark(f, bad);
+  });
+  var phone = form.elements['phone'];
+  var phoneErr = phone && phone.value.trim() ? validatePhone(form) : '';
+  if (phoneErr) problems.push(phoneErr.replace(/\.$/, ''));
+  mark(phone, !!phoneErr);
+  if (note) {
+    note.setAttribute('role', 'alert');
+    note.style.color = problems.length ? color : '';
+    note.textContent = problems.length ? 'Please check: ' + problems.join('; ') + '.' : '';
+    if (note.id) form.querySelectorAll('[aria-invalid="true"]').forEach(function (f) { f.setAttribute('aria-describedby', note.id); });
+  }
+  if (firstBad) firstBad.focus();
+  return !problems.length;
+}
 
 /* ── Block a second click while the form is on its way (v1.3.0) ── */
 function lockSubmit(form, e) {

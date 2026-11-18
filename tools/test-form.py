@@ -55,6 +55,8 @@ results = [
     post({**base, "email": "not-an-email"}, "invalid email", 0, "error"),
     post({**base, "guru_contact_nonce": "bad"}, "bad nonce", 0, "error"),
     post({**base, "guru_redirect": "https://evil.example/"}, "off-site redirect", 1, "sent"),
+    post({**base, "phone": ""}, "no phone (optional, 1.4.0)", 1, "sent"),
+    post({**base, "company": ""}, "no company", 0, "error"),
 ]
 print("stored row:", php('global $wpdb; echo json_encode($wpdb->get_row("SELECT name, company, email, phone, service, message FROM " . guru_enquiries_table() . " ORDER BY id ASC LIMIT 1", ARRAY_A), JSON_UNESCAPED_UNICODE);'))
 sys.exit(0 if all(results) else 1)

@@ -3,7 +3,7 @@
 .gn-mobile-link { font-size: calc(32px * var(--guru-fs-nav, 1)); }
 .gn-mobile-link::after { font-size: calc(20px * var(--guru-fs-nav, 1)); }
 .gh-sub { font-size: calc(15px * var(--guru-fs-body, 1)); }
-.svc-title { font-size: calc(clamp(48px, 7vw, 120px) * var(--guru-fs-heading, 1)); }
+.svc-title { font-size: calc(clamp(48px, 6vw, 104px) * var(--guru-fs-heading, 1)); }
 .svc-lead { font-size: calc(clamp(18px, 1.5vw, 22px) * var(--guru-fs-body, 1)); }
 .svc-all-link { font-size: calc(15px * var(--guru-fs-body, 1)); }
 .svc-acc-name { font-size: calc(clamp(22px, 2.4vw, 36px) * var(--guru-fs-heading, 1)); }
@@ -73,4 +73,8 @@
 }
 @media (max-width: 767px) {
   .gh-intro { font-size: calc(15px * var(--guru-fs-body, 1)); }
+}
+.page-title { font-size: calc(clamp(44px, 3.7vw, 52px) * var(--guru-fs-hero, 1)); }
+@media (max-width: 767px) {
+  .page-title { font-size: calc(36px * var(--guru-fs-hero, 1)); }
 }

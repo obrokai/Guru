@@ -92,16 +92,15 @@ $guru_sent = isset( $_GET['contact'] ) ? sanitize_key( wp_unslash( $_GET['contac
 						</div>
 
 						<div class="cf-field">
-							<input class="cf-input" type="text" id="cf-name" name="name"
-								placeholder="<?php esc_attr_e( 'Name *', 'guru' ); ?>"
-								aria-label="<?php esc_attr_e( 'Name', 'guru' ); ?>" required />
+							<label class="guru-label" for="cf-name"><?php esc_html_e( 'Name', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+							<input class="cf-input" type="text" id="cf-name" name="name" autocomplete="name" required />
 						</div>
 						<div class="cf-field">
-							<input class="cf-input" type="text" id="cf-company" name="company"
-								placeholder="<?php esc_attr_e( 'Company Name *', 'guru' ); ?>"
-								aria-label="<?php esc_attr_e( 'Company Name', 'guru' ); ?>" required />
+							<label class="guru-label" for="cf-company"><?php esc_html_e( 'Company Name', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+							<input class="cf-input" type="text" id="cf-company" name="company" autocomplete="organization" required />
 						</div>
 						<div class="cf-field">
+							<label class="guru-label" for="cf-phone"><?php esc_html_e( 'Contact No.', 'guru' ); ?> <span class="guru-label-opt"><?php esc_html_e( '(optional)', 'guru' ); ?></span></label>
 							<div class="cf-phone-group">
 								<select class="cf-input cf-cc" name="cc" aria-label="<?php esc_attr_e( 'Country code', 'guru' ); ?>">
 									<option value="+852" data-len="8" selected>+852</option>
@@ -116,31 +115,30 @@ $guru_sent = isset( $_GET['contact'] ) ? sanitize_key( wp_unslash( $_GET['contac
 									<option value="+61" data-len="">+61</option>
 									<option value="+other" data-len=""><?php esc_html_e( 'Other', 'guru' ); ?></option>
 								</select>
-								<input class="cf-input cf-phone" type="tel" id="cf-phone" name="phone"
-									placeholder="<?php esc_attr_e( 'Contact No. *', 'guru' ); ?>" inputmode="numeric"
-									aria-label="<?php esc_attr_e( 'Contact No.', 'guru' ); ?>" required />
+								<input class="cf-input cf-phone" type="tel" id="cf-phone" name="phone" inputmode="numeric" autocomplete="tel-national" />
 							</div>
 						</div>
 						<div class="cf-field">
-							<input class="cf-input" type="email" id="cf-email" name="email"
-								placeholder="<?php esc_attr_e( 'Business Email *', 'guru' ); ?>"
-								aria-label="<?php esc_attr_e( 'Business Email', 'guru' ); ?>" required />
+							<label class="guru-label" for="cf-email"><?php esc_html_e( 'Business Email', 'guru' ); ?> <span class="guru-label-req" aria-hidden="true">*</span></label>
+							<input class="cf-input" type="email" id="cf-email" name="email" autocomplete="email"
+								placeholder="<?php esc_attr_e( 'name@company.com', 'guru' ); ?>" required />
 						</div>
 						<div class="cf-field full">
-							<select class="cf-select" id="cf-service" name="service"
-								aria-label="<?php esc_attr_e( "Service You're Looking For", 'guru' ); ?>">
-								<option value=""><?php esc_html_e( "Service You're Looking For", 'guru' ); ?></option>
+							<label class="guru-label" for="cf-service"><?php esc_html_e( "Service You're Looking For", 'guru' ); ?></label>
+							<select class="cf-select" id="cf-service" name="service">
+								<option value=""><?php esc_html_e( 'Select a service', 'guru' ); ?></option>
 								<?php foreach ( $guru_services as $guru_service ) : ?>
 									<option><?php echo esc_html( $guru_service ); ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
 						<div class="cf-field full">
+							<label class="guru-label" for="cf-message"><?php esc_html_e( 'Tell Us More', 'guru' ); ?></label>
 							<textarea class="cf-textarea" id="cf-message" name="message"
-								aria-label="<?php esc_attr_e( 'Tell Us More', 'guru' ); ?>"
 								placeholder="<?php esc_attr_e( 'How can we help you?', 'guru' ); ?>"></textarea>
 						</div>
 
+						<?php guru_form_privacy_note(); ?>
 						<p class="cf-note" id="cfNote">
 							<?php if ( 'sent' === $guru_sent ) : ?>
 								<?php esc_html_e( 'Thank you — we have received your enquiry and will be in touch.', 'guru' ); ?>

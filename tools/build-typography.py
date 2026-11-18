@@ -38,7 +38,7 @@ EXCLUDE = re.compile(
     r"\.inv-sidebar-card-title|\.hw-vmodal-sub|\.vmodal-client|\.wrk-card-meta|\.prj-tags"
 )
 NAV = re.compile(r"\.gn-(link|mobile-link)\b")
-HERO = re.compile(r"\.(abt-hero-title|inv-hero-title|blg-hero-title|wrk-page-title|blg-single-title|"
+HERO = re.compile(r"\.(page-title|abt-hero-title|inv-hero-title|blg-hero-title|wrk-page-title|blg-single-title|"
                   r"srv-panel-title|gh-h1|gh-title)\b")
 HEADING = re.compile(r"-(title|heading)\b|\.abt-stat-num\b|\.svc-acc-name\b|\.abt-office-city\b|\.svc-name\b|"
                      r"\.inf-heading\b|\.hw-vmodal-title\b|\.vmodal-title\b|(^|[\s>+~,])h[1-3]\b")

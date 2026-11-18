@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.3.3
+Version:     1.4.0
 Released:    2026-11-18
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -423,9 +423,10 @@ Text Domain: guru
   }
 
   /* ================================================== SERVICES */
+  /* v1.4.0 spacing (client spec 6.2): 72px above and below, 40px gutters. */
   .svc {
     position: relative;
-    padding: 120px 40px;
+    padding: 72px 40px;
   }
   .svc-inner, .wrk-inner, .ftr-inner {
     max-width: 1500px;
@@ -441,18 +442,20 @@ Text Domain: guru
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--blue);
-    margin-bottom: 56px;
+    margin-bottom: 32px;
   }
-  /* Two-column: intro left, accordion right */
+  /* Two-column: intro left, accordion right; both start on the same line, so the
+     accordion's top rule lines up with the top of "Our Solutions". */
   .svc-layout {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 80px;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+    gap: 72px;
     align-items: start;
   }
   .svc-intro { position: sticky; top: 120px; }
+  /* 6vw (was 7vw) keeps "Our Solutions" on one line in the narrower 0.9fr column. */
   .svc-title {
-    font-size: clamp(48px, 7vw, 120px);
+    font-size: clamp(48px, 6vw, 104px);
     font-weight: 800;
     line-height: 0.92;
     letter-spacing: -0.04em;
@@ -1591,6 +1594,10 @@ Text Domain: guru
     .gh-line-c, .gh-sub, .gh-btn-solid, .gh-btn-ghost {
       animation: none !important;
     }
+    /* v1.4.0: with its fade-out animation removed, the cover stayed opaque and the
+       whole page was blank for these visitors. style.css loads on every page, so this
+       also covers the cover rules in about/blog/work.css. */
+    .pg-intro { display: none !important; }
   }
 
   /* Hide-on-scroll-down / show-on-scroll-up */
@@ -1657,17 +1664,18 @@ Text Domain: guru
     .gh-btn-solid, .gh-btn-ghost { padding: 16px 28px; font-size: 15px; }
     .gh-sub { font-size: 14px; max-width: 100%; line-height: 1.55; }
 
-    .svc, .abt, .wrk, .ftr-top { padding: 80px 20px; }
+    .abt, .wrk, .ftr-top { padding: 80px 20px; }
     .inf { padding: 80px 20px; }
     .wrk-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 48px; }
     .wrk-header-right { align-items: flex-start; }
     .wrk-title { font-size: clamp(40px, 12vw, 80px); }
     .svc-title { font-size: clamp(40px, 12vw, 80px); }
     /* Client 11-17: less empty space on phones — under "What we do", and between Solutions and Our Work (was 160px). */
+    /* v1.4.0 (client spec 6.2): one column, 20px sides, 40px above / 48px below, 32px between intro and accordion. */
     .svc-label { margin-bottom: 20px; }
-    .svc { padding-bottom: 40px; }
+    .svc { padding: 40px 20px 48px; }
     .wrk { padding-top: 40px; }
-    .svc-layout { grid-template-columns: 1fr; gap: 40px; }
+    .svc-layout { grid-template-columns: 1fr; gap: 32px; }
     .svc-intro { position: static; top: auto; }
     .svc-lead { font-size: 17px; max-width: none; }
     .svc-all-link, .wrk-all { padding: 14px 22px; font-size: 14px; }
@@ -1993,3 +2001,53 @@ Text Domain: guru
   /* Play overlays are buttons now: drop the browser's button look. */
   .wrk-play-btn, .prj-play-btn { border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; width: 100%; }
   .wrk-play-btn:focus-visible, .prj-play-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: -3px; }
+
+  /* ================================================== v1.4.0 — CLIENT SPEC BATCH 2 */
+  /* Shared page title for Insights (blog list) and Investor (spec 6.3): both 52px at
+     1440px. Colour and case stay with each page (green capitals on Insights). Scaled by
+     Customize → Typography → Page titles like the other page titles; 100% = 52px. */
+  .page-title {
+    margin: 0;
+    font-family: inherit;
+    font-size: clamp(44px, 3.7vw, 52px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+  @media (max-width: 767px) {
+    .page-title { font-size: 36px; }
+  }
+
+/* ── v1.4.0 keyboard (client spec #8) ──────────────────────────────────────
+   Closed lightboxes were only see-through (opacity 0), so Tab still walked through
+   their invisible close button and form. Hide them for real once the fade ends. */
+.hw-vmodal, .vmodal-overlay { visibility: hidden; transition: opacity 0.28s ease, visibility 0s linear 0.28s; }
+.hw-vmodal.open, .vmodal-overlay.open { visibility: visible; transition: opacity 0.28s ease, visibility 0s; }
+
+/* v1.4.0: privacy line above the Send button of every contact form (client spec, section 9) */
+.guru-form-privacy { grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; line-height: 1.5; opacity: .72; }
+.guru-form-privacy a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+/* v1.4.0: visible field labels on the four contact forms (client spec #8 / section 9).
+   Small capitals like the site's other labels; the forms sit on a light card everywhere
+   (the lightboxes too), so one dark colour works: --ink-2 on #fdfdfb is 13.6:1. */
+.guru-label {
+  display: block;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 12px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-2, #2c2c30);
+}
+.guru-label-req { color: var(--blue, #1B23E0); margin-left: 1px; }
+.guru-label-opt { font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-3, #6d6d72); }
+/* Fields the form check flags (aria-invalid): the site's error red as a quiet outline. */
+:is(.cf-input, .cf-select, .cf-textarea, .hwf-input, .hwf-select, .hwf-textarea,
+    .vmf-input, .vmf-select, .vmf-textarea, .spf-input, .spf-select, .spf-textarea)[aria-invalid="true"] {
+  border-color: #c0392b;
+  background-color: #fffafa;
+}
+:is(.cf-input, .cf-select, .cf-textarea, .hwf-input, .hwf-select, .hwf-textarea,
+    .vmf-input, .vmf-select, .vmf-textarea, .spf-input, .spf-select, .spf-textarea)[aria-invalid="true"]:focus {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.12);
+}

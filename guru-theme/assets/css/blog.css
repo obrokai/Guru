@@ -128,8 +128,11 @@
   }
 
   /* ══════════════════════════════════════════ HERO */
+  /* v1.4.0 (spec 6.3): the title sits 72px under the menu and 64px above the divider;
+     the band is as tall as its content, so the divider, filters and cards follow it up. */
   .blg-hero {
-    padding: 160px 40px 72px;
+    padding: 156px 40px 64px;
+    height: auto; min-height: 0;
     max-width: 1580px; margin: 0 auto;
     display: flex; align-items: flex-end; justify-content: space-between;
     gap: 40px; border-bottom: 1px solid var(--line);
@@ -145,9 +148,9 @@
     content: ''; display: inline-block; width: 8px; height: 8px;
     border-radius: 50%; background: var(--blue);
   }
+  /* Size, weight and spacing come from the shared .page-title (style.css). */
   .blg-hero-title {
-    font-size: clamp(52px, 8vw, 128px); font-weight: 800;
-    line-height: 0.86; letter-spacing: -0.05em; text-transform: uppercase;
+    text-transform: uppercase;
     color: var(--lime);
   }
   .blg-hero-right {
@@ -394,7 +397,7 @@
     .gn-hamburger { display: flex; }
     .gn-logo { height: 48px; padding: 0 14px; }
     .gn-logo img { height: 14px; }
-    .blg-hero { padding: 130px 22px 56px; flex-direction: column; align-items: flex-start; }
+    .blg-hero { padding: 140px 22px 64px; flex-direction: column; align-items: flex-start; }
     .blg-hero-right { align-items: flex-start; }
     .blg-hero-desc { text-align: left; }
     .blg-featured { padding: 48px 22px 0; }
@@ -410,8 +413,19 @@
     .ftr-bottom { padding: 50px 22px 24px; }
     .ftr-bottom .ftr-inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 767px) {
+    /* Phones: one card per row; the title band is tighter (56px under the menu, 48px above the divider). */
     .blg-grid { grid-template-columns: 1fr; }
+    .blg-hero { padding: 124px 22px 48px; }
+    /* Category filters stay on one line and scroll sideways inside their own strip. */
+    .blg-filters {
+      flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .blg-filters::-webkit-scrollbar { display: none; }
+    .blg-filter-btn { flex: 0 0 auto; white-space: nowrap; }
+  }
+  @media (max-width: 560px) {
     .ftr-bottom .ftr-inner { grid-template-columns: 1fr; }
   }
   .gn-nav.nav-hidden .gn-nav-inner { transform: translateY(-170%); }
