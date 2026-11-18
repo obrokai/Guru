@@ -17,7 +17,8 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 ?>
 
 <div class="gh-wrap">
-	<section class="gh" aria-labelledby="home-title">
+	<?php // Title backdrop: gh--glass (clear frosted-glass card). Alternatives in style.css, v1.3.0 hero block: gh--pill / gh--glass-dark / gh--pill-split / gh--nobg / gh--g-a / gh--g-b / gh--g-c / gh--legible. ?>
+	<section class="gh gh--glass" aria-labelledby="home-title">
 		<?php
 		$guru_hero_desktop = guru_hero_video_url( 'desktop' );
 		$guru_hero_mobile  = guru_hero_video_url( 'mobile' );
@@ -36,7 +37,7 @@ $guru_work_url      = get_post_type_archive_link( 'work' );
 		<?php
 		/*
 		 * The homepage's one H1, in the HTML from the start (v1.3.0, client spec #1 / 6.1).
-		 * Bottom-left, clear of the logo in the middle of the film; a local scrim behind
+		 * Bottom-left, clear of the logo in the middle of the film; a green tint behind
 		 * it keeps it readable on bright and dark frames. Edited in Customize → Homepage.
 		 */
 		$guru_hero_title = guru_mod( 'guru_hero_title' );

@@ -51,7 +51,7 @@ function guru_default( $id ) {
 			'guru_contact_cta_button'  => 'Get In Touch',
 			// Homepage hero (v1.3.0). Draft copy from the client's spec of 2026-11-17 — GURU to confirm.
 			'guru_hero_title'        => 'Digital Marketing for Hong Kong, China & Global Growth',
-			'guru_hero_intro'        => 'GURU combines strategy, creative, media, creators, search and technology to help brands enter markets, build demand and measure business impact.',
+			'guru_hero_intro'        => 'Strategy, creative, media and technology that help brands enter markets and build demand.',
 			'guru_hero_cta_contact'  => 'Discuss Your Growth Challenge',
 			'guru_hero_cta_work'     => 'Our Work',
 			'guru_hero_cta_solutions' => 'Our Solutions',

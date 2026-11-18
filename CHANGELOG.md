@@ -8,6 +8,17 @@
 
 ---
 
+## 1.3.2 — 2026-11-18
+
+- **首頁標題區改成 Apple 風格的透明霧面卡片**（Mike：原本標題後面的黑底太突兀，要融入現有設計、要透明）。
+  - 標題＋副標題放在一張霧面玻璃卡片裡（`.gh--glass`）：白色只疊 58%，後方影片模糊 32px、飽和 180% 透出來；1px 半透明白框＋上緣細亮光＋柔和陰影（與 menu 同款淡細框，白畫面也看得出邊）；圓角 36px（手機 26px）。
+  - 字改成跟 menu 一樣的深色（標題 `--ink`、副標題 `--ink-2`），整支影片（全白、暗色賓士、綠底、拼貼、派對）實測最差：標題 6.7:1、副標題 4.9:1，都過規格 4.5:1。不支援 backdrop-filter 的瀏覽器退回 90% 白底。
+  - 版面：寬螢幕（≥1280 寬且 >700 高）標題卡片在左下、三顆按鈕在右下，兩組底部對齊；其他尺寸按鈕排在卡片下方。卡片左緣對齊左上 logo 膠囊，按鈕右緣對齊右上 menu 膠囊。白按鈕加 menu 同款 1px 淡框。
+  - 拿掉 v1.3.0 的局部深色背板（`.gh-copy::before`）和底部全寬陰影（`.gh::after`）。
+  - 設計過程的其他版本都留在 style.css（v1.3.0 hero 區塊），改 `front-page.php` 上 `section.gh` 的 class 即可切換：`gh--pill`（94% 白卡）、`gh--glass-dark`（深色霧面＋白字）、`gh--pill-split`（兩顆膠囊）、`gh--nobg`（無底色、字邊光暈）、`gh--g-a/b/c`、`gh--legible`（全寬綠底，深淺不同）。
+- **首頁副標題縮短**（Mike）：預設文字改成「Strategy, creative, media and technology that help brands enter markets and build demand.」（Customizer `guru_hero_intro`）。後台若已存過自訂文字，以後台為準。
+- 新增設計 subagent 定義 `~/.claude/agents/guru-design.md`（不在主題內）。
+
 ## 1.3.1 — 2026-11-18
 
 - **有影片也有圖片的作品：影片和圖片放在同一個輪播**（客戶：「如果又有 video 又有圖片的話，它好像只可以 show 到 video，不能有圖片」；Mike：影片＋圖片也用 slide）。staging 上「留心蛋 Mr. Safegg」就是這種（影片＋精選圖片＋內文 3 張圖）。

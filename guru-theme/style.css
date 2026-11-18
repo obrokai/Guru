@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.3.1
+Version:     1.3.2
 Released:    2026-11-18
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -1738,30 +1738,74 @@ Text Domain: guru
   .site-main { display: block; }
   .site-main:focus { outline: none; }
 
-  /* Homepage hero H1 (spec 6.1): bottom-left, near-white, readable on any frame. */
-  .gh .gh-bottom { z-index: 3; } /* text and buttons above the backdrop */
-  .gh-copy {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
-    max-width: 760px;
+  /* Homepage hero H1 (spec 6.1): bottom-left, near-white, readable on any frame.
+     Two groups: title + intro bottom-left, the three buttons bottom-right on the same
+     bottom line (wide screens); phones, tablets and short screens stack the buttons
+     under the text. */
+  .gh {
+    /* Bottom tint: the film's own green (#58B948, = --lime) taken one step deeper with
+       the same hue and colourfulness (each channel -24 = #40A130), laid over the film at
+       62%. On the green frames it reads as the same green sinking slightly darker; on
+       the white frames as a pale, fresh green fade (not grey). */
+    --gh-green: 64 161 48;
+    --gh-green-a: .62;
+    --gh-shadow: 30 72 24;           /* text shadow: deep green, not grey */
+    --gh-fade: clamp(120px, 22vh, 220px);
   }
-  /* Dark backdrop tied to the text block: full strength under the text, fading out
-     over 420px to the right and 120px above it, so white text keeps at least 4.5:1 even
-     on the film's white frames, at any screen width. */
-  .gh-copy::before {
+  /* Tint strengths, switched by one class on section.gh (front-page.php). All are the
+     film's green hue; contrast = near-white text on the tint over an all-white frame
+     (the worst case) / over the film's green frame. Without a class: the pale tint
+     above (1.9:1 / 2.7:1).
+       gh--legible  #2E6E22 at 92%   4.7:1 / 5.1:1   (meets the 4.5:1 spec)
+       gh--g-a      #38802C at 88%   3.6:1 / 4.1:1
+       gh--g-b      #3F9031 at 88%   3.0:1 / 3.4:1   (in use: large-text minimum)
+       gh--g-c      #47A438 at 88%   2.5:1 / 2.8:1
+       gh--nobg     no tint at all: the text carries its own halo (rules below)
+       gh--pill / gh--pill-split / gh--glass / gh--glass-dark   text on a card (below) */
+  .gh--legible { --gh-green: 46 110 34; --gh-green-a: .92; }
+  .gh--g-a { --gh-green: 56 128 44; --gh-green-a: .88; }
+  .gh--g-b { --gh-green: 63 144 49; --gh-green-a: .88; }
+  .gh--g-c { --gh-green: 71 164 56; --gh-green-a: .88; }
+  .gh .gh-bottom { z-index: 3; } /* text and buttons above the tint */
+  .gh::after { display: none; }  /* the old grey shade is replaced by the green tint */
+  /* Full-width green tint behind the bottom text and buttons. It starts above the
+     title, fades in on a smooth (ease-in-out) curve so no line shows, is even across
+     the whole width, and runs off the hero's bottom edge (the hero clips it). Because
+     it hangs off .gh-bottom it grows with the text on phones and short screens. */
+  .gh-bottom::before {
     content: '';
     position: absolute;
-    top: -120px; bottom: -48px; left: -80px; right: -420px;
-    background: linear-gradient(to right, rgba(14,14,16,0.78) 0%, rgba(14,14,16,0.70) calc(100% - 420px), rgba(14,14,16,0.42) calc(100% - 260px), rgba(14,14,16,0.14) calc(100% - 110px), rgba(14,14,16,0) 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.55) 70px, #000 120px);
-            mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.55) 70px, #000 120px);
+    top: calc(-1 * (var(--gh-fade) + 24px));
+    bottom: -240px;
+    left: calc(50% - 50vw);
+    width: 100vw;
     z-index: -1;
     pointer-events: none;
+    background: linear-gradient(to bottom,
+      rgb(var(--gh-green) / 0) 0,
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .028)) calc(var(--gh-fade) * .1),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .104)) calc(var(--gh-fade) * .2),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .216)) calc(var(--gh-fade) * .3),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .352)) calc(var(--gh-fade) * .4),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .5))   calc(var(--gh-fade) * .5),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .648)) calc(var(--gh-fade) * .6),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .784)) calc(var(--gh-fade) * .7),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .896)) calc(var(--gh-fade) * .8),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .972)) calc(var(--gh-fade) * .9),
+      rgb(var(--gh-green) / var(--gh-green-a)) var(--gh-fade),
+      rgb(var(--gh-green) / var(--gh-green-a)) 100%);
   }
-  .gh-copy { isolation: isolate; }
+  .gh-copy {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 600px) minmax(0, 1fr);
+    justify-items: start;
+    align-items: end;
+    gap: 18px 40px;
+  }
+  .gh-title, .gh-intro { grid-column: 1; }
+  .gh-copy .gh-btns { grid-column: 1 / -1; flex-wrap: wrap; margin-top: 6px; }
   .gh-title {
     margin: 0;
     font-size: clamp(36px, 3vw, 44px);
@@ -1769,20 +1813,152 @@ Text Domain: guru
     line-height: 1.08;
     letter-spacing: -0.025em;
     color: rgba(255,255,255,0.92);
-    text-shadow: 0 1px 18px rgba(14,14,16,0.35);
+    text-shadow: 0 1px 2px rgb(var(--gh-shadow) / .22), 0 1px 18px rgb(var(--gh-shadow) / .3);
     text-wrap: balance;
   }
   .gh-intro {
     margin: 0;
-    max-width: 600px;
     font-size: 17px;
     line-height: 1.5;
     font-weight: 500;
-    color: rgba(255,255,255,0.88);
-    text-shadow: 0 1px 12px rgba(14,14,16,0.35);
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 1px 2px rgb(var(--gh-shadow) / .22), 0 1px 12px rgb(var(--gh-shadow) / .3);
   }
-  .gh-copy .gh-btns { flex-wrap: wrap; margin-top: 6px; }
   .gh-copy .gh-btn-solid, .gh-copy .gh-btn-ghost { padding: 16px 28px; font-size: 16px; }
+  /* White buttons on a white frame: the nav's hairline ring keeps their edge. */
+  .gh-copy .gh-btn-ghost { box-shadow: 0 4px 20px rgba(14,14,16,0.14), 0 0 0 1px rgba(14,14,16,0.06); }
+  /* gh--nobg: no backdrop behind the bottom text at all. The words carry their own
+     legibility, the way film subtitles do: pure white, with a dark halo that hugs each
+     letter (a crisp 1px rim, a 2-3px edge, a 4-8px soft edge and a short glow) and
+     does not spread into a cloud. The intro is small, so its rim is denser. */
+  .gh--nobg .gh-bottom::before { display: none; }
+  .gh--nobg .gh-title {
+    color: #fff;
+    text-shadow:
+      0 0 1px rgba(14,14,16,.9),
+      0 0 3px rgba(14,14,16,.6),
+      0 0 8px rgba(14,14,16,.4),
+      0 1px 16px rgba(14,14,16,.25);
+  }
+  .gh--nobg .gh-intro {
+    color: #fff;
+    text-shadow:
+      0 0 1px #0e0e10,
+      0 0 2px rgba(14,14,16,.8),
+      0 0 4px rgba(14,14,16,.55),
+      0 1px 10px rgba(14,14,16,.35);
+  }
+
+  /* Card family: gh--pill, gh--pill-split, gh--glass, gh--glass-dark. The title and intro
+     sit on a card with dark (or, on dark glass, white) text, readable on every frame.
+     gh--pill        one card on the same white glass as the logo and menu pills
+                     (94% white, 14px blur, same shadow and hairline ring)
+     gh--pill-split  title and intro as two separate pills, stacked like logo / menu
+     gh--glass       one card of clear frosted glass (Apple-style): the film shows
+                     through, blurred and richer; thin light rim, soft deep shadow
+     gh--glass-dark  the same glass, dark, with white text (alternative) */
+  .gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark {
+    --gh-glass: rgba(255,255,255,0.94);
+    --gh-glass-shadow: 0 2px 14px rgba(14,14,16,0.10), 0 0 0 1px rgba(14,14,16,0.05);
+    /* line the card up with the logo pill (nav gutter 32px, hero gutter 40px; both
+       stop at 1500px wide) and its right edge with the menu pill */
+    --gh-align: calc((min(1500px, 100vw - 80px) - min(1500px, 100vw - 64px)) / 2);
+  }
+  @media (max-width: 980px) {
+    .gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark { --gh-align: -6px; } /* nav 14px, hero 20px */
+  }
+  @media (max-width: 520px) {
+    .gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark { --gh-align: -4px; } /* nav 14px, hero 18px */
+  }
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-bottom::before { display: none; }
+  /* the text column grows by the card's side padding, so the title keeps its two lines */
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-copy {
+    grid-template-columns: minmax(0, 672px) minmax(0, 1fr);
+    margin-inline: var(--gh-align);
+    width: calc(100% - 2 * var(--gh-align));
+  }
+  @media (min-width: 1280px) and (min-height: 701px) {
+    :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-copy { grid-template-columns: minmax(0, 672px) auto; }
+  }
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-title { color: var(--ink); text-shadow: none; }
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-intro { color: var(--ink-2); text-shadow: none; }
+  /* one card: a backdrop filling the title + intro grid area, text padded inside it */
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-copy::before {
+    content: '';
+    position: absolute;
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    inset: 0;
+    z-index: -1;
+    border-radius: 32px;
+    background: var(--gh-glass);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--gh-glass-shadow);
+    pointer-events: none;
+  }
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-copy { row-gap: 12px; }
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-title { padding: 30px 36px 0; }
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-intro { padding: 0 36px 30px; }
+  /* two pills: each hugs its own text */
+  .gh--pill-split .gh-copy { row-gap: 10px; }
+  .gh--pill-split .gh-title, .gh--pill-split .gh-intro {
+    background: var(--gh-glass);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--gh-glass-shadow);
+  }
+  .gh--pill-split .gh-title { padding: 22px 32px 24px; border-radius: 32px; }
+  .gh--pill-split .gh-intro { padding: 14px 26px; border-radius: 24px; }
+
+  /* Frosted glass. The white layer is as thin as the darkest frames allow: on the
+     night and party shots the card's darkest pixel still gives the title and intro
+     at least 4.5:1 (measured). */
+  .gh--glass { --gh-glass-a: .58; } /* 58% white: even over a black frame the intro (--ink-2) is 4.6:1 */
+  .gh--glass .gh-copy::before {
+    background: rgba(255,255,255,var(--gh-glass-a));
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255,255,255,.5);
+    border-radius: 36px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.7),
+      0 0 0 1px rgba(14,14,16,.05),
+      0 2px 8px rgba(14,14,16,.06),
+      0 18px 50px rgba(14,14,16,.16);
+  }
+  .gh--glass-dark { --gh-glass-a: .62; } /* 62%: even over a white frame the intro is 4.7:1 */
+  .gh--glass-dark .gh-copy::before {
+    background: rgba(18,18,20,var(--gh-glass-a));
+    -webkit-backdrop-filter: blur(32px) saturate(160%);
+    backdrop-filter: blur(32px) saturate(160%);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 36px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 18px 50px rgba(0,0,0,.22);
+  }
+  .gh--glass-dark .gh-title { color: #fff; }
+  .gh--glass-dark .gh-intro { color: rgba(255,255,255,.92); }
+  /* browsers without backdrop blur: a plain, more solid card, text just as clear */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .gh--glass .gh-copy::before { background: rgba(255,255,255,.9); }
+    .gh--glass-dark .gh-copy::before { background: rgba(18,18,20,.86); }
+  }
+
+  @media (max-width: 767px) {
+    :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-copy { grid-template-columns: minmax(0, 1fr); } /* full width */
+    :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-title { padding: 24px 22px 0; }
+    :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-intro { padding: 0 22px 24px; }
+    :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-copy::before { border-radius: 26px; }
+    .gh--pill-split .gh-title, .gh--pill-split .gh-intro { justify-self: stretch; }
+    .gh--pill-split .gh-title { padding: 18px 22px 20px; border-radius: 26px; }
+    .gh--pill-split .gh-intro { padding: 12px 22px; border-radius: 20px; }
+  }
+
+  /* Wide, tall-enough screens: buttons move to the right, bottoms aligned with the intro. */
+  @media (min-width: 1280px) and (min-height: 701px) {
+    .gh-copy { grid-template-columns: minmax(0, 600px) auto; justify-content: space-between; }
+    .gh-copy .gh-btns { grid-column: 2; grid-row: 1 / span 2; align-self: end; flex-wrap: nowrap; margin-top: 0; }
+  }
 
   /* Short screens: let the hero grow with its text instead of clipping it. */
   @media (max-height: 700px) {
@@ -1792,7 +1968,7 @@ Text Domain: guru
     .gh { max-height: none; height: auto; }
     .gh-title { font-size: clamp(30px, 8.4vw, 36px); line-height: 1.1; }
     .gh-intro { font-size: 15px; }
-    .gh-copy { gap: 14px; max-width: 100%; }
+    .gh-copy { row-gap: 14px; }
     .gh-copy .gh-btns { width: 100%; }
     .gh-copy .gh-btn-solid { flex: 1 1 100%; justify-content: center; }
     .gh-copy .gh-btn-ghost { flex: 1 1 0; justify-content: center; padding: 14px 16px; font-size: 15px; }
