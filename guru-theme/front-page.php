@@ -11,26 +11,99 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-$guru_solutions_page = get_page_by_path( 'services' );
-$guru_solutions_url  = $guru_solutions_page ? get_permalink( $guru_solutions_page ) : home_url( '/services/' );
-$guru_work_url       = get_post_type_archive_link( 'work' );
+$guru_solutions_url = guru_page_url( array( 'solutions', 'services' ), '/solutions/' );
+$guru_about_url     = guru_page_url( 'about', '/about/' );
+$guru_work_url      = get_post_type_archive_link( 'work' );
 ?>
 
 <div class="gh-wrap">
-	<section class="gh">
-		<video id="heroVideo" autoplay muted loop playsinline preload="auto">
-			<source src="<?php echo guru_hero_video_url( 'mobile' ); ?>" media="(max-width: 900px)" type="video/mp4" />
-			<source src="<?php echo guru_hero_video_url( 'desktop' ); ?>" type="video/mp4" />
-		</video>
+	<?php // Title backdrop: gh--glass (clear frosted-glass card). Alternatives in style.css, v1.3.0 hero block: gh--pill / gh--glass-dark / gh--pill-split / gh--nobg / gh--g-a / gh--g-b / gh--g-c / gh--legible. ?>
+	<section class="gh gh--glass" aria-labelledby="home-title">
+		<?php
+		$guru_hero_desktop = guru_hero_video_url( 'desktop' );
+		$guru_hero_mobile  = guru_hero_video_url( 'mobile' );
+		$guru_poster_desktop = guru_hero_poster_url( 'desktop' );
+		$guru_poster_mobile  = guru_hero_poster_url( 'mobile' );
+		if ( $guru_hero_desktop || $guru_hero_mobile ) :
+			/*
+			 * Client spec #4 / #5 (v1.4.0). The film's files are attached by the small
+			 * script below, not in the HTML, so a visitor who has turned off motion
+			 * effects never downloads or plays it: they get the still picture (poster).
+			 * Without JavaScript the still picture shows too. If autoplay is refused
+			 * (e.g. battery saver) or the film fails, main.js falls back to the still.
+			 */
+			?>
+			<video id="heroVideo" muted playsinline preload="metadata" aria-hidden="true"
+				poster="<?php echo esc_url( $guru_poster_desktop ); ?>"
+				data-poster="<?php echo esc_url( $guru_poster_desktop ); ?>"
+				data-poster-mobile="<?php echo esc_url( $guru_poster_mobile ); ?>">
+				<?php if ( $guru_hero_mobile ) : ?>
+					<source data-src="<?php echo esc_url( $guru_hero_mobile ); ?>" media="(max-width: 900px)" type="video/mp4" />
+				<?php endif; ?>
+				<?php if ( $guru_hero_desktop ) : ?>
+					<source data-src="<?php echo esc_url( $guru_hero_desktop ); ?>" type="video/mp4" />
+				<?php endif; ?>
+			</video>
+			<script>
+			(function () {
+				var v = document.getElementById('heroVideo');
+				var mm = window.matchMedia;
+				var reduce = mm ? mm('(prefers-reduced-motion: reduce)') : null;
+				var src = v.querySelectorAll('source[data-src]');
+				var i;
+				function poster() {
+					return mm && mm('(max-width: 900px)').matches ? v.getAttribute('data-poster-mobile') : v.getAttribute('data-poster');
+				}
+				function still() { /* back to the still picture, nothing loading */
+					for (i = 0; i < src.length; i++) src[i].removeAttribute('src');
+					v.autoplay = false;
+					v.poster = poster();
+					v.load();
+				}
+				function play() {
+					v.removeAttribute('poster'); /* no green flash before the film's white first frame */
+					for (i = 0; i < src.length; i++) src[i].src = src[i].getAttribute('data-src');
+					v.autoplay = true;
+					v.load();
+					var p = v.play();
+					if (p && p.catch) p.catch(function (e) { if (e && e.name !== 'AbortError') still(); });
+				}
+				if (src.length) src[src.length - 1].addEventListener('error', still);
+				if (reduce && reduce.matches) v.poster = poster(); else play();
+				/* Motion setting changed while the page is open: pause on "reduce", start again when allowed. */
+				if (reduce) {
+					var onChange = function () { if (reduce.matches) v.pause(); else if (!v.currentSrc) play(); else if (!v.ended) v.play(); };
+					if (reduce.addEventListener) reduce.addEventListener('change', onChange); else if (reduce.addListener) reduce.addListener(onChange);
+				}
+			})();
+			</script>
+		<?php endif; ?>
 
+		<?php
+		/*
+		 * The homepage's one H1, in the HTML from the start (v1.3.0, client spec #1 / 6.1).
+		 * Bottom-left, clear of the logo in the middle of the film; a green tint behind
+		 * it keeps it readable on bright and dark frames. Edited in Customize → Homepage.
+		 */
+		$guru_hero_title = guru_mod( 'guru_hero_title' );
+		$guru_hero_intro = guru_mod( 'guru_hero_intro' );
+		?>
 		<div class="gh-bottom">
-			<div class="gh-btns">
-				<a href="<?php echo esc_url( $guru_work_url ); ?>" class="gh-btn-solid">
-					<?php esc_html_e( 'Our Works', 'guru' ); ?> <span style="opacity:.7">&rarr;</span>
-				</a>
-				<a href="<?php echo esc_url( $guru_solutions_url ); ?>" class="gh-btn-ghost">
-					<?php esc_html_e( 'Our Services', 'guru' ); ?>
-				</a>
+			<div class="gh-copy">
+				<?php if ( $guru_hero_title ) : ?>
+					<h1 class="gh-title" id="home-title"><?php echo esc_html( $guru_hero_title ); ?></h1>
+				<?php endif; ?>
+				<?php if ( $guru_hero_intro ) : ?>
+					<p class="gh-intro"><?php echo esc_html( $guru_hero_intro ); ?></p>
+				<?php endif; ?>
+				<div class="gh-btns">
+					<a href="#contact" class="gh-btn-solid">
+						<?php echo esc_html( guru_mod( 'guru_hero_cta_contact' ) ); ?> <span aria-hidden="true" style="opacity:.7">&rarr;</span>
+					</a>
+					<?php // Scrolls to the Our Work block below, as on the static page. ?>
+					<a href="#work" class="gh-btn-ghost"><?php echo esc_html( guru_mod( 'guru_hero_cta_work' ) ); ?></a>
+					<a href="<?php echo esc_url( $guru_solutions_url ); ?>" class="gh-btn-ghost"><?php echo esc_html( guru_mod( 'guru_hero_cta_solutions' ) ); ?></a>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -38,22 +111,62 @@ $guru_work_url       = get_post_type_archive_link( 'work' );
 
 <?php get_template_part( 'template-parts/logo-ticker' ); ?>
 
+<?php
+/*
+ * About block — heading, animated statistics and two paragraphs.
+ * Edited in Customize → Guru site settings → Homepage.
+ */
+$guru_stats = guru_pipe_rows( guru_mod( 'guru_home_about_stats' ) );
+$guru_paras = array_filter( array_map( 'trim', preg_split( '/\r?\n\s*\r?\n/', guru_mod( 'guru_home_about_copy' ) ) ) );
+$guru_cta   = guru_mod( 'guru_home_about_cta' );
+?>
+<section id="about" class="abt">
+	<div class="abt-inner">
+		<div>
+			<h2 class="abt-title"><?php echo esc_html( guru_mod( 'guru_home_about_title' ) ); ?></h2>
+			<?php if ( $guru_stats ) : ?>
+				<div class="abt-stats">
+					<?php foreach ( $guru_stats as $guru_stat ) : ?>
+						<?php
+						$guru_num    = isset( $guru_stat[0] ) ? $guru_stat[0] : '';
+						$guru_suffix = isset( $guru_stat[1] ) ? $guru_stat[1] : '';
+						$guru_label  = isset( $guru_stat[2] ) ? $guru_stat[2] : '';
+						if ( '' === $guru_num ) {
+							continue;
+						}
+						?>
+						<div class="abt-stat">
+							<span class="abt-stat-num"
+								<?php // Whole numbers animate; anything else (2.5, 10k) is shown as typed. ?>
+								<?php if ( ctype_digit( $guru_num ) ) : ?>
+									data-count="<?php echo esc_attr( $guru_num ); ?>" data-suffix="<?php echo esc_attr( $guru_suffix ); ?>"
+								<?php endif; ?>><?php echo esc_html( $guru_num . $guru_suffix ); ?></span>
+							<span class="abt-stat-text"><?php echo esc_html( $guru_label ); ?></span>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+		</div>
+		<div class="abt-right">
+			<div class="abt-copy">
+				<?php foreach ( $guru_paras as $guru_para ) : ?>
+					<p class="abt-p"><?php echo esc_html( $guru_para ); ?></p>
+				<?php endforeach; ?>
+				<?php if ( $guru_cta ) : ?>
+					<a href="<?php echo esc_url( $guru_about_url ); ?>" class="btn-outline-dark"><?php echo esc_html( $guru_cta ); ?> <span>&rarr;</span></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+</section>
+
 <section id="services" class="svc">
 	<div class="svc-inner">
 		<div class="svc-label"><?php esc_html_e( 'What We Do', 'guru' ); ?></div>
 		<div class="svc-layout">
 			<div class="svc-intro">
 				<h2 class="svc-title"><?php esc_html_e( 'Our Solutions', 'guru' ); ?></h2>
-				<p class="svc-lead">
-					<?php
-					echo esc_html(
-						get_theme_mod(
-							'guru_solutions_lead',
-							__( 'We craft integrated digital marketing solutions for ambitious brands — blending strategy, creativity, media, data, technology and AI into measurable growth.', 'guru' )
-						)
-					);
-					?>
-				</p>
+				<p class="svc-lead"><?php echo esc_html( guru_mod( 'guru_solutions_lead' ) ); ?></p>
 				<a href="<?php echo esc_url( $guru_solutions_url ); ?>" class="svc-all-link">
 					<?php esc_html_e( 'View All Solutions', 'guru' ); ?> <span class="svc-arrow">&rarr;</span>
 				</a>
@@ -68,12 +181,15 @@ $guru_work_url       = get_post_type_archive_link( 'work' );
 						$guru_solutions->the_post();
 						?>
 						<div class="svc-acc-item">
-							<button class="svc-acc-head" type="button">
-								<span class="svc-acc-name"><?php the_title(); ?></span>
-								<svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-									<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-								</svg>
-							</button>
+							<?php // H3 under the "Our Solutions" H2; the button inside keeps the row operable (client spec #1). ?>
+							<h3 class="svc-acc-h">
+								<button class="svc-acc-head" type="button" aria-expanded="false">
+									<span class="svc-acc-name"><?php the_title(); ?></span>
+									<svg class="svc-acc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+									</svg>
+								</button>
+							</h3>
 							<div class="svc-acc-body">
 								<div class="svc-acc-inner">
 									<p class="svc-acc-desc"><?php echo esc_html( get_the_excerpt() ); ?></p>
@@ -112,18 +228,13 @@ $guru_work_url       = get_post_type_archive_link( 'work' );
 
 		<div class="wrk-grid">
 			<?php
-			$guru_featured = new WP_Query(
-				array(
-					'post_type'      => 'work',
-					'posts_per_page' => 4,
-					'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
-				)
-			);
+			$guru_featured = guru_home_works();
 
-			if ( $guru_featured->have_posts() ) :
-				$guru_i = 0;
-				while ( $guru_featured->have_posts() ) :
-					$guru_featured->the_post();
+			if ( $guru_featured ) :
+				$guru_i  = 0;
+				$guru_ph = 0;
+				foreach ( $guru_featured as $post ) : // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					setup_postdata( $post );
 					$guru_i++;
 					$guru_data  = guru_get_work_data();
 					$guru_size  = ( 1 === $guru_i ) ? 'wrk-card-large' : 'wrk-card-small';
@@ -132,16 +243,27 @@ $guru_work_url       = get_post_type_archive_link( 'work' );
 					<div class="wrk-card <?php echo esc_attr( $guru_size . ' ' . $guru_class ); ?>"
 						<?php if ( $guru_data['video'] ) : ?>
 							data-video="<?php echo esc_url( $guru_data['video'] ); ?>"
+							<?php echo guru_gallery_attr( $guru_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper; pictures after the film (v1.3.1). ?>
+						<?php else : ?>
+							data-url="<?php echo esc_url( get_permalink() ); ?>"
+							<?php echo guru_gallery_attr( $guru_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>
 						<?php endif; ?>
 						data-title="<?php echo esc_attr( $guru_data['title'] ); ?>"
 						data-sub="<?php echo esc_attr( implode( ' · ', $guru_data['tags'] ) ); ?>">
 
 						<?php if ( $guru_data['video'] ) : ?>
 							<div class="wrk-video-card">
-								<video autoplay muted loop playsinline preload="metadata">
-									<source src="<?php echo esc_url( $guru_data['video'] ); ?>" type="video/mp4" />
-								</video>
-								<div class="wrk-play-btn"></div>
+								<?php if ( $guru_data['image'] ) : ?>
+									<?php // Client spec #4 (v1.4.1): the cover picture only; the film loads when the card is clicked (lightbox). ?>
+									<img src="<?php echo esc_url( $guru_data['image'] ); ?>" alt="<?php echo esc_attr( $guru_data['title'] ); ?>" loading="lazy" />
+								<?php else : ?>
+									<?php // No cover picture yet: a silent preview, loaded and played only while on screen (main.js). ?>
+									<video muted loop playsinline preload="none" data-lazy-play>
+										<source src="<?php echo esc_url( $guru_data['video'] ); ?>" type="video/mp4" />
+									</video>
+								<?php endif; ?>
+								<?php /* translators: %s: project title. */ ?>
+								<button type="button" class="wrk-play-btn" aria-label="<?php echo esc_attr( sprintf( __( 'Play film: %s', 'guru' ), $guru_data['title'] ) ); ?>"></button>
 								<div class="wrk-card-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
 							</div>
 						<?php else : ?>
@@ -150,7 +272,8 @@ $guru_work_url       = get_post_type_archive_link( 'work' );
 									<img src="<?php echo esc_url( $guru_data['image'] ); ?>"
 										alt="<?php echo esc_attr( $guru_data['title'] ); ?>" loading="lazy" />
 								<?php else : ?>
-									<div class="wrk-img-ph"></div>
+									<?php // Two placeholder gradients, alternating like the static page; the title is drawn on it via CSS. ?>
+									<div class="wrk-img-ph<?php echo ( $guru_ph++ % 2 ) ? ' wrk-img-ph-2' : ''; ?>" data-title="<?php echo esc_attr( $guru_data['title'] ); ?>"></div>
 								<?php endif; ?>
 								<div class="wrk-card-hover-label"><?php esc_html_e( 'View Project ↗', 'guru' ); ?></div>
 							</div>
@@ -164,11 +287,12 @@ $guru_work_url       = get_post_type_archive_link( 'work' );
 									<?php endforeach; ?>
 								</div>
 							<?php endif; ?>
-							<h3 class="wrk-card-title"><?php echo esc_html( $guru_data['title'] ); ?></h3>
+							<?php // A real link to the project page, so search engines and keyboards can reach it (client spec #13). ?>
+							<h3 class="wrk-card-title"><a class="wrk-card-link" href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( $guru_data['title'] ); ?></a></h3>
 						</div>
 					</div>
 					<?php
-				endwhile;
+				endforeach;
 				wp_reset_postdata();
 			else :
 				?>

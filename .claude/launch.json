@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-l", "8743", "/Users/mike/Guru"],
       "port": 8743
+    },
+    {
+      "name": "guru-local-wp",
+      "runtimeExecutable": "zsh",
+      "runtimeArgs": ["tools/local-wp.sh", "serve"],
+      "port": 8899
     }
   ]
 }

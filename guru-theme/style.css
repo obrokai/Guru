@@ -3,7 +3,8 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.0.0
+Version:     1.4.1
+Released:    2026-11-18
 Requires at least: 6.0
 Requires PHP: 7.4
 License:     Proprietary
@@ -98,23 +99,23 @@ Text Domain: guru
     align-items: center;
     height: 56px;
     padding: 0 18px;
-    background: rgba(247, 244, 232, 0.92);
+    background: rgba(255,255,255,0.94);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-radius: 999px;
-    box-shadow: 0 2px 18px rgba(14,14,16,0.05);
+    box-shadow: 0 2px 14px rgba(14,14,16,0.10), 0 0 0 1px rgba(14,14,16,0.05);
   }
   .gn-logo img { height: 18px; width: auto; display: block; }
   .gn-pill {
     display: flex;
     align-items: center;
     gap: 4px;
-    background: rgba(247, 244, 232, 0.92);
+    background: rgba(255,255,255,0.94);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-radius: 999px;
     padding: 8px;
-    box-shadow: 0 2px 18px rgba(14,14,16,0.05);
+    box-shadow: 0 2px 14px rgba(14,14,16,0.10), 0 0 0 1px rgba(14,14,16,0.05);
   }
   .gn-nav-links {
     display: flex;
@@ -192,7 +193,7 @@ Text Domain: guru
     position: fixed;
     top: 68px;
     left: 12px; right: 12px;
-    background: rgba(242,238,223,0.97);
+    background: rgba(255,255,255,0.97);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1.5px solid var(--line);
@@ -422,9 +423,10 @@ Text Domain: guru
   }
 
   /* ================================================== SERVICES */
+  /* v1.4.0 spacing (client spec 6.2): 72px above and below, 40px gutters. */
   .svc {
     position: relative;
-    padding: 120px 40px;
+    padding: 72px 40px;
   }
   .svc-inner, .wrk-inner, .ftr-inner {
     max-width: 1500px;
@@ -440,18 +442,20 @@ Text Domain: guru
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--blue);
-    margin-bottom: 56px;
+    margin-bottom: 32px;
   }
-  /* Two-column: intro left, accordion right */
+  /* Two-column: intro left, accordion right; both start on the same line, so the
+     accordion's top rule lines up with the top of "Our Solutions". */
   .svc-layout {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 80px;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+    gap: 72px;
     align-items: start;
   }
   .svc-intro { position: sticky; top: 120px; }
+  /* 6vw (was 7vw) keeps "Our Solutions" on one line in the narrower 0.9fr column. */
   .svc-title {
-    font-size: clamp(48px, 7vw, 120px);
+    font-size: clamp(48px, 6vw, 104px);
     font-weight: 800;
     line-height: 0.92;
     letter-spacing: -0.04em;
@@ -522,13 +526,18 @@ Text Domain: guru
   .svc-acc-head:hover .svc-acc-chevron,
   .svc-acc-item.open .svc-acc-chevron { color: var(--blue); }
   .svc-acc-item.open .svc-acc-chevron { transform: rotate(180deg); }
+  /* Mouse: the name is a link (opens on hover), so the open chevron points right */
+  @media (hover: hover) and (pointer: fine) {
+    .svc-acc-item.open .svc-acc-chevron { transform: rotate(-90deg); }
+  }
   .svc-acc-body {
     max-height: 0;
     overflow: hidden;
     transition: max-height .4s var(--ease-out-expo), opacity .3s;
     opacity: 0;
   }
-  .svc-acc-item.open .svc-acc-body { max-height: 240px; opacity: 1; }
+  /* Room for the longest intro on a phone (~330px) so "Explore" is never cut off */
+  .svc-acc-item.open .svc-acc-body { max-height: 480px; opacity: 1; }
   .svc-acc-inner { padding: 0 4px 30px; max-width: 520px; }
   .svc-acc-desc { font-size: 16px; line-height: 1.6; color: var(--ink-2); margin-bottom: 16px; }
   .svc-acc-link {
@@ -539,32 +548,35 @@ Text Domain: guru
   .svc-acc-link:hover { gap: 12px; }
 
   /* ================================================== ABOUT */
+  /* Compact band between the logo ticker and Our Solutions (client request,
+     v1.2.8): one screen shows the company intro and the start of Our Solutions. */
   .abt {
     background: var(--ink);
     color: var(--cream);
-    padding: 120px 40px;
+    padding: 72px 40px;
   }
   .abt-inner {
     max-width: 1500px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1.1fr 1fr;
-    gap: 80px;
+    gap: 64px;
+    align-items: center;
   }
   .abt-title {
-    font-size: clamp(40px, 5.4vw, 90px);
+    font-size: clamp(32px, 3.4vw, 56px);
     font-weight: 800;
     line-height: 0.94;
     letter-spacing: -0.035em;
     color: var(--lime);
-    margin-bottom: 60px;
+    margin-bottom: 32px;
     max-width: 700px;
     text-transform: uppercase;
   }
   .abt-stats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px 32px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
   }
   .abt-stat {
     display: flex;
@@ -574,7 +586,7 @@ Text Domain: guru
     padding-top: 18px;
   }
   .abt-stat-num {
-    font-size: clamp(48px, 5vw, 88px);
+    font-size: clamp(32px, 3vw, 52px);
     font-weight: 800;
     line-height: 1;
     color: var(--cream);
@@ -724,6 +736,9 @@ Text Domain: guru
     will-change: transform;
   }
   .wrk-card-small .wrk-card-img { aspect-ratio: 4/3; }
+  /* Cover image fills the frame like the placeholder and the film; it never sets the column width. */
+  .wrk-card-img > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .wrk-card { min-width: 0; }
   .wrk-card:hover .wrk-card-img { transform: translateY(-6px); }
   .wrk-img-ph {
     position: absolute;
@@ -741,14 +756,14 @@ Text Domain: guru
     text-transform: uppercase;
     font-weight: 600;
   }
-  .wrk-img-ph::after { content: "MGTO × CreatorWeek"; }
+  .wrk-img-ph::after { content: attr(data-title); }
   .wrk-img-ph-2 {
     background:
       radial-gradient(ellipse at 30% 40%, rgba(255,179,71,0.55), transparent 60%),
       radial-gradient(ellipse at 70% 60%, rgba(255,138,184,0.5), transparent 60%),
       linear-gradient(135deg, #c8a890, #a07866);
   }
-  .wrk-img-ph-2::after { content: "MGTO × Miyeon"; }
+  .wrk-img-ph-2::after { content: attr(data-title); }
 
   /* ── Video card (real footage) ── */
   .wrk-video-card {
@@ -875,6 +890,124 @@ Text Domain: guru
   }
   .hw-vmodal-box.form-open #hwVmodalVideo { max-height: 38vh !important; }
   .hw-vmodal-video-wrap.is-hidden { display: none; }
+
+  /* Image slider — showcase items without a film (lightboxes + item page). v1.2.15 */
+  .guru-gallery {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    line-height: 0;
+  }
+  .guru-gallery.is-hidden { display: none; }
+  .gg-track {
+    display: flex;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: calc(100vh - 180px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    cursor: grab;
+    outline: none;
+    transition: max-height 0.45s cubic-bezier(.2,.8,.3,1);
+  }
+  .gg-track::-webkit-scrollbar { display: none; }
+  .gg-track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+  .guru-gallery.is-single .gg-track { cursor: default; }
+  .gg-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+  .gg-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  /* Film slide (v1.3.1): the item's film comes first, its pictures after it. */
+  .gg-slide video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
+  .hw-vmodal-box.form-open .gg-track,
+  .vmodal-box.form-open .gg-track { max-height: 38vh; }
+
+  .gg-nav {
+    position: absolute;
+    top: calc(50% - 15px); /* centred on the picture, above the dots strip */
+    width: 46px; height: 46px;
+    margin-top: -23px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    background: rgba(14,14,16,0.45);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, opacity 0.18s;
+    z-index: 2;
+  }
+  .gg-prev { left: 16px; }
+  .gg-next { right: 16px; }
+  .gg-nav:hover { background: #fff; color: #0e0e10; }
+  .gg-nav:disabled { opacity: 0; pointer-events: none; }
+  .gg-nav:focus-visible, .gg-dot:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+  .gg-count {
+    position: absolute;
+    top: 14px; right: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(14,14,16,0.55);
+    color: #fff;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+    line-height: 1;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .gg-count:empty { display: none; }
+  /* Dots sit in a strip under the picture, like a player's control bar, so they never cover the artwork. */
+  .gg-dots {
+    display: flex; justify-content: center; align-items: center; gap: 6px;
+    padding: 12px 0;
+  }
+  .gg-dot {
+    width: 7px; height: 7px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.45);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+  .gg-dot.active { width: 22px; background: #fff; }
+  .guru-gallery.is-single .gg-nav,
+  .guru-gallery.is-single .gg-dots { display: none; }
+
+  @media (max-width: 700px) {
+    /* Phones: a square frame so portrait and square pictures stay large; swipe to move. */
+    .gg-track { aspect-ratio: 1 / 1; max-height: calc(100svh - 170px); }
+    .gg-nav { width: 36px; height: 36px; margin-top: -18px; }
+    .gg-prev { left: 10px; }
+    .gg-next { right: 10px; }
+    /* The dots already show the position; the counter would cover the picture. */
+    .gg-count { display: none; }
+    .gg-dots { padding: 10px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .gg-track { scroll-behavior: auto; } }
 
   /* In-modal contact CTA + form (homepage) */
   .hw-cta-row {
@@ -1363,6 +1496,30 @@ Text Domain: guru
   .logo-ticker:hover .logo-item img { filter: grayscale(1) contrast(0.6); }
   .logo-ticker:hover .logo-item:hover img { filter: grayscale(0) contrast(1); }
 
+  /* Client logos in the ticker (v1.2.14). They are square 480px images on white with ~19%
+     empty space above and below the mark, so they are shown about as wide as the original
+     wordmarks (150px) with the empty top and bottom cropped, and the white is blended into
+     the page with multiply. The fade lives on the image (filter opacity), not on .logo-item:
+     an opacity on the item would isolate the blend and bring the white squares back. */
+  .logo-ticker--clients .logo-ticker-track { padding: 14px 0; background: var(--bg); }
+  .logo-ticker--clients .logo-item,
+  .logo-ticker--clients:hover .logo-item,
+  .logo-ticker--clients:hover .logo-item:hover { opacity: 1; height: 94px; padding: 0 44px; overflow: hidden; }
+  .logo-ticker--clients .logo-item img {
+    width: 150px; height: 150px; max-width: none; flex-shrink: 0;
+    mix-blend-mode: multiply;
+    filter: grayscale(1) opacity(0.5);
+    transition: filter 0.35s;
+  }
+  .logo-ticker--clients:hover .logo-item img { filter: grayscale(1) opacity(0.3); }
+  .logo-ticker--clients:hover .logo-item:hover img { filter: grayscale(0) opacity(1); }
+  @media (max-width: 760px) {
+    .logo-ticker--clients .logo-item,
+    .logo-ticker--clients:hover .logo-item,
+    .logo-ticker--clients:hover .logo-item:hover { height: 75px; padding: 0 28px; }
+    .logo-ticker--clients .logo-item img { width: 120px; height: 120px; }
+  }
+
   /* ================================================== PAGE LOAD ANIMATIONS */
 
   /* Overlay — hides raw render until first frame paints */
@@ -1437,6 +1594,10 @@ Text Domain: guru
     .gh-line-c, .gh-sub, .gh-btn-solid, .gh-btn-ghost {
       animation: none !important;
     }
+    /* v1.4.0: with its fade-out animation removed, the cover stayed opaque and the
+       whole page was blank for these visitors. style.css loads on every page, so this
+       also covers the cover rules in about/blog/work.css. */
+    .pg-intro { display: none !important; }
   }
 
   /* Hide-on-scroll-down / show-on-scroll-up */
@@ -1503,20 +1664,28 @@ Text Domain: guru
     .gh-btn-solid, .gh-btn-ghost { padding: 16px 28px; font-size: 15px; }
     .gh-sub { font-size: 14px; max-width: 100%; line-height: 1.55; }
 
-    .svc, .abt, .wrk, .ftr-top { padding: 80px 20px; }
+    .abt, .wrk, .ftr-top { padding: 80px 20px; }
     .inf { padding: 80px 20px; }
     .wrk-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 48px; }
     .wrk-header-right { align-items: flex-start; }
     .wrk-title { font-size: clamp(40px, 12vw, 80px); }
     .svc-title { font-size: clamp(40px, 12vw, 80px); }
-    .svc-layout { grid-template-columns: 1fr; gap: 40px; }
+    /* Client 11-17: less empty space on phones — under "What we do", and between Solutions and Our Work (was 160px). */
+    /* v1.4.0 (client spec 6.2): one column, 20px sides, 40px above / 48px below, 32px between intro and accordion. */
+    .svc-label { margin-bottom: 20px; }
+    .svc { padding: 40px 20px 48px; }
+    .wrk { padding-top: 40px; }
+    .svc-layout { grid-template-columns: 1fr; gap: 32px; }
     .svc-intro { position: static; top: auto; }
     .svc-lead { font-size: 17px; max-width: none; }
     .svc-all-link, .wrk-all { padding: 14px 22px; font-size: 14px; }
-    .abt-inner { grid-template-columns: 1fr; gap: 50px; }
-    .abt-title { font-size: clamp(36px, 10vw, 64px); margin-bottom: 40px; }
-    .abt-stats { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
-    .abt-stat-num { font-size: clamp(40px, 12vw, 64px); }
+    .abt { padding: 56px 20px; }
+    .abt-inner { grid-template-columns: 1fr; gap: 28px; }
+    .abt-title { font-size: clamp(28px, 8vw, 44px); margin-bottom: 24px; }
+    .abt-stats { grid-template-columns: repeat(2, 1fr); gap: 20px 16px; }
+    .abt-stat-num { font-size: clamp(30px, 9vw, 44px); }
+    .abt-copy { gap: 14px; }
+    .abt-p { font-size: 15px; }
     .abt-image-wrap { aspect-ratio: 4/3; }
     .wrk-grid { grid-template-columns: 1fr; gap: 28px; }
     .wrk-card-large { grid-column: span 1; }
@@ -1554,3 +1723,334 @@ Text Domain: guru
     .abt-stats { grid-template-columns: 1fr 1fr; }
   }
 
+
+  /* Honeypot field for the contact forms: off-screen for people, present for bots. */
+  .cf-hp { position: absolute !important; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
+
+  /* ================================================== v1.3.0 — CLIENT SPEC BATCH 1 */
+  /* Skip link: hidden until a keyboard user tabs to it (spec #2). */
+  .skip-link {
+    position: fixed;
+    left: 16px;
+    top: -120px;
+    z-index: 100000;
+    background: var(--ink);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: top .15s;
+  }
+  .skip-link:focus { top: 16px; outline: 2px solid var(--lime); outline-offset: 2px; }
+  .site-main { display: block; }
+  .site-main:focus { outline: none; }
+
+  /* Homepage hero H1 (spec 6.1): bottom-left, near-white, readable on any frame.
+     Two groups: title + intro bottom-left, the three buttons bottom-right on the same
+     bottom line (wide screens); phones, tablets and short screens stack the buttons
+     under the text. */
+  .gh {
+    /* Bottom tint: the film's own green (#58B948, = --lime) taken one step deeper with
+       the same hue and colourfulness (each channel -24 = #40A130), laid over the film at
+       62%. On the green frames it reads as the same green sinking slightly darker; on
+       the white frames as a pale, fresh green fade (not grey). */
+    --gh-green: 64 161 48;
+    --gh-green-a: .62;
+    --gh-shadow: 30 72 24;           /* text shadow: deep green, not grey */
+    --gh-fade: clamp(120px, 22vh, 220px);
+  }
+  /* Tint strengths, switched by one class on section.gh (front-page.php). All are the
+     film's green hue; contrast = near-white text on the tint over an all-white frame
+     (the worst case) / over the film's green frame. Without a class: the pale tint
+     above (1.9:1 / 2.7:1).
+       gh--legible  #2E6E22 at 92%   4.7:1 / 5.1:1   (meets the 4.5:1 spec)
+       gh--g-a      #38802C at 88%   3.6:1 / 4.1:1
+       gh--g-b      #3F9031 at 88%   3.0:1 / 3.4:1   (in use: large-text minimum)
+       gh--g-c      #47A438 at 88%   2.5:1 / 2.8:1
+       gh--nobg     no tint at all: the text carries its own halo (rules below)
+       gh--pill / gh--pill-split / gh--glass / gh--glass-dark   text on a card (below) */
+  .gh--legible { --gh-green: 46 110 34; --gh-green-a: .92; }
+  .gh--g-a { --gh-green: 56 128 44; --gh-green-a: .88; }
+  .gh--g-b { --gh-green: 63 144 49; --gh-green-a: .88; }
+  .gh--g-c { --gh-green: 71 164 56; --gh-green-a: .88; }
+  .gh .gh-bottom { z-index: 3; } /* text and buttons above the tint */
+  .gh::after { display: none; }  /* the old grey shade is replaced by the green tint */
+  /* Full-width green tint behind the bottom text and buttons. It starts above the
+     title, fades in on a smooth (ease-in-out) curve so no line shows, is even across
+     the whole width, and runs off the hero's bottom edge (the hero clips it). Because
+     it hangs off .gh-bottom it grows with the text on phones and short screens. */
+  .gh-bottom::before {
+    content: '';
+    position: absolute;
+    top: calc(-1 * (var(--gh-fade) + 24px));
+    bottom: -240px;
+    left: calc(50% - 50vw);
+    width: 100vw;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom,
+      rgb(var(--gh-green) / 0) 0,
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .028)) calc(var(--gh-fade) * .1),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .104)) calc(var(--gh-fade) * .2),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .216)) calc(var(--gh-fade) * .3),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .352)) calc(var(--gh-fade) * .4),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .5))   calc(var(--gh-fade) * .5),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .648)) calc(var(--gh-fade) * .6),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .784)) calc(var(--gh-fade) * .7),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .896)) calc(var(--gh-fade) * .8),
+      rgb(var(--gh-green) / calc(var(--gh-green-a) * .972)) calc(var(--gh-fade) * .9),
+      rgb(var(--gh-green) / var(--gh-green-a)) var(--gh-fade),
+      rgb(var(--gh-green) / var(--gh-green-a)) 100%);
+  }
+  .gh-copy {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 600px) minmax(0, 1fr);
+    justify-items: start;
+    align-items: end;
+    gap: 18px 40px;
+  }
+  .gh-title, .gh-intro { grid-column: 1; }
+  .gh-copy .gh-btns { grid-column: 1 / -1; flex-wrap: wrap; margin-top: 6px; }
+  .gh-title {
+    margin: 0;
+    font-size: clamp(36px, 3vw, 44px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 1px 2px rgb(var(--gh-shadow) / .22), 0 1px 18px rgb(var(--gh-shadow) / .3);
+    text-wrap: balance;
+  }
+  .gh-intro {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 1px 2px rgb(var(--gh-shadow) / .22), 0 1px 12px rgb(var(--gh-shadow) / .3);
+  }
+  .gh-copy .gh-btn-solid, .gh-copy .gh-btn-ghost { padding: 16px 28px; font-size: 16px; }
+  /* White buttons on a white frame: the nav's hairline ring keeps their edge. */
+  .gh-copy .gh-btn-ghost { box-shadow: 0 4px 20px rgba(14,14,16,0.14), 0 0 0 1px rgba(14,14,16,0.06); }
+  /* Black button on black frames: a faint light hairline (the white buttons' 1px ring,
+     inverted) keeps its edge; on white it disappears, on green it is barely there. */
+  .gh-copy .gh-btn-solid { box-shadow: 0 0 0 1px rgba(255,255,255,0.26); }
+  /* gh--nobg: no backdrop behind the bottom text at all. The words carry their own
+     legibility, the way film subtitles do: pure white, with a dark halo that hugs each
+     letter (a crisp 1px rim, a 2-3px edge, a 4-8px soft edge and a short glow) and
+     does not spread into a cloud. The intro is small, so its rim is denser. */
+  .gh--nobg .gh-bottom::before { display: none; }
+  .gh--nobg .gh-title {
+    color: #fff;
+    text-shadow:
+      0 0 1px rgba(14,14,16,.9),
+      0 0 3px rgba(14,14,16,.6),
+      0 0 8px rgba(14,14,16,.4),
+      0 1px 16px rgba(14,14,16,.25);
+  }
+  .gh--nobg .gh-intro {
+    color: #fff;
+    text-shadow:
+      0 0 1px #0e0e10,
+      0 0 2px rgba(14,14,16,.8),
+      0 0 4px rgba(14,14,16,.55),
+      0 1px 10px rgba(14,14,16,.35);
+  }
+
+  /* Card family: gh--pill, gh--pill-split, gh--glass, gh--glass-dark. The title and intro
+     sit on a card with dark (or, on dark glass, white) text, readable on every frame.
+     gh--pill        one card on the same white glass as the logo and menu pills
+                     (94% white, 14px blur, same shadow and hairline ring)
+     gh--pill-split  title and intro as two separate pills, stacked like logo / menu
+     gh--glass       one card of clear frosted glass (Apple-style): the film shows
+                     through, blurred and richer; thin light rim, soft deep shadow
+     gh--glass-dark  the same glass, dark, with white text (alternative) */
+  .gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark {
+    --gh-glass: rgba(255,255,255,0.94);
+    --gh-glass-shadow: 0 2px 14px rgba(14,14,16,0.10), 0 0 0 1px rgba(14,14,16,0.05);
+    /* line the card up with the logo pill (nav gutter 32px, hero gutter 40px; both
+       stop at 1500px wide) and its right edge with the menu pill */
+    --gh-align: calc((min(1500px, 100vw - 80px) - min(1500px, 100vw - 64px)) / 2);
+  }
+  @media (max-width: 980px) {
+    .gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark { --gh-align: -6px; } /* nav 14px, hero 20px */
+  }
+  @media (max-width: 520px) {
+    .gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark { --gh-align: -4px; } /* nav 14px, hero 18px */
+  }
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-bottom::before { display: none; }
+  /* the text column grows by the card's side padding, so the title keeps its two lines */
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-copy {
+    grid-template-columns: minmax(0, 672px) minmax(0, 1fr);
+    margin-inline: var(--gh-align);
+    width: calc(100% - 2 * var(--gh-align));
+  }
+  @media (min-width: 1280px) and (min-height: 701px) {
+    :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-copy { grid-template-columns: minmax(0, 672px) auto; }
+  }
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-title { color: var(--ink); text-shadow: none; }
+  :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-intro { color: var(--ink-2); text-shadow: none; }
+  /* one card: a backdrop filling the title + intro grid area, text padded inside it */
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-copy::before {
+    content: '';
+    position: absolute;
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    inset: 0;
+    z-index: -1;
+    border-radius: 32px;
+    background: var(--gh-glass);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--gh-glass-shadow);
+    pointer-events: none;
+  }
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-copy { row-gap: 12px; }
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-title { padding: 30px 36px 0; }
+  :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-intro { padding: 0 36px 30px; }
+  /* two pills: each hugs its own text */
+  .gh--pill-split .gh-copy { row-gap: 10px; }
+  .gh--pill-split .gh-title, .gh--pill-split .gh-intro {
+    background: var(--gh-glass);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--gh-glass-shadow);
+  }
+  .gh--pill-split .gh-title { padding: 22px 32px 24px; border-radius: 32px; }
+  .gh--pill-split .gh-intro { padding: 14px 26px; border-radius: 24px; }
+
+  /* Frosted glass. The white layer is as thin as the darkest frames allow: on the
+     night and party shots the card's darkest pixel still gives the title and intro
+     at least 4.5:1 (measured). */
+  /* 58% white: even over a black frame the intro (--ink-2) is 4.6:1. On dark footage
+     main.js raises it smoothly (up to 88%, set inline on section.gh) from the film's
+     brightness behind the card, so the glass reads bright and clean instead of grey;
+     on light, green and colourful frames it stays at 58%. */
+  .gh--glass { --gh-glass-a: .58; }
+  .gh--glass .gh-copy::before {
+    background: rgba(255,255,255,var(--gh-glass-a));
+    transition: background-color .8s ease;
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255,255,255,.5);
+    border-radius: 36px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.7),
+      0 0 0 1px rgba(14,14,16,.05),
+      0 2px 8px rgba(14,14,16,.06),
+      0 18px 50px rgba(14,14,16,.16);
+  }
+  .gh--glass-dark { --gh-glass-a: .62; } /* 62%: even over a white frame the intro is 4.7:1 */
+  .gh--glass-dark .gh-copy::before {
+    background: rgba(18,18,20,var(--gh-glass-a));
+    -webkit-backdrop-filter: blur(32px) saturate(160%);
+    backdrop-filter: blur(32px) saturate(160%);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 36px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 18px 50px rgba(0,0,0,.22);
+  }
+  .gh--glass-dark .gh-title { color: #fff; }
+  .gh--glass-dark .gh-intro { color: rgba(255,255,255,.92); }
+  @media (prefers-reduced-motion: reduce) { .gh--glass .gh-copy::before { transition: none; } }
+  /* browsers without backdrop blur: a plain, more solid card, text just as clear */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .gh--glass .gh-copy::before { background: rgba(255,255,255,.9); }
+    .gh--glass-dark .gh-copy::before { background: rgba(18,18,20,.86); }
+  }
+
+  @media (max-width: 767px) {
+    :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-copy { grid-template-columns: minmax(0, 1fr); } /* full width */
+    :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-title { padding: 24px 22px 0; }
+    :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-intro { padding: 0 22px 24px; }
+    :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-copy::before { border-radius: 26px; }
+    .gh--pill-split .gh-title, .gh--pill-split .gh-intro { justify-self: stretch; }
+    .gh--pill-split .gh-title { padding: 18px 22px 20px; border-radius: 26px; }
+    .gh--pill-split .gh-intro { padding: 12px 22px; border-radius: 20px; }
+  }
+
+  /* Wide, tall-enough screens: buttons move to the right, bottoms aligned with the intro. */
+  @media (min-width: 1280px) and (min-height: 701px) {
+    .gh-copy { grid-template-columns: minmax(0, 600px) auto; justify-content: space-between; }
+    .gh-copy .gh-btns { grid-column: 2; grid-row: 1 / span 2; align-self: end; flex-wrap: nowrap; margin-top: 0; }
+  }
+
+  /* Short screens: let the hero grow with its text instead of clipping it. */
+  @media (max-height: 700px) {
+    .gh { max-height: none; min-height: 100vh; }
+  }
+  @media (max-width: 767px) {
+    .gh { max-height: none; height: auto; }
+    .gh-title { font-size: clamp(30px, 8.4vw, 36px); line-height: 1.1; }
+    .gh-intro { font-size: 15px; }
+    .gh-copy { row-gap: 14px; }
+    .gh-copy .gh-btns { width: 100%; }
+    .gh-copy .gh-btn-solid { flex: 1 1 100%; justify-content: center; }
+    .gh-copy .gh-btn-ghost { flex: 1 1 0; justify-content: center; padding: 14px 16px; font-size: 15px; }
+  }
+
+  /* Accordion rows are H3s now (spec #1): the heading adds no styling of its own. */
+  .svc-acc-h { margin: 0; font: inherit; letter-spacing: inherit; }
+
+  /* Card titles are real links (spec #13): look unchanged. */
+  .wrk-card-link, .prj-link { color: inherit; text-decoration: none; }
+  .wrk-card-link:focus-visible, .prj-link:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+
+  /* Play overlays are buttons now: drop the browser's button look. */
+  .wrk-play-btn, .prj-play-btn { border: 0; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; width: 100%; }
+  .wrk-play-btn:focus-visible, .prj-play-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: -3px; }
+
+  /* ================================================== v1.4.0 — CLIENT SPEC BATCH 2 */
+  /* Shared page title for Insights (blog list) and Investor (spec 6.3): both 52px at
+     1440px. Colour and case stay with each page (green capitals on Insights). Scaled by
+     Customize → Typography → Page titles like the other page titles; 100% = 52px. */
+  .page-title {
+    margin: 0;
+    font-family: inherit;
+    font-size: clamp(44px, 3.7vw, 52px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+  @media (max-width: 767px) {
+    .page-title { font-size: 36px; }
+  }
+
+/* ── v1.4.0 keyboard (client spec #8) ──────────────────────────────────────
+   Closed lightboxes were only see-through (opacity 0), so Tab still walked through
+   their invisible close button and form. Hide them for real once the fade ends. */
+.hw-vmodal, .vmodal-overlay { visibility: hidden; transition: opacity 0.28s ease, visibility 0s linear 0.28s; }
+.hw-vmodal.open, .vmodal-overlay.open { visibility: visible; transition: opacity 0.28s ease, visibility 0s; }
+
+/* v1.4.0: privacy line above the Send button of every contact form (client spec, section 9) */
+.guru-form-privacy { grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; line-height: 1.5; opacity: .72; }
+.guru-form-privacy a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+/* v1.4.0: visible field labels on the four contact forms (client spec #8 / section 9).
+   Small capitals like the site's other labels; the forms sit on a light card everywhere
+   (the lightboxes too), so one dark colour works: --ink-2 on #fdfdfb is 13.6:1. */
+.guru-label {
+  display: block;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 12px; font-weight: 700; line-height: 1.3;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-2, #2c2c30);
+}
+.guru-label-req { color: var(--blue, #1B23E0); margin-left: 1px; }
+.guru-label-opt { font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink-3, #6d6d72); }
+/* Fields the form check flags (aria-invalid): the site's error red as a quiet outline. */
+:is(.cf-input, .cf-select, .cf-textarea, .hwf-input, .hwf-select, .hwf-textarea,
+    .vmf-input, .vmf-select, .vmf-textarea, .spf-input, .spf-select, .spf-textarea)[aria-invalid="true"] {
+  border-color: #c0392b;
+  background-color: #fffafa;
+}
+:is(.cf-input, .cf-select, .cf-textarea, .hwf-input, .hwf-select, .hwf-textarea,
+    .vmf-input, .vmf-select, .vmf-textarea, .spf-input, .spf-select, .spf-textarea)[aria-invalid="true"]:focus {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.12);
+}
+
+/* v1.4.1: homepage film cards show their cover picture until clicked (client spec #4) */
+.wrk-video-card > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }

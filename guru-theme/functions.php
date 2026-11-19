@@ -9,7 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GURU_VERSION', '1.0.0' );
+/*
+ * Keep in step with the Version header in style.css — that is the number the
+ * Appearance → Themes screen shows, and the one the package filename uses.
+ */
+define( 'GURU_VERSION', '1.4.1' );
 
 /**
  * Theme supports and menus.
@@ -19,6 +23,9 @@ function guru_setup() {
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption', 'style', 'script' ) );
 	add_theme_support( 'responsive-embeds' );
+
+	// The About lead and the Investor intro are edited as the page's excerpt.
+	add_post_type_support( 'page', 'excerpt' );
 
 	register_nav_menus(
 		array(
@@ -40,6 +47,8 @@ function guru_assets() {
 		array(),
 		file_exists( $css ) ? filemtime( $css ) : GURU_VERSION
 	);
+	// Font-size scaling (Customize → Typography) — must follow the stylesheet it derives from.
+	guru_enqueue_typography_css( 'guru', 'style.css' );
 
 	wp_enqueue_style(
 		'guru-fonts',
@@ -47,6 +56,36 @@ function guru_assets() {
 		array(),
 		null
 	);
+
+	// Page-specific styles, loaded only where they are needed.
+	$page_css = '';
+	if ( is_page_template( 'page-about.php' ) || is_page( 'about' ) ) {
+		$page_css = 'about';
+	} elseif ( is_post_type_archive( 'work' ) || is_singular( 'work' ) || is_tax( 'work_category' ) || is_page( 'work' ) ) {
+		$page_css = 'work';
+	} elseif ( ( is_home() && ! is_front_page() ) || is_singular( 'post' ) || is_archive() || is_search() || is_404() || is_page( 'blog' ) ) {
+		$page_css = 'blog';
+	} elseif ( is_page_template( 'page-services.php' ) || is_page( 'services' ) || is_page( 'solutions' ) || is_singular( 'solution' ) ) {
+		$page_css = 'services';
+	} elseif ( is_page_template( 'page-investor.php' ) || is_page( 'investor' ) ) {
+		$page_css = 'investor';
+	} elseif ( ! is_front_page() && is_singular() ) {
+		// Any other page or post type uses the single-post layout from blog.css.
+		$page_css = 'blog';
+	}
+
+	if ( $page_css ) {
+		$path = get_stylesheet_directory() . '/assets/css/' . $page_css . '.css';
+		if ( file_exists( $path ) ) {
+			wp_enqueue_style(
+				'guru-' . $page_css,
+				get_stylesheet_directory_uri() . '/assets/css/' . $page_css . '.css',
+				array( 'guru' ),
+				filemtime( $path )
+			);
+			guru_enqueue_typography_css( 'guru-' . $page_css, $page_css . '.css' );
+		}
+	}
 
 	$js = get_stylesheet_directory() . '/assets/js/main.js';
 	wp_enqueue_script(
@@ -74,8 +113,48 @@ function guru_resource_hints( $hints, $relation ) {
 }
 add_filter( 'wp_resource_hints', 'guru_resource_hints', 10, 2 );
 
-require_once get_stylesheet_directory() . '/inc/post-types.php';
-require_once get_stylesheet_directory() . '/inc/fields.php';
+/**
+ * Browser-tab title for the showcase archive: "Work", matching the heading and
+ * the navigation rather than the post type's admin label ("Showcase").
+ *
+ * @param array $parts Title parts.
+ * @return array
+ */
+function guru_document_title( $parts ) {
+	if ( is_post_type_archive( 'work' ) ) {
+		$parts['title'] = __( 'Work', 'guru' );
+	}
+	return $parts;
+}
+add_filter( 'document_title_parts', 'guru_document_title' );
+
 require_once get_stylesheet_directory() . '/inc/template-helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
+require_once get_stylesheet_directory() . '/inc/typography.php';
+require_once get_stylesheet_directory() . '/inc/menu-colors.php';
+require_once get_stylesheet_directory() . '/inc/investor-docs.php';
+require_once get_stylesheet_directory() . '/inc/post-types.php';
+require_once get_stylesheet_directory() . '/inc/fields.php';
+require_once get_stylesheet_directory() . '/inc/media.php';
+require_once get_stylesheet_directory() . '/inc/enquiries.php';
 require_once get_stylesheet_directory() . '/inc/contact-form.php';
+require_once get_stylesheet_directory() . '/inc/importer.php';
+require_once get_stylesheet_directory() . '/inc/redirects.php';
+require_once get_stylesheet_directory() . '/inc/seo.php';
+
+/**
+ * Contact Form 7 is installed on the site, but every contact form here is the
+ * theme's own (inc/contact-form.php), and old [contact-form-7] codes are stripped
+ * from page content. So its script, styles and their helpers load on no page,
+ * unless a page really holds a CF7 block (client spec #7, v1.4.0).
+ *
+ * @return bool
+ */
+function guru_cf7_needed() {
+	$post = is_singular() ? get_queried_object() : null;
+	return $post instanceof WP_Post
+		&& function_exists( 'has_block' )
+		&& has_block( 'contact-form-7/contact-form-selector', $post );
+}
+add_filter( 'wpcf7_load_js', 'guru_cf7_needed' );
+add_filter( 'wpcf7_load_css', 'guru_cf7_needed' );
