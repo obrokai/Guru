@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Keep in step with the Version header in style.css — that is the number the
  * Appearance → Themes screen shows, and the one the package filename uses.
  */
-define( 'GURU_VERSION', '1.4.2' );
+define( 'GURU_VERSION', '1.4.3' );
 
 /**
  * Theme supports and menus.
@@ -159,3 +159,44 @@ function guru_cf7_needed() {
 }
 add_filter( 'wpcf7_load_js', 'guru_cf7_needed' );
 add_filter( 'wpcf7_load_css', 'guru_cf7_needed' );
+
+/**
+ * Server disk space in Tools → Site Health → Info ("Guru server"), admins only.
+ * Backups and the staging-to-live move write several GB to the same disk, so
+ * check the free space first (v1.4.3). Read-only.
+ *
+ * @param array $info Site Health debug sections.
+ * @return array
+ */
+function guru_site_health_disk( $info ) {
+	$path   = ABSPATH;
+	$free   = function_exists( 'disk_free_space' ) ? @disk_free_space( $path ) : false; // phpcs:ignore WordPress.PHP.NoSilencedErrors -- may be disabled by the host.
+	$total  = function_exists( 'disk_total_space' ) ? @disk_total_space( $path ) : false; // phpcs:ignore WordPress.PHP.NoSilencedErrors
+	$na     = __( 'Not available (blocked by the server)', 'guru' );
+	$fields = array(
+		'disk_path'  => array(
+			'label' => __( 'Disk checked', 'guru' ),
+			'value' => $path,
+		),
+		'disk_free'  => array(
+			'label' => __( 'Free disk space', 'guru' ),
+			'value' => false !== $free ? size_format( $free, 2 ) : $na,
+		),
+		'disk_total' => array(
+			'label' => __( 'Total disk size', 'guru' ),
+			'value' => false !== $total ? size_format( $total, 2 ) : $na,
+		),
+	);
+	if ( false !== $free && false !== $total && $total > 0 ) {
+		$fields['disk_used_pct'] = array(
+			'label' => __( 'Disk used', 'guru' ),
+			'value' => round( ( 1 - $free / $total ) * 100, 1 ) . '%',
+		);
+	}
+	$info['guru-server'] = array(
+		'label'  => __( 'Guru server', 'guru' ),
+		'fields' => $fields,
+	);
+	return $info;
+}
+add_filter( 'debug_information', 'guru_site_health_disk' );
