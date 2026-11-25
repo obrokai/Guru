@@ -8,6 +8,14 @@
 
 ---
 
+## 1.4.4 — 2026-11-25
+
+上線前準備：新主題接上原本的追蹤碼。
+
+- **Google Tag Manager／GA4 設定**：Customize → Guru site settings → Tracking (Google)。GTM 預設為舊網站的容器 `GTM-K5XVQ9V`（內含 Google Ads 轉換追蹤），換主題後追蹤不中斷，不用另外設定；放在 `<head>` 最前面，並在 `<body>` 開頭加上 noscript。GA4 編號欄預設空白（GA4 可由 GTM 或 Site Kit 加；Site Kit 已加同一支 gtag 時主題不重複加）。
+- **只在正式網址載入**：「Live site address」預設 `https://www.guruonline.com.hk`，網址不符（測試站）或在 Customizer 預覽時不載入，原始碼留一行註解說明，避免測試流量與測試表單算進客戶的 Analytics／Ads。
+- 資料（不在主題內）：正式站 10-16、11-09 新增的 20 份投資人文件已補進測試站（網址代稱、PDF 路徑與正式站相同），測試站與正式站現在都是 1,065 份。
+
 ## 1.4.3 — 2026-11-25
 
 - **後台顯示主機硬碟空間**：工具 → 網站狀態 → 資訊 新增「Guru server」區塊（剩餘空間、總容量、使用率），只有管理員看得到、只讀。備份與測試站搬到正式站都會在同一顆硬碟寫入數 GB，動手前先看這裡。

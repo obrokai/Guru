@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Keep in step with the Version header in style.css — that is the number the
  * Appearance → Themes screen shows, and the one the package filename uses.
  */
-define( 'GURU_VERSION', '1.4.3' );
+define( 'GURU_VERSION', '1.4.4' );
 
 /**
  * Theme supports and menus.
@@ -142,6 +142,7 @@ require_once get_stylesheet_directory() . '/inc/importer.php';
 require_once get_stylesheet_directory() . '/inc/redirects.php';
 require_once get_stylesheet_directory() . '/inc/seo.php';
 require_once get_stylesheet_directory() . '/inc/related.php';
+require_once get_stylesheet_directory() . '/inc/tracking.php';
 
 /**
  * Contact Form 7 is installed on the site, but every contact form here is the

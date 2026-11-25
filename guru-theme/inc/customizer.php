@@ -91,6 +91,10 @@ function guru_default( $id ) {
 			'guru_investor_governance' => "Corporate | Articles of Association | https://www.hkexnews.hk | EN\nCorporate | Board Committees & Charters | https://www.hkexnews.hk | View",
 			'guru_investor_contacts' => GURU_INVESTOR_CONTACTS_DEFAULT,
 			'guru_investor_disclaimer' => 'The information on this page is for reference only and does not constitute investment advice.',
+			// Tracking (v1.4.4, inc/tracking.php). The old website's GTM container; loads only at the live address.
+			'guru_gtm_id'            => 'GTM-K5XVQ9V',
+			'guru_ga4_id'            => '',
+			'guru_tracking_host'     => 'https://www.guruonline.com.hk',
 		);
 	}
 
