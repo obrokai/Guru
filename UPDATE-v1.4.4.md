@@ -15,6 +15,6 @@
 - [ ] Customize → Guru site settings 有「Tracking (Google)」，三個欄位都是上面的預設值
 - [ ] 測試站首頁原始碼**沒有** `gtm.js`，`<head>` 裡有一行註解「Guru: Google Tag Manager is off at this address」
 - [ ] Site Kit 的 GA4（`G-NW4D4CJM18`）照常出現，只出現一次
-- [ ] Investor 頁 Last Announcement 最上面是 2026.11.06 PROFIT WARNING／盈利預告，往下有 11.03、10.27、10.06、09.29、09.28、09.11、09.10（共 10 列，每列都有英文和中文 PDF）
+- [ ] Investor 頁 Last Announcement 最上面是 2026.11.06 PROFIT WARNING／盈利預告，往下 11.03、10.27、10.06、09.29、09.28（Investor 頁本來就只顯示最新 6 列）；按「View All」可看到全部 10 列，含 09.11 和 09.10（三列）。每列都有英文和中文 PDF
 - [ ] 隨便點開其中一份 PDF 能下載（網址是 /staging/wp-content/uploads/2026/10/ 或 2026/11/）
 - [ ] 其他頁面與 1.4.3 相同
