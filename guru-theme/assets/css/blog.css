@@ -148,10 +148,20 @@
     content: ''; display: inline-block; width: 8px; height: 8px;
     border-radius: 50%; background: var(--blue);
   }
-  /* Size, weight and spacing come from the shared .page-title (style.css). */
+  /* v1.4.2: back to the About / Work title size at the client's request (it was the
+     shared 52px .page-title from 1.4.0). Scaled by Customize → Typography → Page titles. */
   .blg-hero-title {
+    margin: 0;
+    font-size: clamp(52px, 8vw, 128px);
+    font-weight: 800;
+    line-height: 0.86;
+    letter-spacing: -0.05em;
     text-transform: uppercase;
     color: var(--lime);
+    overflow-wrap: anywhere; /* long search terms on the search results page */
+  }
+  @media (max-width: 520px) {
+    .blg-hero-title { font-size: clamp(44px, 13vw, 88px); }
   }
   .blg-hero-right {
     display: flex; flex-direction: column; gap: 16px;
@@ -470,3 +480,77 @@
   .blg-empty { display: none; max-width: 1580px; margin: 0 auto; padding: 0 40px 80px; font-size: 17px; color: var(--ink-3); }
   .blg-empty.show { display: block; }
   @media (max-width: 980px) { .blg-empty { padding: 0 22px 60px; } }
+
+  /* ================================================== v1.4.2 — ARTICLE AUTHOR, RELATED, ENQUIRY */
+  .art-byline a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+  .art-byline a:hover { color: var(--blue); }
+
+  .art-author {
+    margin-top: 56px; padding: 26px 28px;
+    border: 1px solid var(--line); border-radius: 18px; background: #fff;
+  }
+  .art-author-label {
+    margin: 0 0 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .art-author-name { margin: 0; font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .art-author-bio { margin: 10px 0 0; font-size: 15px; line-height: 1.65; color: var(--ink-2); }
+  .art-author-date { margin: 12px 0 0; font-size: 13px; color: var(--ink-3); }
+
+  .art-related { margin-top: 56px; }
+  .art-related-heading {
+    margin: 0 0 22px; font-size: clamp(24px, 2.4vw, 32px); font-weight: 800;
+    letter-spacing: -0.03em; line-height: 1.1; color: var(--ink);
+  }
+  .art-related-group + .art-related-group { margin-top: 28px; }
+  .art-related-label {
+    margin: 0 0 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .art-related-services { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .art-related-services a {
+    display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px;
+    border: 1px solid var(--line); border-radius: 999px; background: #fff;
+    font-size: 15px; font-weight: 600; color: var(--ink); text-decoration: none;
+    transition: border-color .2s, color .2s;
+  }
+  .art-related-services a span { color: var(--blue); }
+  .art-related-services a:hover { border-color: var(--blue); color: var(--blue); }
+  .art-related-work {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 16px;
+  }
+  .art-related-work a { display: flex; flex-direction: column; gap: 4px; color: var(--ink); text-decoration: none; }
+  .art-related-thumb {
+    display: block; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden;
+    background: #e4e4e0; margin-bottom: 8px;
+  }
+  .art-related-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
+  .art-related-work a:hover .art-related-thumb img { transform: scale(1.04); }
+  .art-related-name { font-size: 16px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+  .art-related-work a:hover .art-related-name { color: var(--blue); }
+  .art-related-client { font-size: 13px; color: var(--ink-3); }
+
+  .art-cta {
+    margin-top: 56px; padding: 32px 34px; border-radius: 22px;
+    background: var(--ink); color: #fff;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  }
+  .art-cta-copy { flex: 1 1 320px; min-width: 0; }
+  .art-cta-heading { margin: 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+  .art-cta-text { margin: 8px 0 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.78); }
+  .art-cta-btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 999px;
+    background: var(--lime); color: var(--ink); font-weight: 700; font-size: 15px; text-decoration: none;
+    transition: transform .2s, background .2s;
+  }
+  .art-cta-btn:hover { background: #fff; transform: translateY(-2px); }
+  .art-cta-btn:focus-visible, .art-related a:focus-visible, .art-byline a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  @media (max-width: 560px) {
+    .art-author { padding: 22px 20px; }
+    .art-cta { padding: 26px 22px; }
+    .art-cta-btn { width: 100%; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .art-related-thumb img, .art-cta-btn { transition: none; }
+  }

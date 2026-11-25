@@ -71,6 +71,12 @@ function guru_default( $id ) {
 			'guru_offices'           => GURU_OFFICES_DEFAULT,
 			// Blog.
 			'guru_blog_intro'        => 'Perspectives on digital marketing, brand strategy, influencer culture and the future of creativity.',
+			// Insights articles (v1.4.2). Draft wording built from the existing blog intro — GURU to confirm.
+			'guru_editorial_name'    => 'GURU Editorial Team',
+			'guru_editorial_bio'     => 'Perspectives from the GURU Online team on digital marketing, brand strategy, influencer culture and the future of creativity.',
+			'guru_article_cta_heading' => 'Have a growth challenge in mind?',
+			'guru_article_cta_text'  => 'Tell us about your brand and goals, and our team will get back to you.',
+			'guru_article_cta_button' => 'Discuss Your Growth Challenge',
 			// Investor.
 			'guru_stock_code'        => '08121',
 			'guru_exchange'          => 'HKEX GEM',
@@ -278,6 +284,28 @@ function guru_customize_register( $wp_customize ) {
 			'guru_clients_heading' => array( __( 'Client wall heading', 'guru' ), 'text' ),
 			'guru_offices_heading' => array( __( 'Offices heading', 'guru' ), 'textarea', __( 'Line breaks are kept.', 'guru' ) ),
 			'guru_offices'         => array( __( 'Offices', 'guru' ), 'textarea', $pipe . ' ' . __( 'Format: City | E-mail | Address | Badge (optional — a badge makes the card featured).', 'guru' ) ),
+		)
+	);
+
+	/* ------------------------------------------------ Insights articles */
+	$wp_customize->add_section(
+		'guru_articles',
+		array(
+			'title'       => __( 'Insights articles', 'guru' ),
+			'panel'       => 'guru_panel',
+			'priority'    => 50,
+			'description' => __( 'Shown on every article. Articles written by a real person (a public display name under Users → Profile) show that person and their Biographical Info instead of the team. Related services and work are picked on each article, in the "Related services & work" box.', 'guru' ),
+		)
+	);
+	guru_customize_fields(
+		$wp_customize,
+		'guru_articles',
+		array(
+			'guru_editorial_name'      => array( __( 'Editorial team name', 'guru' ), 'text', __( 'The author shown on articles posted from a back-office account (such as admin). Search engines see the same name.', 'guru' ) ),
+			'guru_editorial_bio'       => array( __( 'Editorial team introduction', 'guru' ), 'textarea' ),
+			'guru_article_cta_heading' => array( __( 'Enquiry box heading', 'guru' ), 'text', __( 'The box at the end of every article. Its button jumps to the contact form below.', 'guru' ) ),
+			'guru_article_cta_text'    => array( __( 'Enquiry box text', 'guru' ), 'textarea' ),
+			'guru_article_cta_button'  => array( __( 'Enquiry box button', 'guru' ), 'text' ),
 		)
 	);
 

@@ -25,7 +25,8 @@ while ( have_posts() ) :
 	?>
 
 	<div class="abt-hero">
-		<h1 class="abt-hero-title"><?php echo wp_kses_post( str_replace( ' ', '<br>', get_the_title() ) ); ?></h1>
+		<?php // v1.4.2: one line ("ABOUT GURU"); it used to break after every word. Narrow phones still wrap naturally. ?>
+		<h1 class="abt-hero-title"><?php echo esc_html( get_the_title() ); ?></h1>
 		<div class="abt-hero-bottom">
 			<?php if ( $guru_lead ) : ?>
 				<?php // <em> is the blue highlight the static page uses inside the lead. ?>

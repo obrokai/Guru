@@ -39,7 +39,7 @@ if ( is_home() ) {
 
 <div class="blg-hero">
 	<div class="blg-hero-left">
-		<h1 class="blg-hero-title page-title"><?php echo esc_html( $guru_heading ); ?></h1>
+		<h1 class="blg-hero-title"><?php echo esc_html( $guru_heading ); ?></h1>
 	</div>
 	<?php // The blog intro beside the heading was removed at the client's request (v1.2.10); only the 404 page keeps its explanation. ?>
 	<?php if ( is_404() ) : ?>

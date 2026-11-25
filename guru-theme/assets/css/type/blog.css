@@ -2,6 +2,10 @@
 .gn-link { font-size: calc(16px * var(--guru-fs-nav, 1)); }
 .gn-mobile-link { font-size: calc(32px * var(--guru-fs-nav, 1)); }
 .gn-mobile-link::after { font-size: calc(20px * var(--guru-fs-nav, 1)); }
+.blg-hero-title { font-size: calc(clamp(52px, 8vw, 128px) * var(--guru-fs-hero, 1)); }
+@media (max-width: 520px) {
+  .blg-hero-title { font-size: calc(clamp(44px, 13vw, 88px) * var(--guru-fs-hero, 1)); }
+}
 .blg-hero-desc { font-size: calc(15px * var(--guru-fs-body, 1)); }
 .blg-feat-title { font-size: calc(clamp(30px, 3.4vw, 52px) * var(--guru-fs-heading, 1)); }
 .blg-feat-excerpt { font-size: calc(16px * var(--guru-fs-body, 1)); }
@@ -25,3 +29,9 @@ body.page .ftr-cta-heading, body.single .ftr-cta-heading { font-size: calc(clamp
   body.page .ftr-cta-heading, body.single .ftr-cta-heading { font-size: calc(clamp(30px, 8vw, 44px) * var(--guru-fs-heading, 1)); }
 }
 .blg-empty { font-size: calc(17px * var(--guru-fs-body, 1)); }
+.art-author-name { font-size: calc(20px * var(--guru-fs-body, 1)); }
+.art-author-date { font-size: calc(13px * var(--guru-fs-body, 1)); }
+.art-related-heading { font-size: calc(clamp(24px, 2.4vw, 32px) * var(--guru-fs-heading, 1)); }
+.art-related-name { font-size: calc(16px * var(--guru-fs-body, 1)); }
+.art-cta-heading { font-size: calc(clamp(22px, 2.4vw, 30px) * var(--guru-fs-heading, 1)); }
+.art-cta-text { font-size: calc(15px * var(--guru-fs-body, 1)); }

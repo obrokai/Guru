@@ -63,7 +63,41 @@ function guru_language_attributes( $output ) {
 add_filter( 'language_attributes', 'guru_language_attributes', 20 );
 
 /**
+ * Public pages run in English (v1.4.2).
+ *
+ * The WordPress site language stays Traditional Chinese so the admin is in
+ * Chinese, but that leaked into the public pages: Yoast's Schema said
+ * inLanguage "zh-TW", its share-card label read 「作者:」 and WordPress titles
+ * such as 「找不到符合條件的頁面」 appeared on an English site. Once WordPress has
+ * worked out which page is being shown (the "wp" action — it never runs for
+ * the admin, the REST API, the login page or form posts), the request is
+ * switched to English, so every string printed afterwards is English.
+ */
+function guru_frontend_switch_locale() {
+	if ( is_admin() || guru_multilingual_active() || ! function_exists( 'switch_to_locale' ) ) {
+		return;
+	}
+	switch_to_locale( 'en_US' );
+}
+add_action( 'wp', 'guru_frontend_switch_locale', 0 );
+
+/**
+ * Yoast Schema: every graph piece carries the same language as <html lang>.
+ *
+ * @param string $lang Language from get_bloginfo( 'language' ).
+ * @return string
+ */
+function guru_schema_language( $lang ) {
+	return guru_multilingual_active() ? $lang : guru_frontend_lang();
+}
+add_filter( 'wpseo_schema_piece_language', 'guru_schema_language' );
+
+/**
  * Yoast's og:locale follows the site language (zh_TW); match the page instead.
+ *
+ * Yoast checks its first value against Facebook's locale list, which has no
+ * en_HK, and turns it into en_US; the final filter below sets the page's own
+ * locale after that check so all three tags agree.
  *
  * @param string $locale Locale.
  * @return string
@@ -75,6 +109,7 @@ function guru_wpseo_locale( $locale ) {
 	return str_replace( '-', '_', guru_frontend_lang() );
 }
 add_filter( 'wpseo_locale', 'guru_wpseo_locale' );
+add_filter( 'wpseo_og_locale', 'guru_wpseo_locale' );
 
 /**
  * Automatic description for the current page: the excerpt, or the start of
@@ -175,3 +210,162 @@ function guru_fallback_meta_description() {
 	}
 }
 add_action( 'wp_head', 'guru_fallback_meta_description', 1 );
+
+/* ===================================================================
+ * Article author in Yoast (v1.4.2, spec #15).
+ *
+ * The page no longer shows "admin", and neither does anything a search
+ * engine reads: Schema, <meta name="author"> and the share card all use
+ * guru_article_author(), the same record as the visible byline.
+ * =================================================================== */
+
+/**
+ * True on a single Insights article.
+ *
+ * @return bool
+ */
+function guru_is_article() {
+	return is_singular( 'post' );
+}
+
+/**
+ * Point every reference to one Schema @id at another.
+ *
+ * @param mixed  $node   Graph or part of it.
+ * @param string $old_id Old @id.
+ * @param string $new_id New @id.
+ * @return mixed
+ */
+function guru_schema_swap_id( $node, $old_id, $new_id ) {
+	if ( ! is_array( $node ) ) {
+		return $node;
+	}
+	if ( isset( $node['@id'] ) && $old_id === $node['@id'] && count( $node ) <= 2 ) {
+		// A reference ({"@id": …} or {"name": …, "@id": …}); full nodes are handled by the caller.
+		$node['@id'] = $new_id;
+		return $node;
+	}
+	foreach ( $node as $key => $value ) {
+		$node[ $key ] = guru_schema_swap_id( $value, $old_id, $new_id );
+	}
+	return $node;
+}
+
+/**
+ * True when a Schema node is of the given type.
+ *
+ * @param array  $node Node.
+ * @param string $type Type.
+ * @return bool
+ */
+function guru_schema_is( $node, $type ) {
+	return isset( $node['@type'] ) && in_array( $type, (array) $node['@type'], true );
+}
+
+/**
+ * Yoast Schema: the article's author is the same person or team as the byline.
+ *
+ * @param array $graph Schema graph pieces.
+ * @return array
+ */
+function guru_schema_article_author( $graph ) {
+	if ( ! guru_is_article() || ! is_array( $graph ) ) {
+		return $graph;
+	}
+	$author = guru_article_author( get_queried_object_id() );
+	if ( '' === $author['name'] ) {
+		return $graph;
+	}
+
+	// The @id Yoast gave the WordPress user behind the post.
+	$old_id = '';
+	foreach ( $graph as $node ) {
+		if ( ( guru_schema_is( $node, 'Article' ) || guru_schema_is( $node, 'BlogPosting' ) ) && isset( $node['author']['@id'] ) ) {
+			$old_id = $node['author']['@id'];
+			break;
+		}
+	}
+
+	if ( ! $author['is_team'] ) {
+		// A real person: Yoast already uses their display name; keep the bio identical to the page.
+		foreach ( $graph as $i => $node ) {
+			if ( $old_id && isset( $node['@id'] ) && $old_id === $node['@id'] ) {
+				$graph[ $i ]['name'] = $author['name'];
+				if ( '' !== $author['bio'] ) {
+					$graph[ $i ]['description'] = $author['bio'];
+				} else {
+					unset( $graph[ $i ]['description'] );
+				}
+			}
+		}
+		return $graph;
+	}
+
+	// Back-office account: drop its Person node and credit the editorial team.
+	$team_id = guru_editorial_schema_id();
+	$team    = array(
+		'@type' => 'Organization',
+		'@id'   => $team_id,
+		'name'  => $author['name'],
+	);
+	if ( '' !== $author['bio'] ) {
+		$team['description'] = $author['bio'];
+	}
+	$blog_id = (int) get_option( 'page_for_posts' );
+	if ( $blog_id ) {
+		$team['url'] = get_permalink( $blog_id );
+	}
+
+	$out = array();
+	foreach ( $graph as $node ) {
+		if ( $old_id && isset( $node['@id'] ) && $old_id === $node['@id'] && guru_schema_is( $node, 'Person' ) ) {
+			continue;
+		}
+		if ( ( guru_schema_is( $node, 'Article' ) || guru_schema_is( $node, 'BlogPosting' ) ) ) {
+			$node['author'] = array(
+				'name' => $author['name'],
+				'@id'  => $team_id,
+			);
+		}
+		$out[] = $old_id ? guru_schema_swap_id( $node, $old_id, $team_id ) : $node;
+	}
+	$out[] = $team;
+	return $out;
+}
+add_filter( 'wpseo_schema_graph', 'guru_schema_article_author', 20 );
+
+/**
+ * Yoast <meta name="author">: the byline name.
+ *
+ * @param string $name Display name of the WordPress user.
+ * @return string
+ */
+function guru_wpseo_meta_author( $name ) {
+	if ( ! guru_is_article() ) {
+		return $name;
+	}
+	$author = guru_article_author( get_queried_object_id() );
+	return '' !== $author['name'] ? $author['name'] : $name;
+}
+add_filter( 'wpseo_meta_author', 'guru_wpseo_meta_author' );
+
+/**
+ * Yoast share card ("Written by …"): the byline name.
+ *
+ * @param array $data Label => value.
+ * @return array
+ */
+function guru_wpseo_slack_author( $data ) {
+	if ( ! guru_is_article() || ! is_array( $data ) ) {
+		return $data;
+	}
+	$author = guru_article_author( get_queried_object_id() );
+	$wp     = (string) get_the_author_meta( 'display_name', $author['user_id'] );
+	foreach ( $data as $label => $value ) {
+		if ( '' !== $wp && $value === $wp ) {
+			$data[ $label ] = $author['name'];
+		}
+	}
+	return $data;
+}
+add_filter( 'wpseo_enhanced_slack_data', 'guru_wpseo_slack_author' );

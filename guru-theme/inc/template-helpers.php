@@ -790,6 +790,50 @@ function guru_post_author( $post = null ) {
 	return $name;
 }
 
+/**
+ * The one author record for an article (v1.4.2, spec #15).
+ *
+ * The visible byline, the author box, Yoast's Schema, <meta name="author"> and
+ * the share-card "Written by" line all read this, so they always agree. A post
+ * written by a real person (a public display name set under Users → Profile)
+ * shows that person and their Biographical Info. A post by a back-office
+ * account (admin, editor…) is credited to the editorial team set in
+ * Customize → Guru site settings → Insights articles.
+ *
+ * @param int|WP_Post|null $post Post; default the current one.
+ * @return array{name:string,bio:string,is_team:bool,user_id:int}
+ */
+function guru_article_author( $post = null ) {
+	$post   = get_post( $post );
+	$person = guru_post_author( $post );
+
+	if ( '' !== $person ) {
+		$user_id = (int) $post->post_author;
+		return array(
+			'name'    => $person,
+			'bio'     => trim( (string) get_the_author_meta( 'description', $user_id ) ),
+			'is_team' => false,
+			'user_id' => $user_id,
+		);
+	}
+
+	return array(
+		'name'    => trim( guru_mod( 'guru_editorial_name' ) ),
+		'bio'     => trim( guru_mod( 'guru_editorial_bio' ) ),
+		'is_team' => true,
+		'user_id' => $post ? (int) $post->post_author : 0,
+	);
+}
+
+/**
+ * Schema @id of the editorial team.
+ *
+ * @return string
+ */
+function guru_editorial_schema_id() {
+	return home_url( '/#/schema/editorial-team' );
+}
+
 
 /**
  * Card summary for the Insights list (v1.4.1).

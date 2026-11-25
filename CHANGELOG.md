@@ -8,6 +8,17 @@
 
 ---
 
+## 1.4.2 — 2026-11-25
+
+客戶最新六項清單中可直接做的部分（語言、文章作者、相關服務／作品、標題大小）。
+
+- **語言只有一個來源**：前台用英文 locale（`switch_to_locale('en_US')`，只在前台，後台維持中文），`<html lang>` 為 en-HK；Yoast Schema 的 `inLanguage`（原本 zh-TW）與 Open Graph `og:locale` 也改 en-HK／en_HK。裝了多語外掛時不介入。
+- **文章作者**：作者有公開名稱就用該作者（名稱＋個人簡介），否則顯示「GURU Editorial Team」與簡介（Customize → Insights articles 可改）。標題下「By …」、內文後作者欄（Written by／簡介／Published 日期），Yoast Schema 的 author、`<meta name="author">`、Slack 分享的 Written by 都用同一份資料，不再出現 admin。不顯示「更新日期」（匯入文章的修改日期都是匯入當天）。
+- **相關服務／作品＋詢問按鈕**：文章編輯畫面右側新增「Related services & work」，勾選要連結的服務與作品；文章底部顯示為一般 `<a href>` 連結（服務連到 Solutions 頁對應區塊、作品卡片連到作品頁），再加一個詢問區塊（標題、說明、按鈕文字在 Customize → Insights articles 可改，按鈕跳到頁尾聯絡表單）。沒勾就不顯示相關區。
+- **About 標題一行**：「ABOUT GURU」不再每個字換行；窄手機仍會自然換行。
+- **Insights 標題改回與 About／Work 同大小**（`.blg-hero-title`，Customize → Typography 的 Hero 比例同樣適用）。
+- 檢查：主題內沒有寫死 /staging/ 或網域的連結，全部用 WordPress 網址函式。
+
 ## 1.4.1 — 2026-11-18
 
 修 1.4.0 驗收看到的小地方，加上作品卡片「點了才載入影片」（規格 #4）。
