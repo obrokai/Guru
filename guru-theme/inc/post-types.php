@@ -49,6 +49,27 @@ function guru_register_work_post_type() {
 add_action( 'init', 'guru_register_work_post_type' );
 
 /**
+ * Showcase items and Solutions use the classic edit screen, not the block editor.
+ *
+ * Their real fields live in meta boxes (client, video, homepage position, media
+ * block …) and the cover image is the featured image. In the block editor those
+ * end up below the fold and in a collapsible sidebar, and editors tried to paste
+ * the cover image into the body instead. The classic screen shows the meta box
+ * directly under the title and the cover image in the right-hand column.
+ *
+ * @param bool   $use_block_editor Whether the block editor would be used.
+ * @param string $post_type        Post type.
+ * @return bool
+ */
+function guru_use_classic_editor( $use_block_editor, $post_type ) {
+	if ( in_array( $post_type, array( 'work', 'solution', 'client_logo' ), true ) ) {
+		return false;
+	}
+	return $use_block_editor;
+}
+add_filter( 'use_block_editor_for_post_type', 'guru_use_classic_editor', 10, 2 );
+
+/**
  * Showcase categories — these drive the filter buttons on the work archive.
  */
 function guru_register_work_taxonomy() {
@@ -78,7 +99,7 @@ add_action( 'init', 'guru_register_work_taxonomy' );
  */
 function guru_seed_work_categories() {
 	$defaults = array(
-		'china-digital' => __( 'China Digital', 'guru' ),
+		'china'         => __( 'China Digital', 'guru' ),
 		'influencer'    => __( 'Influencer', 'guru' ),
 		'social'        => __( 'Social Media', 'guru' ),
 		'video'         => __( 'Video', 'guru' ),
@@ -116,6 +137,10 @@ function guru_work_archive_query( $query ) {
 		$query->set( 'posts_per_page', -1 );
 		$query->set( 'orderby', array( 'menu_order' => 'ASC', 'date' => 'DESC' ) );
 	}
+	// The blog listing filters cards in the browser, so keep them on one page.
+	if ( $query->is_home() ) {
+		$query->set( 'posts_per_page', 48 );
+	}
 }
 add_action( 'pre_get_posts', 'guru_work_archive_query' );
 
@@ -136,13 +161,16 @@ function guru_register_solution_post_type() {
 				'add_new_item'  => __( 'Add new solution', 'guru' ),
 				'edit_item'     => __( 'Edit solution', 'guru' ),
 			),
-			'public'        => true,
-			'has_archive'   => false,
-			'menu_icon'     => 'dashicons-screenoptions',
-			'menu_position' => 6,
-			'supports'      => array( 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes' ),
-			'rewrite'       => array( 'slug' => 'solutions' ),
-			'show_in_rest'  => true,
+			'public'              => true,
+			// Solutions are only ever shown on the Solutions page — no single URLs, not in the sitemap.
+			'publicly_queryable'  => false,
+			'exclude_from_search' => true,
+			'has_archive'         => false,
+			'menu_icon'           => 'dashicons-screenoptions',
+			'menu_position'       => 6,
+			'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes' ),
+			'rewrite'             => false,
+			'show_in_rest'        => true,
 		)
 	);
 }

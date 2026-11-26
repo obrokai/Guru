@@ -10,20 +10,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $guru_logo    = guru_asset( 'media/guru-logo.png' );
-$guru_wa      = get_theme_mod( 'guru_whatsapp', 'https://wa.me/85200000000' );
-$guru_contact = home_url( '/#contact' );
+$guru_wa      = guru_mod( 'guru_whatsapp' );
+// On the homepage the contact form is on the same page, so the link scrolls to it.
+$guru_contact = is_front_page() ? '#contact' : home_url( '/#contact' );
+// The static Solutions and Investor pages have no page-load cover.
+$guru_intro   = ! ( is_page_template( 'page-services.php' ) || is_page_template( 'page-investor.php' ) );
 
-/**
- * Nav items. Editable in the admin under Appearance → Menus (Primary);
- * this array is the fallback when no menu has been assigned yet.
+/*
+ * Nav items. The desktop links come from the "Guru Primary" menu (Appearance →
+ * Menus) once the importer has created it; until then — and for the mobile
+ * menu always — the built-in list below is used.
  */
-$guru_nav = array(
-	'about'    => __( 'About', 'guru' ),
-	'work'     => __( 'Work', 'guru' ),
-	'services' => __( 'Solutions', 'guru' ),
-	'blog'     => __( 'Blog', 'guru' ),
-	'investor' => __( 'Investor', 'guru' ),
-);
+$guru_nav = guru_nav_items();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -34,10 +32,13 @@ $guru_nav = array(
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<a class="skip-link" href="#main-content"><?php esc_html_e( 'Skip to main content', 'guru' ); ?></a>
 
-<div class="pg-intro" aria-hidden="true"></div>
+<?php if ( $guru_intro ) : ?>
+	<div class="pg-intro" aria-hidden="true"></div>
+<?php endif; ?>
 
-<nav class="gn-nav">
+<nav class="gn-nav" aria-label="<?php esc_attr_e( 'Main', 'guru' ); ?>">
 	<div class="gn-nav-inner">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="gn-logo" aria-label="<?php esc_attr_e( 'Guru — home', 'guru' ); ?>">
 			<img src="<?php echo $guru_logo; ?>" alt="<?php esc_attr_e( 'Guru', 'guru' ); ?>" />
@@ -45,7 +46,7 @@ $guru_nav = array(
 
 		<div class="gn-pill">
 			<div class="gn-nav-links">
-				<?php if ( has_nav_menu( 'primary' ) ) : ?>
+				<?php if ( guru_use_wp_menu() ) : ?>
 					<?php
 					wp_nav_menu(
 						array(
@@ -59,17 +60,10 @@ $guru_nav = array(
 					);
 					?>
 				<?php else : ?>
-					<?php foreach ( $guru_nav as $guru_slug => $guru_label ) : ?>
-						<?php
-						$guru_page   = get_page_by_path( $guru_slug );
-						$guru_url    = $guru_page ? get_permalink( $guru_page ) : home_url( '/' . $guru_slug . '/' );
-						$guru_active = ( $guru_page && is_page( $guru_page->ID ) )
-							|| ( 'work' === $guru_slug && ( is_post_type_archive( 'work' ) || is_singular( 'work' ) ) )
-							|| ( 'blog' === $guru_slug && ( is_home() || is_singular( 'post' ) ) );
-						?>
-						<a href="<?php echo esc_url( $guru_url ); ?>"
-							class="gn-link<?php echo $guru_active ? ' active' : ''; ?>">
-							<?php echo esc_html( $guru_label ); ?>
+					<?php foreach ( $guru_nav as $guru_item ) : ?>
+						<a href="<?php echo esc_url( $guru_item['url'] ); ?>"
+							class="gn-link<?php echo $guru_item['active'] ? ' active' : ''; ?>">
+							<?php echo esc_html( $guru_item['label'] ); ?>
 						</a>
 					<?php endforeach; ?>
 				<?php endif; ?>
@@ -86,12 +80,8 @@ $guru_nav = array(
 </nav>
 
 <div class="gn-mobile-menu" id="gnMobileMenu" role="dialog" aria-label="<?php esc_attr_e( 'Navigation', 'guru' ); ?>">
-	<?php foreach ( $guru_nav as $guru_slug => $guru_label ) : ?>
-		<?php
-		$guru_page = get_page_by_path( $guru_slug );
-		$guru_url  = $guru_page ? get_permalink( $guru_page ) : home_url( '/' . $guru_slug . '/' );
-		?>
-		<a href="<?php echo esc_url( $guru_url ); ?>" class="gn-mobile-link" data-close><?php echo esc_html( $guru_label ); ?></a>
+	<?php foreach ( $guru_nav as $guru_item ) : ?>
+		<a href="<?php echo esc_url( $guru_item['url'] ); ?>" class="gn-mobile-link" data-close><?php echo esc_html( $guru_item['label'] ); ?></a>
 	<?php endforeach; ?>
 
 	<div class="gn-mobile-ctas">
@@ -99,3 +89,6 @@ $guru_nav = array(
 		<a href="<?php echo esc_url( $guru_wa ); ?>" class="gn-link-whatsapp" target="_blank" rel="noopener"><?php esc_html_e( 'WhatsApp', 'guru' ); ?></a>
 	</div>
 </div>
+
+<?php // One main landmark per page; header above and footer below stay outside it (client spec #2). Closed in footer.php / footer-minimal.php. ?>
+<main id="main-content" class="site-main" tabindex="-1">

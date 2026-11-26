@@ -10,6 +10,149 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * The current page's content, rendered, with the old site's page-builder tags removed.
+ *
+ * Pages carried over from the old site were built with Visual Composer / Elated,
+ * whose shortcodes ([vc_row …], [eltd_…]) are not rendered by this theme and would
+ * otherwise show up as raw text.
+ *
+ * @return string HTML.
+ */
+function guru_clean_page_content() {
+	$content = apply_filters( 'the_content', get_the_content() );
+	return preg_replace( '/\[\/?(vc_|eltd_|rev_slider|contact-form-7)[^\]]*\]/', '', $content );
+}
+
+/**
+ * Permalink of the first page found for the given slugs, else a fallback path.
+ *
+ * The Solutions page is created with the slug "solutions", but older installs
+ * (and the static site) used "services" — accept both.
+ *
+ * @param string|string[] $slugs    Page slugs to try, in order.
+ * @param string          $fallback Home-relative path when no page exists.
+ * @return string
+ */
+function guru_page_url( $slugs, $fallback = '/', $template = '' ) {
+	foreach ( (array) $slugs as $slug ) {
+		$page = get_page_by_path( $slug );
+		if ( $page && 'publish' === $page->post_status ) {
+			return get_permalink( $page );
+		}
+	}
+
+	// No page with that slug — find the page using the template instead.
+	if ( $template ) {
+		$pages = get_pages(
+			array(
+				'meta_key'   => '_wp_page_template', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $template, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'number'     => 1,
+			)
+		);
+		if ( $pages ) {
+			return get_permalink( $pages[0] );
+		}
+	}
+
+	return home_url( $fallback );
+}
+
+/**
+ * ID of the navigation menu the importer created ("Guru Primary"), or 0.
+ *
+ * @return int
+ */
+function guru_menu_id() {
+	$id = (int) get_option( 'guru_menu_id' );
+	return ( $id && wp_get_nav_menu_object( $id ) ) ? $id : 0;
+}
+
+/**
+ * Whether the header should render the WordPress menu: only when the primary
+ * location points at the theme's own menu. A menu inherited from the previous
+ * theme (WordPress maps it across on switch) is ignored in favour of the
+ * built-in links, so the navigation is right from the moment of activation.
+ *
+ * @return bool
+ */
+function guru_use_wp_menu() {
+	$menu_id = guru_menu_id();
+	if ( ! $menu_id ) {
+		return false;
+	}
+	$locations = get_nav_menu_locations();
+	return ! empty( $locations['primary'] ) && (int) $locations['primary'] === $menu_id;
+}
+
+/**
+ * The site's five navigation items with resolved URLs and active state.
+ *
+ * Used by the mobile menu and the footer, and by the header until a Primary
+ * menu has been assigned under Appearance → Menus.
+ *
+ * @param array $labels Optional label overrides keyed by about/work/solutions/blog/investor.
+ * @return array[] Each: [ 'label' => string, 'url' => string, 'active' => bool ].
+ */
+function guru_nav_items( $labels = array() ) {
+	$blog_id  = (int) get_option( 'page_for_posts' );
+	$blog_url = $blog_id ? get_permalink( $blog_id ) : guru_page_url( 'blog', '/blog/' );
+	$label    = static function ( $key, $default ) use ( $labels ) {
+		return isset( $labels[ $key ] ) ? $labels[ $key ] : $default;
+	};
+
+	return array(
+		array(
+			'label'  => $label( 'about', __( 'About', 'guru' ) ),
+			'url'    => guru_page_url( 'about', '/about/', 'page-about.php' ),
+			'active' => is_page_template( 'page-about.php' ),
+		),
+		array(
+			'label'  => $label( 'work', __( 'Work', 'guru' ) ),
+			'url'    => get_post_type_archive_link( 'work' ),
+			'active' => is_post_type_archive( 'work' ) || is_singular( 'work' ) || is_tax( 'work_category' ),
+		),
+		array(
+			'label'  => $label( 'solutions', __( 'Solutions', 'guru' ) ),
+			'url'    => guru_page_url( array( 'solutions', 'services' ), '/solutions/', 'page-services.php' ),
+			'active' => is_page_template( 'page-services.php' ) || is_singular( 'solution' ),
+		),
+		array(
+			'label'  => $label( 'blog', __( 'Blog', 'guru' ) ),
+			'url'    => $blog_url,
+			'active' => ( is_home() && ! is_front_page() ) || is_singular( 'post' ) || is_category(),
+		),
+		array(
+			'label'  => $label( 'investor', __( 'Investor', 'guru' ) ),
+			'url'    => guru_page_url( 'investor', '/investor/', 'page-investor.php' ),
+			'active' => is_page_template( 'page-investor.php' ),
+		),
+	);
+}
+
+/**
+ * Escaped theme asset URL.
+ *
+ * @param string $path Path relative to the theme's assets folder.
+ * @return string
+ */
+function guru_asset( $path ) {
+	return esc_url( get_stylesheet_directory_uri() . '/assets/' . ltrim( $path, '/' ) );
+}
+
+/**
+ * URL of a file under assets/media/, or '' when it is not shipped
+ * (the slim package omits the large videos).
+ *
+ * @param string $file File name, e.g. "hero-bg.mp4".
+ * @return string
+ */
+function guru_theme_media_url( $file ) {
+	$file = ltrim( $file, '/' );
+	return file_exists( get_stylesheet_directory() . '/assets/media/' . $file ) ? guru_asset( 'media/' . $file ) : '';
+}
+
+/**
  * Data for the current showcase item, normalised for the card templates.
  *
  * @param int|null $post_id Optional post ID.
@@ -26,48 +169,310 @@ function guru_get_work_data( $post_id = null ) {
 	foreach ( $terms as $term ) {
 		$slugs[] = $term->slug;
 		$names[] = $term->name;
+		// A child category also matches its parent's filter button.
+		foreach ( get_ancestors( $term->term_id, 'work_category', 'taxonomy' ) as $ancestor_id ) {
+			$ancestor = get_term( $ancestor_id, 'work_category' );
+			if ( $ancestor && ! is_wp_error( $ancestor ) ) {
+				$slugs[] = $ancestor->slug;
+			}
+		}
 	}
 
+	// Card labels: the item's own tags when set (as on the static site), else its categories.
+	$tags = get_post_meta( $post_id, '_guru_tags', true );
+	$tags = is_array( $tags ) ? array_values( array_filter( array_map( 'strval', $tags ) ) ) : array();
+
+	$video = (string) get_post_meta( $post_id, '_guru_video_url', true );
+
 	return array(
-		'title'  => get_the_title( $post_id ),
-		'client' => (string) get_post_meta( $post_id, '_guru_client', true ),
-		'video'  => (string) get_post_meta( $post_id, '_guru_video_url', true ),
-		'image'  => get_the_post_thumbnail_url( $post_id, 'large' ),
-		'cats'   => implode( ' ', $slugs ),
-		'tags'   => $names,
+		'title'   => get_the_title( $post_id ),
+		'client'  => (string) get_post_meta( $post_id, '_guru_client', true ),
+		'video'   => $video,
+		'image'   => get_the_post_thumbnail_url( $post_id, 'large' ),
+		// Pictures for the slider (v1.2.15). Items with a film show it as the first
+		// slide, followed by these pictures (v1.3.1, client request 11-18).
+		'gallery' => guru_work_gallery( $post_id ),
+		'cats'    => implode( ' ', array_unique( $slugs ) ),
+		'tags'    => $tags ? $tags : $names,
 	);
 }
 
 /**
- * Render one showcase card for the work archive.
+ * Pictures of a showcase item, for the image slider.
+ *
+ * The featured image comes first, then every picture placed in the item's
+ * text (Add Media, Image or Gallery blocks), in the order they appear. The
+ * same picture is listed only once.
+ *
+ * @param int $post_id Post ID.
+ * @return array[] Each: src, alt, w, h.
+ */
+function guru_work_gallery( $post_id ) {
+	$items = array();
+	$seen  = array();
+
+	$add = function ( $id, $src = '', $alt = '' ) use ( &$items, &$seen ) {
+		$w = 0;
+		$h = 0;
+		if ( $id ) {
+			$img = wp_get_attachment_image_src( $id, '1536x1536' );
+			if ( ! $img ) {
+				return;
+			}
+			list( $src, $w, $h ) = $img;
+			if ( '' === $alt ) {
+				$alt = (string) get_post_meta( $id, '_wp_attachment_image_alt', true );
+			}
+		}
+		$key = $id ? 'id' . $id : preg_replace( '/-\d+x\d+(?=\.\w+$)/', '', strtok( $src, '?' ) );
+		if ( ! $src || isset( $seen[ $key ] ) ) {
+			return;
+		}
+		$seen[ $key ] = true;
+		$items[]      = array(
+			'src' => $src,
+			'alt' => $alt,
+			'w'   => (int) $w,
+			'h'   => (int) $h,
+		);
+	};
+
+	$thumb = (int) get_post_thumbnail_id( $post_id );
+	if ( $thumb ) {
+		$add( $thumb );
+	}
+
+	$content = (string) get_post_field( 'post_content', $post_id );
+	if ( preg_match_all( '/<img\b[^>]*>/i', $content, $tags ) ) {
+		foreach ( $tags[0] as $tag ) {
+			$id  = preg_match( '/\bwp-image-(\d+)\b/', $tag, $m ) ? (int) $m[1] : 0;
+			$src = preg_match( '/\bsrc=["\']([^"\']+)["\']/i', $tag, $m ) ? html_entity_decode( $m[1] ) : '';
+			$alt = preg_match( '/\balt=["\']([^"\']*)["\']/i', $tag, $m ) ? html_entity_decode( $m[1] ) : '';
+			if ( $id && ! wp_attachment_is_image( $id ) ) {
+				$id = 0;
+			}
+			$add( $id, $src, $alt );
+		}
+	}
+
+	return $items;
+}
+
+/**
+ * Item text with its pictures taken out — they are shown in the slider.
+ *
+ * @param string $html Rendered content.
+ * @return string Empty when nothing but pictures was left.
+ */
+function guru_strip_content_images( $html ) {
+	$html = preg_replace( '/<img\b[^>]*>/i', '', $html );
+	// Captions, links and wrappers left empty once their picture is gone.
+	$html = preg_replace( '#<figcaption\b[^>]*>.*?</figcaption>#is', '', $html );
+	do {
+		$before = $html;
+		$html   = preg_replace( '#<(a|p|figure|div|ul|li)\b[^>]*>(\s|&nbsp;|<br\s*/?>)*</\1>#i', '', $html );
+	} while ( $html !== $before );
+
+	return '' === trim( wp_strip_all_tags( $html ) ) ? '' : $html;
+}
+
+/**
+ * Image slider markup. Filled server-side on the item page, or left empty
+ * for the lightbox to fill from the card it opens (main.js, guruGallery).
+ *
+ * @param array  $items Pictures from guru_work_gallery(); empty for the lightbox.
+ * @param string $id    Element ID.
+ * @param string $title Item title, used as alt text when a picture has none.
+ */
+function guru_gallery_markup( $items = array(), $id = '', $title = '' ) {
+	$count = count( $items );
+	?>
+	<div class="guru-gallery<?php echo $count ? '' : ' is-hidden'; ?>"<?php echo $id ? ' id="' . esc_attr( $id ) . '"' : ''; ?>
+		role="region" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Project film and images', 'guru' ); ?>"
+		data-count="<?php echo (int) $count; ?>">
+		<div class="gg-track" tabindex="0">
+			<?php foreach ( $items as $i => $item ) : ?>
+				<div class="gg-slide<?php echo ! empty( $item['video'] ) ? ' gg-slide-video' : ''; ?>" role="group" aria-roledescription="slide"
+					aria-label="<?php echo esc_attr( ( $i + 1 ) . ' / ' . $count ); ?>">
+					<?php if ( ! empty( $item['video'] ) ) : ?>
+						<?php // The film as the first slide when the item also has pictures (v1.3.1). ?>
+						<video controls playsinline preload="metadata"
+							<?php echo ! empty( $item['poster'] ) ? 'poster="' . esc_url( $item['poster'] ) . '"' : ''; ?>>
+							<source src="<?php echo esc_url( $item['video'] ); ?>" type="video/mp4" />
+						</video>
+					<?php else : ?>
+						<img src="<?php echo esc_url( $item['src'] ); ?>"
+							alt="<?php echo esc_attr( $item['alt'] ? $item['alt'] : $title ); ?>"
+							<?php if ( $item['w'] && $item['h'] ) : ?>
+								width="<?php echo (int) $item['w']; ?>" height="<?php echo (int) $item['h']; ?>"
+							<?php endif; ?>
+							<?php echo $i ? 'loading="lazy"' : 'fetchpriority="high"'; ?> decoding="async" draggable="false" />
+					<?php endif; ?>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<button type="button" class="gg-nav gg-prev" aria-label="<?php esc_attr_e( 'Previous', 'guru' ); ?>">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12.5 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+		</button>
+		<button type="button" class="gg-nav gg-next" aria-label="<?php esc_attr_e( 'Next', 'guru' ); ?>">
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+		</button>
+		<div class="gg-count" aria-live="polite"></div>
+		<div class="gg-dots"></div>
+	</div>
+	<?php
+}
+
+/**
+ * The item's pictures as a data attribute for the lightbox.
+ *
+ * @param array $data From guru_get_work_data().
+ * @return string Attribute markup (with a leading space), or ''.
+ */
+function guru_gallery_attr( $data ) {
+	if ( empty( $data['gallery'] ) ) {
+		return '';
+	}
+	$list = array();
+	foreach ( $data['gallery'] as $item ) {
+		$list[] = array(
+			's' => $item['src'],
+			'a' => $item['alt'] ? $item['alt'] : $data['title'],
+			'w' => $item['w'],
+			'h' => $item['h'],
+		);
+	}
+	return ' data-gallery="' . esc_attr( wp_json_encode( $list ) ) . '"';
+}
+
+/**
+ * The four showcase items shown on the homepage.
+ *
+ * Items with a "Homepage position" (1–4) come first, in that order; any
+ * remaining slots are filled by the newest items in menu order.
+ *
+ * @return WP_Post[]
+ */
+function guru_home_works() {
+	$picked = get_posts(
+		array(
+			'post_type'      => 'work',
+			'posts_per_page' => 4,
+			'meta_key'       => '_guru_home_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			// Two items with the same number should not happen (saving a slot
+			// releases it from any other item), but if it does, the one edited
+			// most recently wins rather than the older post.
+			'orderby'        => array(
+				'meta_value_num' => 'ASC',
+				'modified'       => 'DESC',
+			),
+		)
+	);
+
+	if ( count( $picked ) < 4 ) {
+		$fill = get_posts(
+			array(
+				'post_type'      => 'work',
+				'posts_per_page' => 4 - count( $picked ),
+				'post__not_in'   => wp_list_pluck( $picked, 'ID' ),
+				'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
+			)
+		);
+		$picked = array_merge( $picked, $fill );
+	}
+
+	return $picked;
+}
+
+/**
+ * One item per homepage slot. When $post_id takes slot $slot, every other
+ * showcase item holding that number is moved off the homepage (its position
+ * is cleared; it stays in the Work list). Returns the demoted post IDs so the
+ * admin screen can say what happened.
+ *
+ * @param int $post_id The item claiming the slot.
+ * @param int $slot    1–4.
+ * @return int[]
+ */
+function guru_claim_home_slot( $post_id, $slot ) {
+	$others = get_posts(
+		array(
+			'post_type'      => 'work',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'post__not_in'   => array( (int) $post_id ),
+			'no_found_rows'  => true,
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'     => '_guru_home_order',
+					'value'   => (int) $slot,
+					'type'    => 'NUMERIC',
+					'compare' => '=',
+				),
+			),
+		)
+	);
+
+	foreach ( $others as $other_id ) {
+		delete_post_meta( $other_id, '_guru_home_order' );
+	}
+
+	return array_map( 'intval', $others );
+}
+
+/**
+ * Render one showcase card for the work archive — same markup as the static
+ * site: .prj-img holds the film / cover / coloured placeholder, and cards fade
+ * in one after another. Every card is the same 4:3 size — the static page's
+ * 16:9 "large" variant was dropped at the client's request (2026-09-22).
  *
  * @param int|null $post_id Optional post ID.
+ * @param int      $index   Position in the grid (0-based).
  */
-function guru_work_card( $post_id = null ) {
+function guru_work_card( $post_id = null, $index = 0 ) {
 	$data = guru_get_work_data( $post_id );
+	$sub  = $data['client'];
+	if ( $data['tags'] ) {
+		$sub .= ( $sub ? ' · ' : '' ) . implode( ' · ', $data['tags'] );
+	}
 	?>
 	<div class="prj-card"
 		data-cats="<?php echo esc_attr( $data['cats'] ); ?>"
 		<?php if ( $data['video'] ) : ?>
 			data-video="<?php echo esc_url( $data['video'] ); ?>"
+			<?php echo guru_gallery_attr( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper; pictures after the film (v1.3.1). ?>
+		<?php else : ?>
+			<?php // No film: its pictures open in the lightbox slider; with no pictures either, the card opens the item's own page. ?>
+			data-url="<?php echo esc_url( get_permalink( $post_id ? $post_id : get_the_ID() ) ); ?>"
+			<?php echo guru_gallery_attr( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the helper. ?>
 		<?php endif; ?>
 		data-title="<?php echo esc_attr( $data['title'] ); ?>"
 		data-client="<?php echo esc_attr( $data['client'] ); ?>"
-		data-tags="<?php echo esc_attr( implode( ', ', $data['tags'] ) ); ?>">
+		data-tags="<?php echo esc_attr( implode( '|', $data['tags'] ) ); ?>"
+		data-sub="<?php echo esc_attr( $sub ); ?>"
+		style="animation-delay:<?php echo esc_attr( number_format( 0.38 + $index * 0.06, 2 ) ); ?>s">
 
-		<div class="prj-media">
+		<div class="prj-img">
 			<?php if ( $data['video'] ) : ?>
-				<video muted loop playsinline preload="metadata">
-					<source src="<?php echo esc_url( $data['video'] ); ?>" type="video/mp4" />
-				</video>
-				<div class="prj-play"></div>
+				<?php if ( $data['image'] ) : ?>
+					<?php // Client spec #4 (v1.4.1): the cover picture only; the film loads when the card is clicked (lightbox). ?>
+					<img class="prj-video" src="<?php echo esc_url( $data['image'] ); ?>" alt="<?php echo esc_attr( $data['title'] ); ?>" loading="lazy" />
+				<?php else : ?>
+					<?php // No cover picture yet: a silent preview, loaded and played only while on screen (main.js). ?>
+					<video class="prj-video" src="<?php echo esc_url( $data['video'] ); ?>" muted loop playsinline preload="none" data-lazy-play></video>
+				<?php endif; ?>
+				<?php /* translators: %s: project title. */ ?>
+				<button type="button" class="prj-play-btn" aria-label="<?php echo esc_attr( sprintf( __( 'Play film: %s', 'guru' ), $data['title'] ) ); ?>"></button>
+				<div class="prj-hover-label"><?php esc_html_e( 'Watch Film ↗', 'guru' ); ?></div>
 			<?php elseif ( $data['image'] ) : ?>
 				<img src="<?php echo esc_url( $data['image'] ); ?>"
 					alt="<?php echo esc_attr( $data['title'] ); ?>" loading="lazy" />
+				<div class="prj-hover-label"><?php esc_html_e( 'View Project ↗', 'guru' ); ?></div>
 			<?php else : ?>
-				<div class="prj-img-ph"></div>
+				<div class="prj-img-ph c<?php echo (int) ( ( $index % 12 ) + 1 ); ?>"></div>
+				<div class="prj-hover-label"><?php esc_html_e( 'View Project ↗', 'guru' ); ?></div>
 			<?php endif; ?>
-			<div class="prj-hover-label"><?php esc_html_e( 'View Project ↗', 'guru' ); ?></div>
 		</div>
 
 		<div class="prj-info">
@@ -78,7 +483,8 @@ function guru_work_card( $post_id = null ) {
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
-			<h3 class="prj-title"><?php echo esc_html( $data['title'] ); ?></h3>
+			<?php // A real link to the project page, so search engines and keyboards can reach it (client spec #13). ?>
+			<h3 class="prj-title"><a class="prj-link" href="<?php echo esc_url( get_permalink( $post_id ? $post_id : get_the_ID() ) ); ?>"><?php echo esc_html( $data['title'] ); ?></a></h3>
 			<?php if ( $data['client'] ) : ?>
 				<p class="prj-client"><?php echo esc_html( $data['client'] ); ?></p>
 			<?php endif; ?>
@@ -101,11 +507,20 @@ function guru_work_filters() {
 	if ( is_wp_error( $terms ) || ! $terms ) {
 		return;
 	}
+
+	// On a category archive the matching button starts out selected.
+	$current = 'all';
+	if ( is_tax( 'work_category' ) ) {
+		$queried = get_queried_object();
+		if ( $queried && ! empty( $queried->slug ) ) {
+			$current = $queried->slug;
+		}
+	}
 	?>
 	<div class="wrk-filters" id="filterBar">
-		<button class="filter-btn active" data-filter="all"><?php esc_html_e( 'All', 'guru' ); ?></button>
+		<button class="filter-btn<?php echo 'all' === $current ? ' active' : ''; ?>" data-filter="all"><?php esc_html_e( 'All', 'guru' ); ?></button>
 		<?php foreach ( $terms as $term ) : ?>
-			<button class="filter-btn" data-filter="<?php echo esc_attr( $term->slug ); ?>">
+			<button class="filter-btn<?php echo $term->slug === $current ? ' active' : ''; ?>" data-filter="<?php echo esc_attr( $term->slug ); ?>">
 				<?php echo esc_html( $term->name ); ?>
 			</button>
 		<?php endforeach; ?>
@@ -114,13 +529,181 @@ function guru_work_filters() {
 }
 
 /**
- * Escaped theme asset URL.
+ * Image files in a folder (png/jpg/jpeg/webp/svg), sorted — without GLOB_BRACE,
+ * which some PHP builds lack.
  *
- * @param string $path Path relative to the theme's assets folder.
- * @return string
+ * @param string $dir Absolute folder path.
+ * @return string[] Absolute file paths.
  */
-function guru_asset( $path ) {
-	return esc_url( get_stylesheet_directory_uri() . '/assets/' . ltrim( $path, '/' ) );
+function guru_image_files( $dir ) {
+	if ( ! is_dir( $dir ) ) {
+		return array();
+	}
+	$files = array();
+	foreach ( (array) scandir( $dir ) as $name ) {
+		if ( preg_match( '/\.(png|jpe?g|webp|svg)$/i', $name ) ) {
+			$files[] = $dir . '/' . $name;
+		}
+	}
+	sort( $files );
+	return $files;
+}
+
+/* -------------------------------------------------------------------------
+ * Solutions — media block and highlight cards
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Media types a solution panel can show.
+ *
+ * @return array type => label.
+ */
+function guru_solution_media_types() {
+	return array(
+		''         => __( 'None', 'guru' ),
+		'phones'   => __( 'Phone mockups (images, side by side)', 'guru' ),
+		'carousel' => __( 'Carousel (videos or images)', 'guru' ),
+		'video'    => __( 'Single video', 'guru' ),
+	);
+}
+
+/**
+ * Normalised media + highlights for a solution.
+ *
+ * @param int $post_id Solution ID.
+ * @return array { label, type, items[], highlights[] }
+ */
+function guru_get_solution_media( $post_id ) {
+	$type  = (string) get_post_meta( $post_id, '_guru_media_type', true );
+	$items = get_post_meta( $post_id, '_guru_media_items', true );
+	$hl    = get_post_meta( $post_id, '_guru_highlights', true );
+
+	return array(
+		'label'      => (string) get_post_meta( $post_id, '_guru_media_label', true ),
+		'type'       => array_key_exists( $type, guru_solution_media_types() ) ? $type : '',
+		'items'      => is_array( $items ) ? array_values( array_filter( $items, 'is_array' ) ) : array(),
+		'highlights' => is_array( $hl ) ? array_values( array_filter( $hl, 'is_array' ) ) : array(),
+	);
+}
+
+/**
+ * Whether a URL points at a video file.
+ *
+ * @param string $url URL.
+ * @return bool
+ */
+function guru_is_video_url( $url ) {
+	$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+	return (bool) preg_match( '/\.(mp4|webm|mov|m4v)$/i', $path );
+}
+
+/**
+ * Output a solution's media block and highlight cards — same markup as the
+ * static site, so the Solutions stylesheet applies unchanged.
+ *
+ * @param int $post_id Solution ID.
+ */
+function guru_solution_media( $post_id ) {
+	$m     = guru_get_solution_media( $post_id );
+	$items = array();
+
+	foreach ( $m['items'] as $item ) {
+		if ( ! empty( $item['src'] ) ) {
+			$items[] = $item;
+		}
+	}
+
+	if ( $m['type'] && $items ) :
+		if ( $m['label'] ) :
+			?>
+			<div class="srv-media-label"><?php echo esc_html( $m['label'] ); ?></div>
+			<?php
+		endif;
+
+		if ( 'phones' === $m['type'] ) :
+			?>
+			<div class="srv-phones-row">
+				<?php foreach ( $items as $item ) : ?>
+					<div class="srv-phone-wrap">
+						<div class="srv-phone">
+							<div class="srv-phone-screen">
+								<img src="<?php echo esc_url( $item['src'] ); ?>"
+									alt="<?php echo esc_attr( isset( $item['alt'] ) ? $item['alt'] : '' ); ?>" draggable="false" loading="lazy" />
+							</div>
+						</div>
+						<?php if ( ! empty( $item['caption'] ) ) : ?>
+							<p class="srv-phone-cap"><?php echo esc_html( $item['caption'] ); ?></p>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+			<?php
+		elseif ( 'carousel' === $m['type'] ) :
+			?>
+			<div class="srv-carousel-outer">
+				<div class="srv-carousel-track-wrap">
+					<div class="srv-carousel-track">
+						<?php foreach ( $items as $item ) : ?>
+							<div class="srv-carousel-slide">
+								<?php if ( guru_is_video_url( $item['src'] ) ) : ?>
+									<video muted loop playsinline preload="none">
+										<source src="<?php echo esc_url( $item['src'] ); ?>" type="video/mp4" />
+									</video>
+								<?php else : ?>
+									<img src="<?php echo esc_url( $item['src'] ); ?>"
+										alt="<?php echo esc_attr( isset( $item['alt'] ) ? $item['alt'] : '' ); ?>" loading="lazy" />
+								<?php endif; ?>
+							</div>
+						<?php endforeach; ?>
+					</div>
+					<?php if ( count( $items ) > 1 ) : ?>
+						<button class="srv-carousel-btn srv-carousel-prev" type="button" aria-label="<?php esc_attr_e( 'Previous', 'guru' ); ?>">&#8592;</button>
+						<button class="srv-carousel-btn srv-carousel-next" type="button" aria-label="<?php esc_attr_e( 'Next', 'guru' ); ?>">&#8594;</button>
+						<span class="srv-carousel-count">1 / <?php echo count( $items ); ?></span>
+					<?php endif; ?>
+				</div>
+				<?php if ( count( $items ) > 1 ) : ?>
+					<div class="srv-carousel-dots">
+						<?php foreach ( $items as $i => $item ) : ?>
+							<div class="srv-carousel-dot<?php echo 0 === $i ? ' active' : ''; ?>" data-idx="<?php echo (int) $i; ?>"></div>
+						<?php endforeach; ?>
+					</div>
+				<?php endif; ?>
+			</div>
+			<?php
+		elseif ( 'video' === $m['type'] ) :
+			?>
+			<div class="srv-video-wrap">
+				<video autoplay muted loop playsinline preload="metadata">
+					<source src="<?php echo esc_url( $items[0]['src'] ); ?>" type="video/mp4" />
+				</video>
+			</div>
+			<?php
+		endif;
+	endif;
+
+	if ( $m['highlights'] ) :
+		?>
+		<div class="srv-highlights">
+			<?php foreach ( $m['highlights'] as $h ) : ?>
+				<?php
+				if ( empty( $h['title'] ) ) {
+					continue;
+				}
+				?>
+				<div class="srv-highlight">
+					<?php if ( ! empty( $h['icon'] ) ) : ?>
+						<div class="srv-highlight-icon"><?php echo esc_html( $h['icon'] ); ?></div>
+					<?php endif; ?>
+					<div class="srv-highlight-title"><?php echo esc_html( $h['title'] ); ?></div>
+					<?php if ( ! empty( $h['desc'] ) ) : ?>
+						<div class="srv-highlight-desc"><?php echo esc_html( $h['desc'] ); ?></div>
+					<?php endif; ?>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<?php
+	endif;
 }
 
 /**
@@ -166,4 +749,132 @@ class Guru_Nav_Walker extends Walker_Nav_Menu {
 	 * @param array   $args   Args.
 	 */
 	public function end_el( &$output, $item, $depth = 0, $args = null ) {}
+}
+
+/**
+ * Post date for the front end, always in English ("10 Nov 2026") — the site's
+ * language setting is Chinese for the admin, which made posts show "10 11 月, 2026"
+ * on English pages. Wrapped in <time> so the date is machine-readable (v1.4.0).
+ *
+ * @param int|WP_Post|null $post Post; default the current one.
+ * @return string HTML.
+ */
+function guru_post_date( $post = null ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return '';
+	}
+	return '<time datetime="' . esc_attr( get_post_time( 'c', false, $post ) ) . '">'
+		. esc_html( mysql2date( 'j M Y', $post->post_date, false ) ) . '</time>';
+}
+
+/**
+ * Author name to show on a post, or '' to show none. Client spec #15: never show
+ * "admin" (or a bare login name) as the author — only a real name set in
+ * Users → Profile ("Display name publicly as").
+ *
+ * @param int|WP_Post|null $post Post; default the current one.
+ * @return string
+ */
+function guru_post_author( $post = null ) {
+	$post = get_post( $post );
+	$user = $post ? get_userdata( (int) $post->post_author ) : null;
+	if ( ! $user ) {
+		return '';
+	}
+	$name = trim( $user->display_name );
+	if ( '' === $name || in_array( strtolower( $name ), array( 'admin', 'administrator', 'editor', 'webmaster' ), true )
+		|| strtolower( $name ) === strtolower( $user->user_login ) ) {
+		return '';
+	}
+	return $name;
+}
+
+/**
+ * The one author record for an article (v1.4.2, spec #15).
+ *
+ * The visible byline, the author box, Yoast's Schema, <meta name="author"> and
+ * the share-card "Written by" line all read this, so they always agree. A post
+ * written by a real person (a public display name set under Users → Profile)
+ * shows that person and their Biographical Info. A post by a back-office
+ * account (admin, editor…) is credited to the editorial team set in
+ * Customize → Guru site settings → Insights articles.
+ *
+ * @param int|WP_Post|null $post Post; default the current one.
+ * @return array{name:string,bio:string,is_team:bool,user_id:int}
+ */
+function guru_article_author( $post = null ) {
+	$post   = get_post( $post );
+	$person = guru_post_author( $post );
+
+	if ( '' !== $person ) {
+		$user_id = (int) $post->post_author;
+		return array(
+			'name'    => $person,
+			'bio'     => trim( (string) get_the_author_meta( 'description', $user_id ) ),
+			'is_team' => false,
+			'user_id' => $user_id,
+		);
+	}
+
+	return array(
+		'name'    => trim( guru_mod( 'guru_editorial_name' ) ),
+		'bio'     => trim( guru_mod( 'guru_editorial_bio' ) ),
+		'is_team' => true,
+		'user_id' => $post ? (int) $post->post_author : 0,
+	);
+}
+
+/**
+ * Schema @id of the editorial team.
+ *
+ * @return string
+ */
+function guru_editorial_schema_id() {
+	return home_url( '/#/schema/editorial-team' );
+}
+
+
+/**
+ * Card summary for the Insights list (v1.4.1).
+ *
+ * wp_trim_words() counts characters, not words, when the site language is Chinese
+ * (the admin is zh_TW), so cards were cut to 24 letters ("Selecting a Hong Kong KO…").
+ * This trims by length instead: English to the last whole word before $latin
+ * characters, Chinese/Japanese/Korean to $cjk characters. The card's CSS then shows
+ * at most three lines.
+ *
+ * @param int|WP_Post|null $post  Post; default the current one.
+ * @param int              $latin Maximum length for Latin-script text.
+ * @param int              $cjk   Maximum length for CJK text.
+ * @return string Plain text (not escaped).
+ */
+function guru_card_excerpt( $post = null, $latin = 200, $cjk = 96 ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return '';
+	}
+	$text = has_excerpt( $post ) ? $post->post_excerpt : $post->post_content;
+	$text = preg_replace( '/\[\/?[a-z][^\]]*\]/i', '', strip_shortcodes( $text ) ); // old page-builder tags
+	$text = trim( preg_replace( '/\s+/u', ' ', html_entity_decode( wp_strip_all_tags( $text ), ENT_QUOTES, 'UTF-8' ) ) );
+	if ( '' === $text ) {
+		return '';
+	}
+
+	$letters = preg_match_all( '/\S/u', $text );
+	$cjk_n   = preg_match_all( '/[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}]/u', $text );
+	$is_cjk  = $letters && $cjk_n / $letters > 0.3;
+	$max     = $is_cjk ? $cjk : $latin;
+	if ( mb_strlen( $text ) <= $max ) {
+		return $text;
+	}
+
+	$cut = mb_substr( $text, 0, $max );
+	if ( ! $is_cjk ) {
+		$space = mb_strrpos( $cut, ' ' );
+		if ( false !== $space && $space > $max * 0.6 ) {
+			$cut = mb_substr( $cut, 0, $space );
+		}
+	}
+	return preg_replace( '/[\s,.;:!?\-–—、，。；：！？（(「『]+$/u', '', $cut ) . '…';
 }

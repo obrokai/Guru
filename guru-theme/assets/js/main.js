@@ -1,31 +1,204 @@
-/* Guru theme — front-end behaviour. */
+/* Guru theme — front-end behaviour. Mirrors the inline scripts of the static site. */
 
-(function () {
-  var overlay   = document.getElementById('hwVmodal');
-  var box       = overlay.querySelector('.hw-vmodal-box');
-  var videoEl   = document.getElementById('hwVmodalVideo');
-  var videoWrap = document.getElementById('hwVmodalVideoWrap');
-  var titleEl   = document.getElementById('hwVmodalTitle');
-  var subEl     = document.getElementById('hwVmodalSub');
-  var closeBtn  = document.getElementById('hwVmodalClose');
-  var contactBtn= document.getElementById('hwContactBtn');
-  var formWrap  = document.getElementById('hwFormWrap');
-  var modalForm = document.getElementById('hwContactForm');
-  var formNote  = document.getElementById('hwfNote');
-  var scrollHint= document.getElementById('hwScrollHint');
-  if (modalForm) {
-    var hwCc = modalForm.querySelector('.hwf-cc');
-    var hwPhone = modalForm.querySelector('.hwf-phone');
-    if (hwCc && hwPhone) {
-      var hwApplyCc = function () {
-        var len = hwCc.options[hwCc.selectedIndex].getAttribute('data-len');
-        if (len) { hwPhone.setAttribute('maxlength', len); } else { hwPhone.removeAttribute('maxlength'); }
-      };
-      hwCc.addEventListener('change', hwApplyCc);
-      hwPhone.addEventListener('input', function () { hwPhone.value = hwPhone.value.replace(/[^0-9]/g, ''); });
-      hwApplyCc();
+/* ── Image slider for showcase items without a film ──
+ * Swipe on phones (native scroll-snap), arrows / keys / trackpad on desktop.
+ * Used in both lightboxes (filled from the card's data-gallery) and on the
+ * item's own page (slides already in the markup). */
+function guruGallery(root) {
+  if (!root) return null;
+  var track = root.querySelector('.gg-track');
+  var prev  = root.querySelector('.gg-prev');
+  var next  = root.querySelector('.gg-next');
+  var count = root.querySelector('.gg-count');
+  var dots  = root.querySelector('.gg-dots');
+  var cur = 0;
+
+  function slides() { return track.querySelectorAll('.gg-slide'); }
+
+  function render() {
+    var n = slides().length;
+    root.setAttribute('data-count', n);
+    root.classList.toggle('is-single', n < 2);
+    dots.innerHTML = '';
+    for (var i = 0; i < n; i++) {
+      var d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'gg-dot';
+      d.setAttribute('aria-label', 'Image ' + (i + 1));
+      d.setAttribute('data-idx', i);
+      dots.appendChild(d);
     }
+    cur = 0;
+    track.scrollLeft = 0;
+    update();
   }
+
+  // Only the film on the current slide may play (v1.3.1).
+  function pauseOthers() {
+    slides().forEach(function (sl, i) {
+      if (i === cur) return;
+      var v = sl.querySelector('video');
+      if (v && !v.paused) v.pause();
+    });
+  }
+
+  function update() {
+    pauseOthers();
+    var n = slides().length;
+    if (count) count.textContent = n > 1 ? (cur + 1) + ' / ' + n : '';
+    if (prev) prev.disabled = cur <= 0;
+    if (next) next.disabled = cur >= n - 1;
+    dots.querySelectorAll('.gg-dot').forEach(function (d, i) { d.classList.toggle('active', i === cur); });
+  }
+
+  function go(i, instant) {
+    var n = slides().length;
+    if (!n) return;
+    cur = Math.max(0, Math.min(n - 1, i));
+    track.scrollTo({ left: cur * track.clientWidth, behavior: instant ? 'auto' : 'smooth' });
+    update();
+  }
+
+  var raf = 0;
+  track.addEventListener('scroll', function () {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(function () {
+      var w = track.clientWidth || 1;
+      var i = Math.round(track.scrollLeft / w);
+      if (i !== cur) { cur = i; update(); }
+    });
+  }, { passive: true });
+
+  if (prev) prev.addEventListener('click', function (e) { e.stopPropagation(); go(cur - 1); });
+  if (next) next.addEventListener('click', function (e) { e.stopPropagation(); go(cur + 1); });
+  dots.addEventListener('click', function (e) {
+    var d = e.target.closest('.gg-dot');
+    if (d) go(+d.getAttribute('data-idx'));
+  });
+  track.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+  });
+
+  // Desktop: drag with the mouse like on a phone.
+  var down = false, startX = 0, startLeft = 0, moved = false;
+  track.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    if (e.target.closest && e.target.closest('video')) return; // film controls (seek bar, volume) keep the mouse
+    down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
+    track.classList.add('is-dragging');
+  });
+  window.addEventListener('mousemove', function (e) {
+    if (!down) return;
+    var dx = e.clientX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    track.scrollLeft = startLeft - dx;
+  });
+  window.addEventListener('mouseup', function (e) {
+    if (!down) return;
+    down = false;
+    track.classList.remove('is-dragging');
+    var dx = e.clientX - startX;
+    var w = track.clientWidth || 1;
+    // A short flick is enough to move one picture.
+    var target = Math.abs(dx) > w * 0.12 ? cur + (dx < 0 ? 1 : -1) : cur;
+    go(target);
+  });
+  track.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+  // Keep the current picture in place when the window is resized or rotated.
+  window.addEventListener('resize', function () { if (slides().length) go(cur, true); });
+
+  render();
+
+  return {
+    set: function (items) {
+      track.innerHTML = '';
+      (items || []).forEach(function (it, i) {
+        var slide = document.createElement('div');
+        slide.className = 'gg-slide';
+        slide.setAttribute('role', 'group');
+        slide.setAttribute('aria-roledescription', 'slide');
+        slide.setAttribute('aria-label', (i + 1) + ' / ' + items.length);
+        if (it.v) {
+          // Film slide (v1.3.1): first in the slider when the item has a film and pictures.
+          slide.className += ' gg-slide-video';
+          var vid = document.createElement('video');
+          vid.controls = true;
+          vid.playsInline = true;
+          vid.setAttribute('playsinline', '');
+          vid.preload = 'metadata';
+          vid.src = it.v;
+          slide.appendChild(vid);
+          track.appendChild(slide);
+          return;
+        }
+        var img = document.createElement('img');
+        img.src = it.s;
+        img.alt = it.a || '';
+        if (it.w && it.h) { img.width = it.w; img.height = it.h; }
+        img.decoding = 'async';
+        img.draggable = false;
+        if (i > 1) img.loading = 'lazy';
+        slide.appendChild(img);
+        track.appendChild(slide);
+      });
+      root.classList.toggle('is-hidden', !items || !items.length);
+      render();
+    },
+    clear: function () {
+      track.querySelectorAll('video').forEach(function (v) { v.pause(); v.removeAttribute('src'); v.load(); });
+      track.innerHTML = ''; root.classList.add('is-hidden'); render();
+    },
+    video: function () { var s = slides()[cur]; return s ? s.querySelector('video') : null; },
+    go: function (i) { go(i); },
+    step: function (d) { go(cur + d); },
+    count: function () { return slides().length; }
+  };
+}
+
+/* The item's own page: slides are already in the markup. */
+(function () {
+  var g = guruGallery(document.getElementById('wrkSingleGallery'));
+  if (!g) return;
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.closest('.gg-track'))) return;
+    if (e.key === 'ArrowLeft') g.step(-1);
+    if (e.key === 'ArrowRight') g.step(1);
+  });
+})();
+
+/* ── Showcase lightbox ──
+ * Two markups share one controller: the homepage modal (#hwVmodal, styled in
+ * style.css) and the Work archive modal (#vmodal, styled in work.css) — the
+ * same two designs the static site has. Cards open whichever is on the page. */
+function guruModal(ids) {
+  var overlay = document.getElementById(ids.overlay);
+  if (!overlay) return null;
+  var $ = function (id) { return id ? document.getElementById(id) : null; };
+  var box        = overlay.querySelector(ids.box);
+  var videoEl    = $(ids.video);
+  var videoWrap  = $(ids.videoWrap) || (videoEl && videoEl.parentNode);
+  var titleEl    = $(ids.title);
+  var subEl      = $(ids.sub);
+  var clientEl   = $(ids.client);
+  var tagsEl     = $(ids.tags);
+  var closeBtn   = $(ids.close);
+  var contactBtn = $(ids.contactBtn);
+  var formWrap   = $(ids.formWrap);
+  var modalForm  = $(ids.form);
+  var formNote   = $(ids.note);
+  var scrollHint = $(ids.scrollHint);
+  var projectEl  = $(ids.project);
+  var firstField = $(ids.firstField);
+  var gallery    = guruGallery($(ids.gallery));
+
+  if (modalForm) setupPhoneGroup(modalForm);
+  // Screen readers: announce it as a dialog named after the project (client spec #8).
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  if (titleEl && titleEl.id) overlay.setAttribute('aria-labelledby', titleEl.id);
 
   function updateScrollHint() {
     if (!scrollHint) return;
@@ -34,142 +207,322 @@
     scrollHint.classList.toggle('show', canScroll && !atBottom);
   }
   function collapseForm() {
-    formWrap.classList.remove('open');
-    contactBtn.classList.remove('active');
-    box.classList.remove('form-open');
-    formNote.textContent = '';
-    scrollHint.classList.remove('show');
+    if (formWrap) formWrap.classList.remove('open');
+    if (contactBtn) contactBtn.classList.remove('active');
+    if (box) box.classList.remove('form-open');
+    if (formNote) formNote.textContent = '';
+    if (scrollHint) scrollHint.classList.remove('show');
   }
 
-  function openModal(src, title, sub) {
-    titleEl.textContent = title;
-    subEl.textContent = sub;
-    if (src) {
-      videoWrap.classList.remove('is-hidden');
-      videoEl.src = src;
-      videoEl.play();
-    } else {
-      videoWrap.classList.add('is-hidden');
-      videoEl.removeAttribute('src');
+  var lastFocus = null;
+
+  function open(card) {
+    lastFocus = document.activeElement;
+    var src    = card.getAttribute('data-video');
+    var title  = card.getAttribute('data-title') || '';
+    var client = card.getAttribute('data-client') || '';
+    var tags   = card.getAttribute('data-tags') || '';
+    var sub    = card.getAttribute('data-sub') || '';
+
+    if (titleEl) titleEl.textContent = title;
+    if (subEl) subEl.textContent = sub;
+    if (clientEl) clientEl.textContent = client;
+    if (tagsEl) {
+      tagsEl.innerHTML = '';
+      tags.split('|').forEach(function (t) {
+        t = t.trim();
+        if (!t) return;
+        var pill = document.createElement('span');
+        pill.className = ids.tagClass;
+        pill.textContent = t;
+        tagsEl.appendChild(pill);
+      });
+    }
+    var pics = [];
+    if (gallery) {
+      try { pics = JSON.parse(card.getAttribute('data-gallery') || '[]'); } catch (err) { pics = []; }
+    }
+    // Film and pictures (v1.3.1): the film becomes the first slide of the slider.
+    var mixed = !!(src && gallery && pics.length);
+
+    if (videoEl) {
+      if (src && !mixed) {
+        if (videoWrap) { videoWrap.classList.remove('is-hidden'); videoWrap.style.display = ''; }
+        videoEl.src = src;
+        videoEl.play().catch(function () {});
+      } else {
+        if (videoWrap) { videoWrap.classList.add('is-hidden'); videoWrap.style.display = 'none'; }
+        videoEl.removeAttribute('src');
+      }
+    }
+    if (gallery) {
+      if (mixed) {
+        gallery.set([{ v: src }].concat(pics));
+        var first = gallery.video();
+        if (first) { var pr = first.play(); if (pr && pr.catch) pr.catch(function () {}); }
+      } else {
+        gallery.set(src ? [] : pics);
+      }
     }
     collapseForm();
     overlay.classList.add('open');
     overlay.scrollTop = 0;
     document.body.style.overflow = 'hidden';
     setTimeout(updateScrollHint, 100);
+    // Keyboard users land inside the lightbox (v1.3.0).
+    if (closeBtn) setTimeout(function () { closeBtn.focus({ preventScroll: true }); }, 60);
   }
-  function closeModal() {
+  function close() {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
-    videoEl.pause();
-    videoEl.removeAttribute('src');
+    if (videoEl) { videoEl.pause(); videoEl.removeAttribute('src'); }
+    if (gallery) gallery.clear();
     collapseForm();
+    // Back to the card that opened it.
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (err) {} }
+    lastFocus = null;
   }
 
-  // All work cards open the modal (video + non-video)
-  document.querySelectorAll('.hw-video-card, .hw-info-card').forEach(function (card) {
-    card.style.cursor = 'pointer';
-    card.addEventListener('click', function () {
-      openModal(
-        card.getAttribute('data-video'),
-        card.getAttribute('data-title'),
-        card.getAttribute('data-sub')
-      );
+  if (contactBtn && formWrap) {
+    contactBtn.addEventListener('click', function () {
+      var isOpen = formWrap.classList.toggle('open');
+      contactBtn.classList.toggle('active', isOpen);
+      if (box) box.classList.toggle('form-open', isOpen);
+      if (isOpen) {
+        setTimeout(function () {
+          formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          if (firstField) firstField.focus();
+          updateScrollHint();
+        }, 480);
+      } else { updateScrollHint(); }
     });
-  });
-
-  // Contact form toggle
-  contactBtn.addEventListener('click', function () {
-    var isOpen = formWrap.classList.toggle('open');
-    contactBtn.classList.toggle('active', isOpen);
-    box.classList.toggle('form-open', isOpen);
-    if (isOpen) {
-      setTimeout(function () {
-        formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        var first = document.getElementById('hwf-name');
-        if (first) first.focus();
-        updateScrollHint();
-      }, 480);
-    } else { updateScrollHint(); }
-  });
+  }
 
   // Client-side validation only — the form POSTs to WordPress.
-  modalForm.addEventListener('submit', function (e) {
-    var projectField = document.getElementById('hwf-project');
-    if (projectField && titleEl) projectField.value = titleEl.textContent || '';
-    var required = ['name','email','phone','company'];
-    for (var i = 0; i < required.length; i++) {
-      var f = modalForm.elements[required[i]];
-      if (!f.value.trim()) {
-        e.preventDefault();
-        f.focus();
-        formNote.style.color = '#ff6b6b';
-        formNote.textContent = 'Please fill in all required (*) fields.';
-        return;
-      }
-    }
-  });
+  if (modalForm) {
+    modalForm.addEventListener('submit', function (e) {
+      if (projectEl && titleEl) projectEl.value = titleEl.textContent || '';
+      if (!guruCheckForm(modalForm, formNote, '#c0392b')) { e.preventDefault(); return; }
+      lockSubmit(modalForm, e);
+    });
+  }
 
   overlay.addEventListener('scroll', updateScrollHint, { passive: true });
   if (scrollHint) scrollHint.addEventListener('click', function () { overlay.scrollBy({ top: overlay.clientHeight * 0.7, behavior: 'smooth' }); });
+  if (closeBtn) closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'Tab') { guruTrapTab(e, overlay); return; }
+    // Left / right arrows page through the pictures (not while typing in the form).
+    var t = e.target;
+    if (!gallery || !gallery.count() || (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.closest('.gg-track')))) return;
+    if (e.key === 'ArrowLeft') gallery.step(-1);
+    if (e.key === 'ArrowRight') gallery.step(1);
+  });
 
-  closeBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+  return { open: open, close: close };
+}
+
+(function () {
+  var homeModal = guruModal({
+    overlay: 'hwVmodal', box: '.hw-vmodal-box', video: 'hwVmodalVideo', videoWrap: 'hwVmodalVideoWrap', gallery: 'hwVmodalGallery',
+    title: 'hwVmodalTitle', sub: 'hwVmodalSub', close: 'hwVmodalClose', contactBtn: 'hwContactBtn',
+    formWrap: 'hwFormWrap', form: 'hwContactForm', note: 'hwfNote', scrollHint: 'hwScrollHint',
+    project: 'hwf-project', firstField: 'hwf-name', tagClass: ''
+  });
+  var workModal = guruModal({
+    overlay: 'vmodal', box: '.vmodal-box', video: 'vmodalVideo', videoWrap: 'vmodalVideoWrap', gallery: 'vmodalGallery',
+    title: 'vmodalTitle', client: 'vmodalClient', tags: 'vmodalTags', close: 'vmodalClose', contactBtn: 'vmodalContactBtn',
+    formWrap: 'vmodalFormWrap', form: 'vmodalForm', note: 'vmfNote', scrollHint: 'vmodalScrollHint',
+    project: 'vmf-project', firstField: 'vmf-name', tagClass: 'vmodal-tag'
+  });
+  var modal = workModal || homeModal;
+  if (!modal) return;
+
+  // Showcase cards: play the film in the lightbox, or open the project's own page.
+  document.querySelectorAll('.hw-video-card, .hw-info-card, .prj-card').forEach(function (card) {
+    var url = card.getAttribute('data-url');
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (!card.getAttribute('data-video') && !card.getAttribute('data-gallery') && url) { window.location.href = url; return; }
+      modal.open(card);
+    });
+  });
 })();
 
+/* ── Work archive: category filter + project count ── */
+(function () {
+  var grid  = document.getElementById('projectGrid');
+  if (!grid) return;
+  var btns  = document.querySelectorAll('.filter-btn');
+  var cards = grid.querySelectorAll('.prj-card');
+  var count = document.getElementById('projectCount');
+  var empty = document.getElementById('emptyState');
+
+  function updateCount(n) {
+    if (count) count.textContent = n + ' Project' + (n !== 1 ? 's' : '');
+  }
+
+  function filter(cat) {
+    var visible = 0;
+    cards.forEach(function (card) {
+      var cats = (card.getAttribute('data-cats') || '').split(' ');
+      var show = cat === 'all' || cats.indexOf(cat) !== -1;
+      if (show) {
+        card.style.display = '';
+        card.style.animationDelay = (0.38 + visible * 0.06) + 's';
+        card.style.animation = 'none';
+        void card.offsetWidth; /* reflow so the entrance animation replays */
+        card.style.animation = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    if (empty) empty.classList.toggle('show', visible === 0);
+    updateCount(visible);
+  }
+
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      filter(btn.getAttribute('data-filter'));
+    });
+  });
+
+  updateCount(cards.length);
+})();
+
+/* ── Smooth scroll for same-page anchors ── */
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
   a.addEventListener('click', function(e){
     var href = a.getAttribute('href');
     if (href.length < 2) return;
-    var el = document.querySelector(href);
+    var el = document.getElementById(decodeURIComponent(href.slice(1)));
     if (!el) return;
     e.preventDefault();
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
+    // Skip link: move keyboard focus into the main content too, not just the view.
+    if (a.classList.contains('skip-link')) el.focus({ preventScroll: true });
   });
 });
 
-// ── Mobile menu toggle ──
+/* ── Mobile menu toggle ── */
 (function() {
   var toggle = document.getElementById('gnToggle');
   var menu   = document.getElementById('gnMobileMenu');
   if (!toggle || !menu) return;
 
+  toggle.setAttribute('aria-controls', 'gnMobileMenu');
+
   function openMenu() {
     menu.classList.add('open');
     toggle.classList.add('open');
     toggle.setAttribute('aria-expanded', 'true');
+    // Keyboard (client spec #8): start on the first link.
+    var first = menu.querySelector('a[href], button');
+    if (first) first.focus({ preventScroll: true });
   }
-  function closeMenu() {
+  function closeMenu(backToToggle) {
+    if (!menu.classList.contains('open')) return;
     menu.classList.remove('open');
     toggle.classList.remove('open');
     toggle.setAttribute('aria-expanded', 'false');
+    if (backToToggle === true) toggle.focus({ preventScroll: true });
   }
 
   toggle.addEventListener('click', function() {
     menu.classList.contains('open') ? closeMenu() : openMenu();
   });
-
-  // Close when any menu link is clicked
   menu.querySelectorAll('[data-close]').forEach(function(el) {
     el.addEventListener('click', closeMenu);
   });
-
-  // Close on outside click
   document.addEventListener('click', function(e) {
     if (!menu.contains(e.target) && !toggle.contains(e.target)) closeMenu();
   });
-
-  // Close on Escape
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeMenu();
+    if (!menu.classList.contains('open')) return;
+    if (e.key === 'Escape') closeMenu(true);
+    // Tab stays between the menu button and the menu's links while it is open.
+    if (e.key === 'Tab') guruTrapTab(e, menu, toggle);
   });
+})();
+
+/* ── Keep Tab inside an open menu / lightbox (client spec #8) ──
+   `extra` is an element outside `root` that belongs to the loop (the menu button). */
+function guruTrapTab(e, root, extra) {
+  var sel = 'a[href], button:not([disabled]), input:not([type="hidden"]):not([tabindex="-1"]), select, textarea, video[controls], [tabindex]:not([tabindex="-1"])';
+  var list = [].slice.call(root.querySelectorAll(sel)).filter(function (el) {
+    return el.getClientRects().length && !el.closest('[aria-hidden="true"]');
+  });
+  if (extra) list.unshift(extra);
+  if (!list.length) return;
+  var first = list[0], last = list[list.length - 1], cur = document.activeElement;
+  var inside = root.contains(cur) || cur === extra;
+  if (e.shiftKey && (cur === first || !inside)) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && (cur === last || !inside)) { e.preventDefault(); first.focus(); }
+}
+
+/* ── Showcase card films: load and play only while on screen ── */
+(function () {
+  var vids = document.querySelectorAll('video[data-lazy-play]');
+  if (!vids.length) return;
+  // Motion effects turned off (client spec #5): keep the cover picture, load nothing.
+  // The play button still opens the film in the lightbox.
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  if (reduce && reduce.matches) return;
+
+  function play(v) {
+    if (v.preload !== 'auto') v.preload = 'auto';
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    vids.forEach(play);
+    return;
+  }
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) play(entry.target);
+      else entry.target.pause();
+    });
+  }, { rootMargin: '200px 0px' });
+
+  vids.forEach(function (v) { observer.observe(v); });
+})();
+
+/* ── Motion effects turned off: other looping films (Solutions page) stay still ── */
+(function () {
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  if (!reduce) return;
+  function apply() {
+    if (!reduce.matches) return;
+    document.querySelectorAll('video[autoplay]:not(#heroVideo)').forEach(function (v) {
+      v.removeAttribute('autoplay');
+      v.autoplay = false;
+      v.pause();
+    });
+    // Solutions films have no controls of their own: give them some, so they can still be watched.
+    document.querySelectorAll('.srv-video-wrap video, .srv-carousel-slide video').forEach(function (v) {
+      v.pause();
+      v.controls = true;
+    });
+  }
+  apply();
+  if (reduce.addEventListener) reduce.addEventListener('change', apply);
+  else if (reduce.addListener) reduce.addListener(apply);
 })();
 
 /* ── Count-up animation for stat numbers ── */
 (function () {
   var els = document.querySelectorAll('.abt-stat-num[data-count]');
-  if (!els.length) return;
+  if (!els.length || !('IntersectionObserver' in window)) return;
 
   function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
 
@@ -227,40 +580,288 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   }, { passive: true });
 })();
 
-/* ── Solutions accordion ── */
+/* ── Homepage: Solutions accordion ──
+   Mouse: hovering a row opens its intro, one click on the name goes to that
+   solution (client request, v1.2.7). Touch: tap opens, "Explore" goes. */
 (function () {
   var acc = document.getElementById('svcAccordion');
   if (!acc) return;
   var items = acc.querySelectorAll('.svc-acc-item');
+  var mouse = window.matchMedia('(hover: hover) and (pointer: fine)');
+  var timer = null;
+
+  function setOpen(item, on) {
+    item.classList.toggle('open', on);
+    var h = item.querySelector('.svc-acc-head');
+    if (h) h.setAttribute('aria-expanded', on ? 'true' : 'false');
+  }
+  function open(item) {
+    items.forEach(function (i) { if (i !== item) setOpen(i, false); });   // single-open
+    setOpen(item, true);
+  }
+
   items.forEach(function (item) {
     var head = item.querySelector('.svc-acc-head');
+    var link = item.querySelector('.svc-acc-link');
+
+    // Short delay so sweeping the mouse across the list doesn't open every row.
+    item.addEventListener('mouseenter', function () {
+      if (!mouse.matches) return;
+      clearTimeout(timer);
+      timer = setTimeout(function () { open(item); }, 90);
+    });
+    item.addEventListener('mouseleave', function () { clearTimeout(timer); });
+    head.addEventListener('focus', function () { if (mouse.matches) open(item); });
+
     head.addEventListener('click', function () {
+      if (mouse.matches && link) {
+        window.location.href = link.href;
+        return;
+      }
       var isOpen = item.classList.contains('open');
-      items.forEach(function (i) { i.classList.remove('open'); });   // single-open
-      if (!isOpen) item.classList.add('open');
+      items.forEach(function (i) { setOpen(i, false); });
+      if (!isOpen) setOpen(item, true);
     });
   });
 })();
 
-/* ── Contact form: client-side validation; POSTs to WordPress ── */
+/* ── Solutions page: panel switching, phone mockups, carousels ── */
+(function () {
+  var main = document.getElementById('srvMain');
+  if (!main) return;
+
+  var navItems = document.querySelectorAll('.srv-nav-item');
+  var panels   = document.querySelectorAll('.srv-panel');
+  var nextBtns = document.querySelectorAll('.srv-panel-next');
+  var carousels = [];
+  // Motion effects turned off (client spec #5): films don't start by themselves;
+  // they get playback controls instead (see the block before the count-up animation).
+  function still() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+
+  // Carousels — one instance per .srv-carousel-outer, no shared ids.
+  document.querySelectorAll('.srv-carousel-outer').forEach(function (outer) {
+    var track  = outer.querySelector('.srv-carousel-track');
+    var slides = outer.querySelectorAll('.srv-carousel-slide');
+    var dots   = outer.querySelectorAll('.srv-carousel-dot');
+    var prev   = outer.querySelector('.srv-carousel-prev');
+    var next   = outer.querySelector('.srv-carousel-next');
+    var count  = outer.querySelector('.srv-carousel-count');
+    var cur    = 0;
+    var total  = slides.length;
+    if (!track || !total) return;
+
+    function go(n) {
+      cur = (n + total) % total;
+      track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+      if (count) count.textContent = (cur + 1) + ' / ' + total;
+      dots.forEach(function (d, i) { d.classList.toggle('active', i === cur); });
+      slides.forEach(function (s, i) {
+        var v = s.querySelector('video');
+        if (!v) return;
+        if (i === cur) { if (!still()) v.play().catch(function () {}); }
+        else { v.pause(); v.currentTime = 0; }
+      });
+    }
+    function pause() {
+      slides.forEach(function (s) { var v = s.querySelector('video'); if (v) v.pause(); });
+    }
+
+    if (prev) prev.addEventListener('click', function () { go(cur - 1); });
+    if (next) next.addEventListener('click', function () { go(cur + 1); });
+    dots.forEach(function (d) { d.addEventListener('click', function () { go(+d.getAttribute('data-idx')); }); });
+
+    var touchX = 0;
+    track.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', function (e) {
+      var dx = touchX - e.changedTouches[0].clientX;
+      if (Math.abs(dx) > 40) go(dx > 0 ? cur + 1 : cur - 1);
+    });
+
+    carousels.push({ el: outer, play: function () { go(cur); }, pause: pause });
+  });
+
+  function showPanel(slug, fromUser) {
+    var target = document.getElementById('panel-' + slug);
+    if (!target) return false;
+    var navItem = document.querySelector('.srv-nav-item[data-panel="' + slug + '"]');
+
+    panels.forEach(function (p) {
+      p.classList.remove('active');
+      p.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    });
+    navItems.forEach(function (n) { n.classList.remove('active'); });
+
+    target.classList.add('active');
+    // Autoplaying videos (single-video block) resume; carousels play their current slide.
+    if (!still()) target.querySelectorAll('.srv-video-wrap video, video[autoplay]').forEach(function (v) { v.play().catch(function () {}); });
+    carousels.forEach(function (c) { if (target.contains(c.el)) c.play(); else c.pause(); });
+
+    if (navItem) {
+      navItem.classList.add('active');
+      navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+    if (window.innerWidth < 980) {
+      // Phones/tablets: the page title, service row and panel stack in one column.
+      // Only scroll when a tap leaves the panel's top out of view (e.g. "Next" at the
+      // end of a long panel), and go to the page top so the title is not left under
+      // the fixed logo. Never scroll on page load.
+      if (fromUser && main.getBoundingClientRect().top < 0) window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      main.scrollTop = 0;
+    }
+    if (history.replaceState) history.replaceState(null, '', '#' + slug);
+    return true;
+  }
+
+  navItems.forEach(function (item) {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+      showPanel(item.getAttribute('data-panel'), true);
+    });
+  });
+  nextBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () { showPanel(btn.getAttribute('data-next'), true); });
+  });
+
+  // Phone mockups: drag / touch to scroll the screenshot.
+  document.querySelectorAll('.srv-phone-screen').forEach(function (screen) {
+    var isDown = false, startY = 0, scrollTop = 0;
+    screen.addEventListener('mousedown', function (e) {
+      isDown = true; screen.style.cursor = 'grabbing';
+      startY = e.pageY - screen.offsetTop;
+      scrollTop = screen.scrollTop;
+    });
+    screen.addEventListener('mouseleave', function () { isDown = false; screen.style.cursor = 'grab'; });
+    screen.addEventListener('mouseup',    function () { isDown = false; screen.style.cursor = 'grab'; });
+    screen.addEventListener('mousemove',  function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var y = e.pageY - screen.offsetTop;
+      screen.scrollTop = scrollTop - (y - startY) * 1.4;
+    });
+    var tStartY = 0;
+    screen.addEventListener('touchstart', function (e) { tStartY = e.touches[0].clientY; }, { passive: true });
+    screen.addEventListener('touchmove', function (e) {
+      var dy = tStartY - e.touches[0].clientY;
+      screen.scrollTop += dy * 1.2;
+      tStartY = e.touches[0].clientY;
+    }, { passive: true });
+  });
+
+  // Open the panel named in the URL hash (homepage accordion links here), else the first.
+  var initial = window.location.hash.replace('#', '');
+  if (!initial || !showPanel(initial)) {
+    var first = navItems.length ? navItems[0].getAttribute('data-panel') : '';
+    if (first) showPanel(first);
+  }
+  // Also react to hash changes from links elsewhere on the page.
+  window.addEventListener('hashchange', function () {
+    var slug = window.location.hash.replace('#', '');
+    if (slug) showPanel(slug, true);
+  });
+})();
+
+/* ── Blog: category filter ── */
+(function () {
+  var btns  = document.querySelectorAll('.blg-filter-btn');
+  if (!btns.length) return;
+  var cards = document.querySelectorAll('.art-card');
+
+  var empty = document.getElementById('blgEmpty');
+
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var active = btn.getAttribute('data-cat');
+      var visible = 0;
+      btns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      cards.forEach(function (card) {
+        var cats = (card.getAttribute('data-cat') || '').split(' ');
+        var show = active === 'all' || cats.indexOf(active) !== -1;
+        card.classList.toggle('hidden', !show);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (empty) empty.classList.toggle('show', visible === 0);
+    });
+  });
+})();
+
+/* ── Footer contact form: client-side validation; POSTs to WordPress ── */
 (function () {
   var form = document.getElementById('contactForm');
   var note = document.getElementById('cfNote');
   if (!form) return;
+  setupPhoneGroup(form);
   form.addEventListener('submit', function (e) {
-    var required = ['name','email','phone','company'];
-    for (var i = 0; i < required.length; i++) {
-      var f = form.elements[required[i]];
-      if (!f.value.trim()) {
-        e.preventDefault();
-        f.focus();
-        note.style.color = '#c0392b';
-        note.textContent = 'Please fill in all required (*) fields.';
-        return;
-      }
-    }
+    if (!guruCheckForm(form, note, '#c0392b')) { e.preventDefault(); return; }
+    lockSubmit(form, e);
   });
 })();
+
+/* ── Per-solution contact forms: same validation ── */
+document.querySelectorAll('.spf-form').forEach(function (form) {
+  var note = form.querySelector('.spf-note');
+  setupPhoneGroup(form);
+  form.addEventListener('submit', function (e) {
+    if (!guruCheckForm(form, note, '#c0392b')) { e.preventDefault(); return; }
+    lockSubmit(form, e);
+  });
+});
+
+/* ── Form check with an error summary (client spec #8, v1.4.0) ──
+   Lists every field that needs attention in the note under the form (read out by
+   screen readers), marks those fields invalid and puts the cursor in the first one.
+   Contact No. is optional; when given it must have the right number of digits. */
+function guruCheckForm(form, note, color) {
+  var checks = [
+    ['name', 'Name'],
+    ['company', 'Company Name'],
+    ['email', 'Business Email']
+  ];
+  var problems = [], firstBad = null;
+  function mark(f, bad) {
+    if (!f) return;
+    if (bad) { f.setAttribute('aria-invalid', 'true'); if (!firstBad) firstBad = f; }
+    else f.removeAttribute('aria-invalid');
+  }
+  checks.forEach(function (c) {
+    var f = form.elements[c[0]];
+    if (!f) return;
+    var v = f.value.trim(), bad = false;
+    if (!v) { problems.push(c[1] + ' is required'); bad = true; }
+    else if (c[0] === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { problems.push(c[1] + ' is not a valid address'); bad = true; }
+    mark(f, bad);
+  });
+  var phone = form.elements['phone'];
+  var phoneErr = phone && phone.value.trim() ? validatePhone(form) : '';
+  if (phoneErr) problems.push(phoneErr.replace(/\.$/, ''));
+  mark(phone, !!phoneErr);
+  if (note) {
+    note.setAttribute('role', 'alert');
+    note.style.color = problems.length ? color : '';
+    note.textContent = problems.length ? 'Please check: ' + problems.join('; ') + '.' : '';
+    if (note.id) form.querySelectorAll('[aria-invalid="true"]').forEach(function (f) { f.setAttribute('aria-describedby', note.id); });
+  }
+  if (firstBad) firstBad.focus();
+  return !problems.length;
+}
+
+/* ── Block a second click while the form is on its way (v1.3.0) ── */
+function lockSubmit(form, e) {
+  if (form.getAttribute('data-sending')) { e.preventDefault(); return; }
+  form.setAttribute('data-sending', '1');
+  var btn = form.querySelector('[type="submit"]');
+  if (btn) { btn.setAttribute('aria-disabled', 'true'); btn.style.opacity = '0.6'; }
+}
+// Coming back with the browser's Back button: allow sending again.
+window.addEventListener('pageshow', function () {
+  document.querySelectorAll('form[data-sending]').forEach(function (f) {
+    f.removeAttribute('data-sending');
+    var btn = f.querySelector('[type="submit"]');
+    if (btn) { btn.removeAttribute('aria-disabled'); btn.style.opacity = ''; }
+  });
+});
 
 /* ── Phone country-code helpers (shared) ── */
 function setupPhoneGroup(form) {
@@ -286,3 +887,68 @@ function validatePhone(form) {
   }
   return '';
 }
+
+/* ── Homepage hero, frosted-glass card (gh--glass): adapt to dark footage ──
+   Every 400ms, reads how bright the film is right behind the title card (an 8×4
+   sample of the current frame) and sets --gh-glass-a: 58% white on light, green or
+   colourful frames, rising to 88% on dark ones, so the glass stays bright and clean
+   instead of turning into a grey slab. If the frame can't be read (e.g. a video on
+   another domain), the card simply keeps 58%, which is still readable. */
+(function () {
+  var hero = document.querySelector('.gh.gh--glass');
+  var video = document.getElementById('heroVideo');
+  if (!hero || !video) return;
+  var title = hero.querySelector('.gh-title');
+  var intro = hero.querySelector('.gh-intro');
+  var ctx = null;
+  function freshCanvas() {   // a canvas that once read an unreadable frame stays locked
+    var c = document.createElement('canvas');
+    c.width = 8; c.height = 4;
+    ctx = c.getContext('2d', { willReadFrequently: true });
+  }
+  freshCanvas();
+  if (!ctx || !title) return;
+  var LIGHT = 0.58, DARK = 0.88;   // white layer on light / on dark footage
+  var HI = 0.35, LO = 0.08;        // film brightness (0–1) for each end
+  var last = -1, timer = null, visible = true, broken = false;
+
+  function sample() {
+    if (broken || !visible || document.hidden || video.readyState < 2 || !video.videoWidth) return;
+    var vr = video.getBoundingClientRect();
+    var a = title.getBoundingClientRect();
+    var b = intro ? intro.getBoundingClientRect() : a;
+    var left = Math.min(a.left, b.left), top = Math.min(a.top, b.top);
+    var right = Math.max(a.right, b.right), bottom = Math.max(a.bottom, b.bottom);
+    // object-fit: cover — map the card's box on screen to the video frame
+    var scale = Math.max(vr.width / video.videoWidth, vr.height / video.videoHeight);
+    var ox = (vr.width - video.videoWidth * scale) / 2, oy = (vr.height - video.videoHeight * scale) / 2;
+    var sx = Math.max(0, (left - vr.left - ox) / scale), sy = Math.max(0, (top - vr.top - oy) / scale);
+    var sw = Math.min(video.videoWidth - sx, (right - left) / scale), sh = Math.min(video.videoHeight - sy, (bottom - top) / scale);
+    if (sw <= 0 || sh <= 0) return;
+    var d;
+    try {
+      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, 8, 4);
+      d = ctx.getImageData(0, 0, 8, 4).data;
+    } catch (e) { broken = true; stop(); return; }   // unreadable frame: keep the CSS default
+    var sum = 0;
+    for (var i = 0; i < d.length; i += 4) sum += 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+    var lum = sum / (d.length / 4) / 255;
+    var t = Math.min(1, Math.max(0, (HI - lum) / (HI - LO)));
+    var alpha = Math.round((LIGHT + (DARK - LIGHT) * t) * 50) / 50;   // 2% steps
+    if (alpha !== last) { hero.style.setProperty('--gh-glass-a', alpha); last = alpha; }
+  }
+  function start() { if (broken) return; if (!timer) timer = setInterval(sample, 400); sample(); }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      if (visible) start(); else stop();
+    }).observe(hero);
+  }
+  video.addEventListener('loadeddata', function () {   // a new source may be readable
+    if (broken) { broken = false; freshCanvas(); }
+    start();
+  });
+  video.addEventListener('seeked', sample);
+  start();
+})();
