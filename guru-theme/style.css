@@ -3,7 +3,7 @@ Theme Name:  Guru
 Theme URI:   https://www.guruonline.com.hk
 Author:      Guru
 Description: Custom theme for Guru — Hong Kong digital marketing agency. Editable work showcase, blog and page copy via the WordPress admin.
-Version:     1.4.4
+Version:     1.4.5
 Released:    2026-11-25
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -1969,6 +1969,37 @@ Text Domain: guru
     .gh--pill-split .gh-title, .gh--pill-split .gh-intro { justify-self: stretch; }
     .gh--pill-split .gh-title { padding: 18px 22px 20px; border-radius: 26px; }
     .gh--pill-split .gh-intro { padding: 12px 22px; border-radius: 20px; }
+  }
+
+  /* Phones (v1.4.5): the title and buttons no longer sit on top of the film. On a tall
+     screen they covered the lower half of the picture, where most of its words and
+     products appear. The film gets its own block (about 60% of the screen, full width)
+     and the title, intro and buttons follow below it on the page background, so nothing
+     is covered and the first screen still shows film, title and buttons. */
+  @media (max-width: 767px) {
+    .gh { --gh-pad: 20px; min-height: 0; padding: 0 var(--gh-pad) 32px; }
+    #heroVideo {
+      position: relative;
+      inset: auto;
+      display: block;
+      flex: none;
+      width: calc(100% + 2 * var(--gh-pad));
+      height: clamp(340px, 60svh, 600px);
+      margin: 0 calc(-1 * var(--gh-pad));
+    }
+    .gh:not(:has(#heroVideo)) { padding-top: 96px; } /* no film: keep the copy clear of the menu */
+    .gh .gh-bottom { margin-top: 22px; padding-top: 0; }
+    :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-copy { margin-inline: 0; width: 100%; row-gap: 10px; }
+    :is(.gh--pill, .gh--glass, .gh--glass-dark) .gh-copy::before { display: none; }
+    .gh--pill-split .gh-title, .gh--pill-split .gh-intro { background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-title,
+    :is(.gh--pill, .gh--pill-split, .gh--glass, .gh--glass-dark) .gh-intro { padding: 0; }
+    .gh--glass-dark .gh-title { color: var(--ink); }
+    .gh--glass-dark .gh-intro { color: var(--ink-2); }
+    .gh .gh-btns { margin-top: 8px; }
+  }
+  @media (max-width: 520px) {
+    .gh { --gh-pad: 18px; }
   }
 
   /* Wide, tall-enough screens: buttons move to the right, bottoms aligned with the intro. */
