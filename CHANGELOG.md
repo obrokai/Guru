@@ -8,6 +8,15 @@
 
 ---
 
+## 1.4.6 — 2026-11-26
+
+客戶的 SEO 常見問答（Word「SEO for website」，8 個服務共 89 題），照客戶要求只給搜尋引擎、不顯示在網頁上。
+
+- **每個 Solution 的編輯頁新增「SEO FAQ（只給搜尋引擎，頁面不顯示）」欄位**：可直接從 Word 貼上，格式是「Q1. 問題」一行、下一行答案、空一行再下一題。欄位下方會顯示目前有幾題。
+- **Solutions 頁輸出 FAQPage 結構化資料（JSON-LD）**：依頁面上服務的順序，把所有服務的問答合成一份。訪客看不到，頁面外觀不變。沒有任何問答時不輸出。
+- **自動帶入客戶這次的 89 題**：安裝後第一次進後台時，依服務代稱填進還是空白的欄位（Influencer Marketing 4 題、Video Production 11、Go-Global 12、Threads 11、Social Media 12、GEO & Search 13、AI & Development 13、Campaign / PR Events 13；China Digital Expansion 沒有）。只跑一次，不會覆蓋客戶之後改過的內容。
+- 注意：Google 規定結構化資料的內容要在頁面上看得到，所以這份資料 Google 多半不採用，也不會顯示 FAQ 搜尋樣式；Bing 和部分 AI 搜尋會參考。
+
 ## 1.4.5 — 2026-11-26
 
 上線後修正：手機版首頁標題擋住影片。
